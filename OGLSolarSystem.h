@@ -1,5 +1,12 @@
 #pragma once
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+#include <GL\glut.h>
+#include <vector>
+
+
 namespace OGLSolarSystem {
 
 	using namespace System;
@@ -53,6 +60,9 @@ namespace OGLSolarSystem {
 	private: System::Windows::Forms::Label^  lCross;
 	private: System::Windows::Forms::Label^  lgpTimeScale;
 	private: System::Windows::Forms::NumericUpDown^  nudgpTimeScale;
+	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::NumericUpDown^  numericUpDown1;
+	private: System::Windows::Forms::Label^  label2;
 
 	private:
 		/// <summary>
@@ -81,9 +91,13 @@ namespace OGLSolarSystem {
 			this->pMainOGLViewport = (gcnew System::Windows::Forms::Panel());
 			this->lCurrentDateTimeTitle = (gcnew System::Windows::Forms::Label());
 			this->lCurrentDateTime = (gcnew System::Windows::Forms::Label());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->numericUpDown1 = (gcnew System::Windows::Forms::NumericUpDown());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->menuStripMain->SuspendLayout();
 			this->pControls->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudgpTimeScale))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStripMain
@@ -130,6 +144,9 @@ namespace OGLSolarSystem {
 			this->pControls->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
 				| System::Windows::Forms::AnchorStyles::Left));
 			this->pControls->AutoScroll = true;
+			this->pControls->Controls->Add(this->label2);
+			this->pControls->Controls->Add(this->label1);
+			this->pControls->Controls->Add(this->numericUpDown1);
 			this->pControls->Controls->Add(this->lCross);
 			this->pControls->Controls->Add(this->lgpTimeScale);
 			this->pControls->Controls->Add(this->nudgpTimeScale);
@@ -143,7 +160,7 @@ namespace OGLSolarSystem {
 			// lCross
 			// 
 			this->lCross->AutoSize = true;
-			this->lCross->Location = System::Drawing::Point(140, 61);
+			this->lCross->Location = System::Drawing::Point(189, 61);
 			this->lCross->Name = L"lCross";
 			this->lCross->Size = System::Drawing::Size(12, 13);
 			this->lCross->TabIndex = 50;
@@ -154,15 +171,15 @@ namespace OGLSolarSystem {
 			this->lgpTimeScale->AutoSize = true;
 			this->lgpTimeScale->Location = System::Drawing::Point(16, 61);
 			this->lgpTimeScale->Name = L"lgpTimeScale";
-			this->lgpTimeScale->Size = System::Drawing::Size(64, 13);
+			this->lgpTimeScale->Size = System::Drawing::Size(114, 13);
 			this->lgpTimeScale->TabIndex = 49;
-			this->lgpTimeScale->Text = L"Time scale :";
+			this->lgpTimeScale->Text = L"Time scale slowdown :";
 			// 
 			// nudgpTimeScale
 			// 
-			this->nudgpTimeScale->Location = System::Drawing::Point(80, 59);
+			this->nudgpTimeScale->Location = System::Drawing::Point(136, 59);
 			this->nudgpTimeScale->Name = L"nudgpTimeScale";
-			this->nudgpTimeScale->Size = System::Drawing::Size(55, 20);
+			this->nudgpTimeScale->Size = System::Drawing::Size(47, 20);
 			this->nudgpTimeScale->TabIndex = 48;
 			this->nudgpTimeScale->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			// 
@@ -219,6 +236,34 @@ namespace OGLSolarSystem {
 			this->lCurrentDateTime->TabIndex = 7;
 			this->lCurrentDateTime->Text = L"Jan 1/2015 12:45:00";
 			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(47, 87);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(83, 13);
+			this->label1->TabIndex = 52;
+			this->label1->Text = L"Distance scale :";
+			this->label1->Click += gcnew System::EventHandler(this, &OGLSolarSystem::label1_Click_1);
+			// 
+			// numericUpDown1
+			// 
+			this->numericUpDown1->Location = System::Drawing::Point(136, 85);
+			this->numericUpDown1->Name = L"numericUpDown1";
+			this->numericUpDown1->Size = System::Drawing::Size(47, 20);
+			this->numericUpDown1->TabIndex = 51;
+			this->numericUpDown1->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->numericUpDown1->ValueChanged += gcnew System::EventHandler(this, &OGLSolarSystem::numericUpDown1_ValueChanged);
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(189, 87);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(77, 13);
+			this->label2->TabIndex = 53;
+			this->label2->Text = L"x / 10 000 000";
+			// 
 			// OGLSolarSystem
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -238,6 +283,7 @@ namespace OGLSolarSystem {
 			this->pControls->ResumeLayout(false);
 			this->pControls->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudgpTimeScale))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -257,6 +303,10 @@ private: System::Void label3_Click(System::Object^  sender, System::EventArgs^  
 private: System::Void checkBox1_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 }
 private: System::Void label7_Click(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void label1_Click_1(System::Object^  sender, System::EventArgs^  e) {
+}
+private: System::Void numericUpDown1_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
 }
 };
 }
