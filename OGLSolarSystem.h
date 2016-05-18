@@ -34,7 +34,9 @@ namespace OGLSolarSystem {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::MenuStrip^  menuStrip1;
+	private: System::Windows::Forms::MenuStrip^  menuStripMain;
+	protected:
+
 	protected:
 	private: System::Windows::Forms::ToolStripMenuItem^  fileToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  miExit;
@@ -65,36 +67,36 @@ namespace OGLSolarSystem {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
+			this->menuStripMain = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->miExit = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pControls = (gcnew System::Windows::Forms::Panel());
-			this->pMainOGLViewport = (gcnew System::Windows::Forms::Panel());
-			this->lGlobalParams = (gcnew System::Windows::Forms::Label());
+			this->lCross = (gcnew System::Windows::Forms::Label());
+			this->lgpTimeScale = (gcnew System::Windows::Forms::Label());
+			this->nudgpTimeScale = (gcnew System::Windows::Forms::NumericUpDown());
 			this->cbgpShowOrbits = (gcnew System::Windows::Forms::CheckBox());
+			this->lGlobalParams = (gcnew System::Windows::Forms::Label());
+			this->pMainOGLViewport = (gcnew System::Windows::Forms::Panel());
 			this->lCurrentDateTimeTitle = (gcnew System::Windows::Forms::Label());
 			this->lCurrentDateTime = (gcnew System::Windows::Forms::Label());
-			this->nudgpTimeScale = (gcnew System::Windows::Forms::NumericUpDown());
-			this->lgpTimeScale = (gcnew System::Windows::Forms::Label());
-			this->lCross = (gcnew System::Windows::Forms::Label());
-			this->menuStrip1->SuspendLayout();
+			this->menuStripMain->SuspendLayout();
 			this->pControls->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudgpTimeScale))->BeginInit();
 			this->SuspendLayout();
 			// 
-			// menuStrip1
+			// menuStripMain
 			// 
-			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+			this->menuStripMain->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
 				this->fileToolStripMenuItem,
 					this->helpToolStripMenuItem
 			});
-			this->menuStrip1->Location = System::Drawing::Point(0, 0);
-			this->menuStrip1->Name = L"menuStrip1";
-			this->menuStrip1->Size = System::Drawing::Size(1040, 24);
-			this->menuStrip1->TabIndex = 0;
-			this->menuStrip1->Text = L"menuStrip1";
+			this->menuStripMain->Location = System::Drawing::Point(0, 0);
+			this->menuStripMain->Name = L"menuStripMain";
+			this->menuStripMain->Size = System::Drawing::Size(1040, 24);
+			this->menuStripMain->TabIndex = 0;
+			this->menuStripMain->Text = L"menuStripMain";
 			// 
 			// fileToolStripMenuItem
 			// 
@@ -138,26 +140,31 @@ namespace OGLSolarSystem {
 			this->pControls->Size = System::Drawing::Size(271, 522);
 			this->pControls->TabIndex = 1;
 			// 
-			// pMainOGLViewport
+			// lCross
 			// 
-			this->pMainOGLViewport->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-				| System::Windows::Forms::AnchorStyles::Left)
-				| System::Windows::Forms::AnchorStyles::Right));
-			this->pMainOGLViewport->AutoScroll = true;
-			this->pMainOGLViewport->Location = System::Drawing::Point(277, 63);
-			this->pMainOGLViewport->Name = L"pMainOGLViewport";
-			this->pMainOGLViewport->Size = System::Drawing::Size(763, 486);
-			this->pMainOGLViewport->TabIndex = 2;
-			this->pMainOGLViewport->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &OGLSolarSystem::panel1_Paint);
+			this->lCross->AutoSize = true;
+			this->lCross->Location = System::Drawing::Point(140, 61);
+			this->lCross->Name = L"lCross";
+			this->lCross->Size = System::Drawing::Size(12, 13);
+			this->lCross->TabIndex = 50;
+			this->lCross->Text = L"x";
 			// 
-			// lGlobalParams
+			// lgpTimeScale
 			// 
-			this->lGlobalParams->AutoSize = true;
-			this->lGlobalParams->Location = System::Drawing::Point(12, 10);
-			this->lGlobalParams->Name = L"lGlobalParams";
-			this->lGlobalParams->Size = System::Drawing::Size(92, 13);
-			this->lGlobalParams->TabIndex = 47;
-			this->lGlobalParams->Text = L"Global parameters";
+			this->lgpTimeScale->AutoSize = true;
+			this->lgpTimeScale->Location = System::Drawing::Point(16, 61);
+			this->lgpTimeScale->Name = L"lgpTimeScale";
+			this->lgpTimeScale->Size = System::Drawing::Size(64, 13);
+			this->lgpTimeScale->TabIndex = 49;
+			this->lgpTimeScale->Text = L"Time scale :";
+			// 
+			// nudgpTimeScale
+			// 
+			this->nudgpTimeScale->Location = System::Drawing::Point(80, 59);
+			this->nudgpTimeScale->Name = L"nudgpTimeScale";
+			this->nudgpTimeScale->Size = System::Drawing::Size(55, 20);
+			this->nudgpTimeScale->TabIndex = 48;
+			this->nudgpTimeScale->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			// 
 			// cbgpShowOrbits
 			// 
@@ -171,6 +178,27 @@ namespace OGLSolarSystem {
 			this->cbgpShowOrbits->Text = L"Show orbits";
 			this->cbgpShowOrbits->UseVisualStyleBackColor = true;
 			this->cbgpShowOrbits->CheckedChanged += gcnew System::EventHandler(this, &OGLSolarSystem::checkBox1_CheckedChanged);
+			// 
+			// lGlobalParams
+			// 
+			this->lGlobalParams->AutoSize = true;
+			this->lGlobalParams->Location = System::Drawing::Point(12, 10);
+			this->lGlobalParams->Name = L"lGlobalParams";
+			this->lGlobalParams->Size = System::Drawing::Size(92, 13);
+			this->lGlobalParams->TabIndex = 47;
+			this->lGlobalParams->Text = L"Global parameters";
+			// 
+			// pMainOGLViewport
+			// 
+			this->pMainOGLViewport->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+				| System::Windows::Forms::AnchorStyles::Left)
+				| System::Windows::Forms::AnchorStyles::Right));
+			this->pMainOGLViewport->AutoScroll = true;
+			this->pMainOGLViewport->Location = System::Drawing::Point(277, 63);
+			this->pMainOGLViewport->Name = L"pMainOGLViewport";
+			this->pMainOGLViewport->Size = System::Drawing::Size(763, 486);
+			this->pMainOGLViewport->TabIndex = 2;
+			this->pMainOGLViewport->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &OGLSolarSystem::panel1_Paint);
 			// 
 			// lCurrentDateTimeTitle
 			// 
@@ -191,32 +219,6 @@ namespace OGLSolarSystem {
 			this->lCurrentDateTime->TabIndex = 7;
 			this->lCurrentDateTime->Text = L"Jan 1/2015 12:45:00";
 			// 
-			// nudgpTimeScale
-			// 
-			this->nudgpTimeScale->Location = System::Drawing::Point(80, 59);
-			this->nudgpTimeScale->Name = L"nudgpTimeScale";
-			this->nudgpTimeScale->Size = System::Drawing::Size(55, 20);
-			this->nudgpTimeScale->TabIndex = 48;
-			this->nudgpTimeScale->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-			// 
-			// lgpTimeScale
-			// 
-			this->lgpTimeScale->AutoSize = true;
-			this->lgpTimeScale->Location = System::Drawing::Point(16, 61);
-			this->lgpTimeScale->Name = L"lgpTimeScale";
-			this->lgpTimeScale->Size = System::Drawing::Size(64, 13);
-			this->lgpTimeScale->TabIndex = 49;
-			this->lgpTimeScale->Text = L"Time scale :";
-			// 
-			// lCross
-			// 
-			this->lCross->AutoSize = true;
-			this->lCross->Location = System::Drawing::Point(140, 61);
-			this->lCross->Name = L"lCross";
-			this->lCross->Size = System::Drawing::Size(12, 13);
-			this->lCross->TabIndex = 50;
-			this->lCross->Text = L"x";
-			// 
 			// OGLSolarSystem
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -226,13 +228,13 @@ namespace OGLSolarSystem {
 			this->Controls->Add(this->lCurrentDateTimeTitle);
 			this->Controls->Add(this->pMainOGLViewport);
 			this->Controls->Add(this->pControls);
-			this->Controls->Add(this->menuStrip1);
-			this->MainMenuStrip = this->menuStrip1;
+			this->Controls->Add(this->menuStripMain);
+			this->MainMenuStrip = this->menuStripMain;
 			this->Name = L"OGLSolarSystem";
 			this->Text = L"OGLSolarSystem";
 			this->Load += gcnew System::EventHandler(this, &OGLSolarSystem::OGLSolarSystem_Load);
-			this->menuStrip1->ResumeLayout(false);
-			this->menuStrip1->PerformLayout();
+			this->menuStripMain->ResumeLayout(false);
+			this->menuStripMain->PerformLayout();
 			this->pControls->ResumeLayout(false);
 			this->pControls->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudgpTimeScale))->EndInit();
