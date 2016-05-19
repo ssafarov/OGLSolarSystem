@@ -37,148 +37,14 @@ namespace OGLSolarSystem {
 			//
 		}
 
-		bool initializeOpenGL(HDC hdc)
-		{
-			hDC = hdc;
-
-			PIXELFORMATDESCRIPTOR pfd = {
-				sizeof(PIXELFORMATDESCRIPTOR),    // size of this pfd 
-				1,                                // version number 
-				PFD_DRAW_TO_WINDOW |              // support window 
-				PFD_SUPPORT_OPENGL |              // support OpenGL 
-				PFD_DOUBLEBUFFER,                 // double buffered 
-				PFD_TYPE_RGBA,                    // RGBA type 
-				24,                               // 24-bit color depth 
-				0, 0, 0, 0, 0, 0,                 // color bits ignored 
-				0,                                // no alpha buffer 
-				0,                                // shift bit ignored 
-				0,                                // no accumulation buffer 
-				0, 0, 0, 0,                       // accum bits ignored 
-				32,                               // 32-bit z-buffer     
-				0,                                // no stencil buffer 
-				0,                                // no auxiliary buffer 
-				PFD_MAIN_PLANE,                   // main layer 
-				0,                                // reserved 
-				0, 0, 0                           // layer masks ignored 
-			};
-			
-			int iPixelFormat = ChoosePixelFormat(hDC, &pfd);
-
-			if (iPixelFormat == 0) {
-				MessageBox::Show("ChoosePixelFormat Failed");
-				return false;
-			}
-
-			if (SetPixelFormat(hDC, iPixelFormat, &pfd) == FALSE) {
-				MessageBox::Show("SetPixelFormat Failed");
-				return false;
-			}
-
-			wglDeleteContext(hRC);
-			hRC = wglCreateContext(hDC);
-			if (hRC == NULL) {
-				MessageBox::Show("wglCreateContext Failed");
-				return false;
-			}
-			if (wglMakeCurrent(hDC, hRC) == NULL) {
-				MessageBox::Show("wglMakeCurrent Failed");
-				return false;
-			}
-
-			return true;
-		}
-
-		int initOpenGL(GLvoid) 
-		{
-			// Initialization
-			glEnable(GL_TEXTURE_2D);				// Enable Texture Mapping
-			glShadeModel(GL_SMOOTH);				// Enable Smooth Shading
-			glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	// Black Background
-
-			// lighting set up
-			glEnable(GL_LIGHT0);
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
-			GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
-			GLfloat matShininess[] = { 20.0 };
-
-			glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
-			glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
-			glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
-
-			GLfloat lightAmbient[] = { 0.9, 0.8, 0.3, 1.0 };
-			GLfloat lightDiffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-			GLfloat lightSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
-
-			glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
-			glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
-			glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
-
-			//glEnable(GL_LIGHTING);
-			//glEnable(GL_LIGHT0);
-			//glDisable(GL_LIGHTING);
-			 
-			glClearDepth(1.0f);									// Depth Buffer Setup
-			//glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-			glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-			glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
-			//glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
-
-			return TRUE;										// Initialization Went OK
-		}
-
 		void Render()
 		{
 			glLoadIdentity();
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			drawCube();
+			DrawUniverse();
 
 			SwapBuffers(hDC);
-		}
-
-		void drawCube(void)
-		{
-			glBegin(GL_QUADS);
-			// new face
-			glColor3ub(153, 234, 19);
-			glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
-			glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-			glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-			glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-			// new face
-			glColor3ub(253, 184, 109);
-			glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-			glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-			glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-			glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-			// new face
-			glColor3ub(213, 124, 109);
-			glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-			glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-			glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-			glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-			// new face
-			glColor3ub(53, 84, 209);
-			glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-			glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
-			glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-			glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-			// new face
-			glColor3ub(200, 14, 19);
-			glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-			glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-			glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-			glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-			// new face
-			glColor3ub(123, 14, 209);
-			glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-			glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-			glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-			glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
-
-			glEnd();
 		}
 
 		protected:
@@ -216,6 +82,140 @@ namespace OGLSolarSystem {
 		private: System::Windows::Forms::Timer^  timer1;
 
 		private:
+			bool initializeOpenGL(HDC hdc)
+			{
+				hDC = hdc;
+
+				PIXELFORMATDESCRIPTOR pfd = {
+					sizeof(PIXELFORMATDESCRIPTOR),    // size of this pfd 
+					1,                                // version number 
+					PFD_DRAW_TO_WINDOW |              // support window 
+					PFD_SUPPORT_OPENGL |              // support OpenGL 
+					PFD_DOUBLEBUFFER,                 // double buffered 
+					PFD_TYPE_RGBA,                    // RGBA type 
+					24,                               // 24-bit color depth 
+					0, 0, 0, 0, 0, 0,                 // color bits ignored 
+					0,                                // no alpha buffer 
+					0,                                // shift bit ignored 
+					0,                                // no accumulation buffer 
+					0, 0, 0, 0,                       // accum bits ignored 
+					32,                               // 32-bit z-buffer     
+					0,                                // no stencil buffer 
+					0,                                // no auxiliary buffer 
+					PFD_MAIN_PLANE,                   // main layer 
+					0,                                // reserved 
+					0, 0, 0                           // layer masks ignored 
+				};
+
+				int iPixelFormat = ChoosePixelFormat(hDC, &pfd);
+
+				if (iPixelFormat == 0) {
+					MessageBox::Show("ChoosePixelFormat Failed");
+					return false;
+				}
+
+				if (SetPixelFormat(hDC, iPixelFormat, &pfd) == FALSE) {
+					MessageBox::Show("SetPixelFormat Failed");
+					return false;
+				}
+
+				wglDeleteContext(hRC);
+				hRC = wglCreateContext(hDC);
+				if (hRC == NULL) {
+					MessageBox::Show("wglCreateContext Failed");
+					return false;
+				}
+				if (wglMakeCurrent(hDC, hRC) == NULL) {
+					MessageBox::Show("wglMakeCurrent Failed");
+					return false;
+				}
+
+				return true;
+			}
+
+			int initOpenGL(GLvoid)
+			{
+				// Initialization
+				glEnable(GL_TEXTURE_2D);				// Enable Texture Mapping
+				glShadeModel(GL_SMOOTH);				// Enable Smooth Shading
+				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	// Black Background
+
+														// lighting set up
+				glEnable(GL_LIGHT0);
+				glMatrixMode(GL_MODELVIEW);
+				glLoadIdentity();
+				GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
+				GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
+				GLfloat matShininess[] = { 20.0 };
+
+				glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
+				glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
+				glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
+
+				GLfloat lightAmbient[] = { 0.9, 0.8, 0.3, 1.0 };
+				GLfloat lightDiffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+				GLfloat lightSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
+
+				glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
+				glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+				glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
+
+				//glEnable(GL_LIGHTING);
+				//glEnable(GL_LIGHT0);
+				//glDisable(GL_LIGHTING);
+
+				glClearDepth(1.0f);									// Depth Buffer Setup
+																	//glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+				glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
+				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
+																	//glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
+
+				return TRUE;										// Initialization Went OK
+			}
+
+			void DrawUniverse(void)
+			{
+				glBegin(GL_QUADS);
+				// new face
+				glColor3ub(153, 234, 19);
+				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
+				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
+				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
+				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
+				// new face
+				glColor3ub(253, 184, 109);
+				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
+				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
+				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
+				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
+				// new face
+				glColor3ub(213, 124, 109);
+				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
+				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
+				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
+				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
+				// new face
+				glColor3ub(53, 84, 209);
+				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
+				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
+				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
+				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
+				// new face
+				glColor3ub(200, 14, 19);
+				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
+				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
+				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
+				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
+				// new face
+				glColor3ub(123, 14, 209);
+				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
+				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
+				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
+				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
+
+				glEnd();
+			}
+
 			/// <summary>
 			/// Required designer variable.
 			/// </summary>

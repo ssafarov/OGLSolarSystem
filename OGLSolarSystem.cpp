@@ -13,3 +13,4 @@ int main(array<String^>^ argv)
 	OGLSolarSystem::OGLSolarSystem form;
 	Application::Run(%form);
 }
+
