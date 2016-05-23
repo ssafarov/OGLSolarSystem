@@ -98,7 +98,7 @@ namespace OGLSolarSystem {
 					0,                                // no alpha buffer 
 					0,                                // shift bit ignored 
 					0,                                // no accumulation buffer 
-					0, 0, 0, 0,                       // accum bits ignored 
+					0, 0, 0, 0,                       // ignored bits
 					32,                               // 32-bit z-buffer     
 					0,                                // no stencil buffer 
 					0,                                // no auxiliary buffer 
@@ -140,7 +140,7 @@ namespace OGLSolarSystem {
 				glShadeModel(GL_SMOOTH);				// Enable Smooth Shading
 				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	// Black Background
 
-														// lighting set up
+				// lighting set up
 				glEnable(GL_LIGHT0);
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
@@ -165,10 +165,10 @@ namespace OGLSolarSystem {
 				//glDisable(GL_LIGHTING);
 
 				glClearDepth(1.0f);									// Depth Buffer Setup
-																	//glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+				//glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 				glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
 				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
-																	//glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
+				//glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
 
 				return TRUE;										// Initialization Went OK
 			}
