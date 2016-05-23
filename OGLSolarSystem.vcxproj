@@ -133,11 +133,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLSolarSystem.cpp" />
+    <ClCompile Include="planet.cpp" />
+    <ClCompile Include="satellite.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="globals.h" />
     <ClInclude Include="OGLSolarSystem.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="planet.h" />
+    <ClInclude Include="satellite.h" />
+    <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="OGLSolarSystem.resx">
