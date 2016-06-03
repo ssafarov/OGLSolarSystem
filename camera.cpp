@@ -205,7 +205,7 @@ void Camera::moveBackward(void)
 	vectorAdd(position, tempVector);
 }
 
-// slide left
+// slide the camera left
 void Camera::slideLeft(void)
 {
 	float tempVector[3];
@@ -218,7 +218,7 @@ void Camera::slideLeft(void)
 	vectorAdd(position, tempVector);
 }
 
-// slide right
+// slide the camera right
 void Camera::slideRight(void)
 {
 	float tempVector[3];
@@ -283,7 +283,7 @@ void Camera::pitchDown(void)
 	vectorCopy(upVector, tempVector);
 }
 
-// yaw left
+// yaw the camera left
 void Camera::yawLeft(void)
 {
 	float tempVector[3];
@@ -296,7 +296,7 @@ void Camera::yawLeft(void)
 	vectorCopy(rightVector, tempVector);
 }
 
-// yaw right
+// yaw the camera right
 void Camera::yawRight(void)
 {
 	float tempVector[3];

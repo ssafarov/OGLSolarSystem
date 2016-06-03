@@ -3,7 +3,7 @@ See LICENSE.TXT*/
 
 // Sergey Safarov
 
-#define _CRT_SECURE_NO_DEPRECATE
+//#define _CRT_SECURE_NO_DEPRECATE
 
 #include "texture.h"
 #include <cstdio>

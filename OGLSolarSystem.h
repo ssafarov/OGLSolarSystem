@@ -4,6 +4,9 @@
 #include <GL\glut.h>
 #include <vector>
 
+#include "camera.h"
+#include "texture.h"
+
 
 namespace OGLSolarSystem {
 
@@ -22,6 +25,10 @@ namespace OGLSolarSystem {
 		public:
 			HDC		hDC;	// Private GDI Device Context
 			HGLRC	hRC;	// Get handle to panel on form and call initialization function
+							
+			Camera* camera;	// The instance of the camera
+
+
 
 		OGLSolarSystem(void)
 		{
@@ -32,15 +39,14 @@ namespace OGLSolarSystem {
 			HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
 			initializeOpenGL(GetDC(hWnd));
 			initOpenGL();
-			//
-			//TODO: Add the constructor code here
-			//
 		}
 
-		void Render()
+		void Render(void)
 		{
 			glLoadIdentity();
+			// clear the buffers
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glColor3f(1.0, 1.0, 1.0);
 
 			DrawUniverse();
 
@@ -68,23 +74,58 @@ namespace OGLSolarSystem {
 		private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
 		private: System::Windows::Forms::Panel^  pControls;
 		private: System::Windows::Forms::Panel^  pMainOGLViewport;
+		private: System::Windows::Forms::NumericUpDown^  nudParamsTimeScale;
+		private: System::Windows::Forms::NumericUpDown^  nudParamsDistanceScale;
 
-		private: System::Windows::Forms::NumericUpDown^  nudgpTimeScale;
-		private: System::Windows::Forms::NumericUpDown^  numericUpDown1;
-		private: System::Windows::Forms::CheckBox^  cbgpShowOrbits;
+		private: System::Windows::Forms::CheckBox^  cbParamsShowOrbits;
+
 		private: System::Windows::Forms::Label^  lGlobalParams;
 		private: System::Windows::Forms::Label^  lCurrentDateTimeTitle;
 		private: System::Windows::Forms::Label^  lCurrentDateTime;
 		private: System::Windows::Forms::Label^  lCross;
-		private: System::Windows::Forms::Label^  lgpTimeScale;
-		private: System::Windows::Forms::Label^  label1;
+		private: System::Windows::Forms::Label^  lParamsTimeScale;
+		private: System::Windows::Forms::Label^  lParamsDistanceScale;
+
 		private: System::Windows::Forms::Label^  label2;
 		private: System::Windows::Forms::Timer^  timer1;
 
 		private:
+			// These control the simulation of time
+			double time;
+			double timeSpeed;
+
+			// Toggles drawn of the orbits
+			bool showOrbits = true;
+
+			Texture* stars = new Texture("images/stars.tga");
+
+			ref struct ControlStates
+			{
+				bool forward, backward, left, right, yawLeft, yawRight, pitchUp,
+					pitchDown, rollLeft, rollRight;
+			} controls;
+
 			bool initializeOpenGL(HDC hdc)
 			{
 				hDC = hdc;
+
+
+				// set up time
+				this->time = 2.552f;
+				this->timeSpeed = 0.1f;
+
+				// reset controls
+				this->controls.forward = false;
+				this->controls.backward = false;
+				this->controls.left = false;
+				this->controls.right = false;
+				this->controls.rollRight = false;
+				this->controls.rollLeft = false;
+				this->controls.pitchDown = false;
+				this->controls.pitchUp = false;
+				this->controls.yawLeft = false;
+				this->controls.yawRight = false;
+
 
 				PIXELFORMATDESCRIPTOR pfd = {
 					sizeof(PIXELFORMATDESCRIPTOR),    // size of this pfd 
@@ -170,44 +211,41 @@ namespace OGLSolarSystem {
 				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
 				//glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
 
-				return TRUE;										// Initialization Went OK
+				return TRUE;										// Initialization went OK
 			}
 
 			void DrawUniverse(void)
 			{
+				// draw the box with stars
+				glBindTexture(GL_TEXTURE_2D, this->stars->getTextureHandle());
+
 				glBegin(GL_QUADS);
 				// new face
-				glColor3ub(153, 234, 19);
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
 				// new face
-				glColor3ub(253, 184, 109);
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
 				// new face
-				glColor3ub(213, 124, 109);
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
 				// new face
-				glColor3ub(53, 84, 209);
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
 				// new face
-				glColor3ub(200, 14, 19);
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
 				// new face
-				glColor3ub(123, 14, 209);
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
@@ -237,12 +275,12 @@ namespace OGLSolarSystem {
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pControls = (gcnew System::Windows::Forms::Panel());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->numericUpDown1 = (gcnew System::Windows::Forms::NumericUpDown());
+			this->lParamsDistanceScale = (gcnew System::Windows::Forms::Label());
+			this->nudParamsDistanceScale = (gcnew System::Windows::Forms::NumericUpDown());
 			this->lCross = (gcnew System::Windows::Forms::Label());
-			this->lgpTimeScale = (gcnew System::Windows::Forms::Label());
-			this->nudgpTimeScale = (gcnew System::Windows::Forms::NumericUpDown());
-			this->cbgpShowOrbits = (gcnew System::Windows::Forms::CheckBox());
+			this->lParamsTimeScale = (gcnew System::Windows::Forms::Label());
+			this->nudParamsTimeScale = (gcnew System::Windows::Forms::NumericUpDown());
+			this->cbParamsShowOrbits = (gcnew System::Windows::Forms::CheckBox());
 			this->lGlobalParams = (gcnew System::Windows::Forms::Label());
 			this->pMainOGLViewport = (gcnew System::Windows::Forms::Panel());
 			this->lCurrentDateTimeTitle = (gcnew System::Windows::Forms::Label());
@@ -250,8 +288,8 @@ namespace OGLSolarSystem {
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->menuStripMain->SuspendLayout();
 			this->pControls->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudgpTimeScale))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsDistanceScale))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsTimeScale))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menuStripMain
@@ -299,12 +337,12 @@ namespace OGLSolarSystem {
 				| System::Windows::Forms::AnchorStyles::Left));
 			this->pControls->AutoScroll = true;
 			this->pControls->Controls->Add(this->label2);
-			this->pControls->Controls->Add(this->label1);
-			this->pControls->Controls->Add(this->numericUpDown1);
+			this->pControls->Controls->Add(this->lParamsDistanceScale);
+			this->pControls->Controls->Add(this->nudParamsDistanceScale);
 			this->pControls->Controls->Add(this->lCross);
-			this->pControls->Controls->Add(this->lgpTimeScale);
-			this->pControls->Controls->Add(this->nudgpTimeScale);
-			this->pControls->Controls->Add(this->cbgpShowOrbits);
+			this->pControls->Controls->Add(this->lParamsTimeScale);
+			this->pControls->Controls->Add(this->nudParamsTimeScale);
+			this->pControls->Controls->Add(this->cbParamsShowOrbits);
 			this->pControls->Controls->Add(this->lGlobalParams);
 			this->pControls->Location = System::Drawing::Point(0, 27);
 			this->pControls->Name = L"pControls";
@@ -320,22 +358,22 @@ namespace OGLSolarSystem {
 			this->label2->TabIndex = 53;
 			this->label2->Text = L"x / 10 000 000";
 			// 
-			// label1
+			// lParamsDistanceScale
 			// 
-			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(47, 87);
-			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(83, 13);
-			this->label1->TabIndex = 52;
-			this->label1->Text = L"Distance scale :";
+			this->lParamsDistanceScale->AutoSize = true;
+			this->lParamsDistanceScale->Location = System::Drawing::Point(47, 87);
+			this->lParamsDistanceScale->Name = L"lParamsDistanceScale";
+			this->lParamsDistanceScale->Size = System::Drawing::Size(83, 13);
+			this->lParamsDistanceScale->TabIndex = 52;
+			this->lParamsDistanceScale->Text = L"Distance scale :";
 			// 
-			// numericUpDown1
+			// nudParamsDistanceScale
 			// 
-			this->numericUpDown1->Location = System::Drawing::Point(136, 85);
-			this->numericUpDown1->Name = L"numericUpDown1";
-			this->numericUpDown1->Size = System::Drawing::Size(47, 20);
-			this->numericUpDown1->TabIndex = 51;
-			this->numericUpDown1->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->nudParamsDistanceScale->Location = System::Drawing::Point(136, 85);
+			this->nudParamsDistanceScale->Name = L"nudParamsDistanceScale";
+			this->nudParamsDistanceScale->Size = System::Drawing::Size(47, 20);
+			this->nudParamsDistanceScale->TabIndex = 51;
+			this->nudParamsDistanceScale->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			// 
 			// lCross
 			// 
@@ -346,34 +384,34 @@ namespace OGLSolarSystem {
 			this->lCross->TabIndex = 50;
 			this->lCross->Text = L"x";
 			// 
-			// lgpTimeScale
+			// lParamsTimeScale
 			// 
-			this->lgpTimeScale->AutoSize = true;
-			this->lgpTimeScale->Location = System::Drawing::Point(16, 61);
-			this->lgpTimeScale->Name = L"lgpTimeScale";
-			this->lgpTimeScale->Size = System::Drawing::Size(114, 13);
-			this->lgpTimeScale->TabIndex = 49;
-			this->lgpTimeScale->Text = L"Time scale slowdown :";
+			this->lParamsTimeScale->AutoSize = true;
+			this->lParamsTimeScale->Location = System::Drawing::Point(16, 61);
+			this->lParamsTimeScale->Name = L"lParamsTimeScale";
+			this->lParamsTimeScale->Size = System::Drawing::Size(114, 13);
+			this->lParamsTimeScale->TabIndex = 49;
+			this->lParamsTimeScale->Text = L"Time scale slowdown :";
 			// 
-			// nudgpTimeScale
+			// nudParamsTimeScale
 			// 
-			this->nudgpTimeScale->Location = System::Drawing::Point(136, 59);
-			this->nudgpTimeScale->Name = L"nudgpTimeScale";
-			this->nudgpTimeScale->Size = System::Drawing::Size(47, 20);
-			this->nudgpTimeScale->TabIndex = 48;
-			this->nudgpTimeScale->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->nudParamsTimeScale->Location = System::Drawing::Point(136, 59);
+			this->nudParamsTimeScale->Name = L"nudParamsTimeScale";
+			this->nudParamsTimeScale->Size = System::Drawing::Size(47, 20);
+			this->nudParamsTimeScale->TabIndex = 48;
+			this->nudParamsTimeScale->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			// 
-			// cbgpShowOrbits
+			// cbParamsShowOrbits
 			// 
-			this->cbgpShowOrbits->AutoSize = true;
-			this->cbgpShowOrbits->Checked = true;
-			this->cbgpShowOrbits->CheckState = System::Windows::Forms::CheckState::Checked;
-			this->cbgpShowOrbits->Location = System::Drawing::Point(15, 36);
-			this->cbgpShowOrbits->Name = L"cbgpShowOrbits";
-			this->cbgpShowOrbits->Size = System::Drawing::Size(81, 17);
-			this->cbgpShowOrbits->TabIndex = 3;
-			this->cbgpShowOrbits->Text = L"Show orbits";
-			this->cbgpShowOrbits->UseVisualStyleBackColor = true;
+			this->cbParamsShowOrbits->AutoSize = true;
+			this->cbParamsShowOrbits->Checked = true;
+			this->cbParamsShowOrbits->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->cbParamsShowOrbits->Location = System::Drawing::Point(15, 36);
+			this->cbParamsShowOrbits->Name = L"cbParamsShowOrbits";
+			this->cbParamsShowOrbits->Size = System::Drawing::Size(81, 17);
+			this->cbParamsShowOrbits->TabIndex = 3;
+			this->cbParamsShowOrbits->Text = L"Show orbits";
+			this->cbParamsShowOrbits->UseVisualStyleBackColor = true;
 			// 
 			// lGlobalParams
 			// 
@@ -437,11 +475,10 @@ namespace OGLSolarSystem {
 			this->menuStripMain->PerformLayout();
 			this->pControls->ResumeLayout(false);
 			this->pControls->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudgpTimeScale))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsDistanceScale))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsTimeScale))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
-
 		}
 #pragma endregion
 		private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
