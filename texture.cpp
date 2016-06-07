@@ -3,14 +3,13 @@ See LICENSE.TXT*/
 
 // Sergey Safarov
 
-//#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_DEPRECATE
 
 #include "texture.h"
-#include <cstdio>
-#include <cstdlib>
-
 #include <Windows.h>
 #include <GL\glut.h>
+#include <cstdio>
+#include <cstdlib>
 
 // define the header structure for
 // loading the TGA header info.
@@ -33,7 +32,7 @@ struct TGAHeader {
 
 Texture::Texture(char* imagePath)
 {
-	FILE* file = NULL;	// the file handle
+	FILE * ptrFile;		// Texture file handle
 	TGAHeader header;	// structure for the header info
 	char* pixels, *buffer;
 
@@ -43,10 +42,12 @@ Texture::Texture(char* imagePath)
 	char pixel[4];
 
 	// open the file
-	file = fopen(imagePath, "rb");
+	if ((ptrFile = fopen(imagePath, "rb")) == NULL) {
+		exit(1);
+	}
 
 	// read the header
-	fread(&header, 18, 1, file);
+	fread(&header, 18, 1, ptrFile);
 
 	bytespp = header.bpp / 8; // bytes per pixel
 
@@ -56,11 +57,11 @@ Texture::Texture(char* imagePath)
 	if (header.type == 2)
 	{
 		// seek to the start of the data
-		fseek(file, header.map_start + header.map_length * bytespp + 18, SEEK_SET);
+		fseek(ptrFile, header.map_start + header.map_length * bytespp + 18, SEEK_SET);
 
 		// read the pixel data into a buffer
 		buffer = (char*)malloc(bytespp * header.width * header.height);
-		fread(buffer, bytespp, header.width * header.height, file);
+		fread(buffer, bytespp, header.width * header.height, ptrFile);
 
 		// plot the pixel data into pixels buffer
 		for (c = 0; c < header.width; c++)	// count up columns
@@ -89,27 +90,27 @@ Texture::Texture(char* imagePath)
 	else if (header.type == 10)	// run length encoded, non color mapped rgb
 	{
 		// find the start of the data
-		fseek(file, header.map_start + header.map_length * bytespp + 18, SEEK_SET);
+		fseek(ptrFile, header.map_start + header.map_length * bytespp + 18, SEEK_SET);
 
 		c = 0; r = header.height - 1; // start at the top left
 									  // work through the bitmap
 		while (r >= 0)
 		{
 			// read in the packet header
-			fread(&packet_header, sizeof(packet_header), 1, file);
+			fread(&packet_header, sizeof(packet_header), 1, ptrFile);
 
 			// find the number of reps
 			n = packet_header & 0x7F;
 
 			*((int*)pixel) = 0;
 			if (n != packet_header) // if bit = 1, the next pixel repeated N times
-				fread(&pixel, bytespp, 1, file);
+				fread(&pixel, bytespp, 1, ptrFile);
 
 			// loop n times
 			for (i = 0; i < n + 1; i++)
 			{
 				if (n == packet_header) // if bit = 0, N individual pixels
-					fread(&pixel, bytespp, 1, file);
+					fread(&pixel, bytespp, 1, ptrFile);
 
 				if (bytespp == 4)
 				{
@@ -142,7 +143,7 @@ Texture::Texture(char* imagePath)
 		}
 	}
 	// close the file
-	fclose(file);
+	fclose(ptrFile);
 
 	// create an OpenGL texture
 	glGenTextures(1, &textureHandle);

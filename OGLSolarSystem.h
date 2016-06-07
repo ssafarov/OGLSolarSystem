@@ -97,7 +97,7 @@ namespace OGLSolarSystem {
 			// Toggles drawn of the orbits
 			bool showOrbits = true;
 
-			Texture* stars = new Texture("images/stars.tga");
+			Texture* stars = new Texture("images\\stars.tga");
 
 			ref struct ControlStates
 			{
