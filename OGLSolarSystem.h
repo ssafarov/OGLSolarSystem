@@ -1,11 +1,12 @@
 #pragma once
 
 #include <Windows.h>
+
 #include <GL\glut.h>
 #include <vector>
 
-#include "camera.h"
 #include "texture.h"
+#include "camera.h"
 
 
 namespace OGLSolarSystem {
@@ -26,9 +27,7 @@ namespace OGLSolarSystem {
 			HDC		hDC;	// Private GDI Device Context
 			HGLRC	hRC;	// Get handle to panel on form and call initialization function
 							
-			Camera* camera;	// The instance of the camera
-
-
+			Camera  *camera;	// The instance of the camera
 
 		OGLSolarSystem(void)
 		{
@@ -37,8 +36,8 @@ namespace OGLSolarSystem {
 			//TODO: Add the constructor code here
 			//
 			HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
-			initializeOpenGL(GetDC(hWnd));
-			initOpenGL();
+			_initializeOpenGL(GetDC(hWnd));
+			_initOpenGL();
 		}
 
 		void Render(void)
@@ -48,7 +47,7 @@ namespace OGLSolarSystem {
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glColor3f(1.0, 1.0, 1.0);
 
-			DrawUniverse();
+			this->_drawUniverse();
 
 			SwapBuffers(hDC);
 		}
@@ -97,20 +96,19 @@ namespace OGLSolarSystem {
 			// Toggles drawn of the orbits
 			bool showOrbits = true;
 
-			Texture* stars = new Texture("images\\stars.tga");
+			Texture *stars = new Texture("textures/\stars.tga");
 
 			ref struct ControlStates
 			{
-				bool forward, backward, left, right, yawLeft, yawRight, pitchUp,
-					pitchDown, rollLeft, rollRight;
+				bool forward, backward, left, right, yawLeft, yawRight, pitchUp, pitchDown, rollLeft, rollRight;
 			} controls;
 
-			bool initializeOpenGL(HDC hdc)
+			bool _initializeOpenGL(HDC hdc)
 			{
 				hDC = hdc;
 
 
-				// set up time
+				// set up time scales
 				this->time = 2.552f;
 				this->timeSpeed = 0.1f;
 
@@ -126,26 +124,26 @@ namespace OGLSolarSystem {
 				this->controls.yawLeft = false;
 				this->controls.yawRight = false;
 
-
+				// Set the pixel format description
 				PIXELFORMATDESCRIPTOR pfd = {
-					sizeof(PIXELFORMATDESCRIPTOR),    // size of this pfd 
-					1,                                // version number 
-					PFD_DRAW_TO_WINDOW |              // support window 
-					PFD_SUPPORT_OPENGL |              // support OpenGL 
-					PFD_DOUBLEBUFFER,                 // double buffered 
-					PFD_TYPE_RGBA,                    // RGBA type 
-					24,                               // 24-bit color depth 
-					0, 0, 0, 0, 0, 0,                 // color bits ignored 
-					0,                                // no alpha buffer 
-					0,                                // shift bit ignored 
-					0,                                // no accumulation buffer 
-					0, 0, 0, 0,                       // ignored bits
-					32,                               // 32-bit z-buffer     
-					0,                                // no stencil buffer 
-					0,                                // no auxiliary buffer 
-					PFD_MAIN_PLANE,                   // main layer 
-					0,                                // reserved 
-					0, 0, 0                           // layer masks ignored 
+					sizeof(PIXELFORMATDESCRIPTOR),  // size of this pixel format description 
+					1,								// version number 
+					PFD_DRAW_TO_WINDOW |            // support window 
+					PFD_SUPPORT_OPENGL |            // support OpenGL 
+					PFD_DOUBLEBUFFER,               // double buffered 
+					PFD_TYPE_RGBA,                  // RGBA type 
+					24,                             // 24-bit color depth 
+					0, 0, 0, 0, 0, 0,               // color bits ignored 
+					0,                              // no alpha buffer 
+					0,                              // shift bit ignored 
+					0,                              // no accumulation buffer 
+					0, 0, 0, 0,                     // ignored bits
+					32,                             // 32-bit z-buffer     
+					0,                              // no stencil buffer 
+					0,                              // no auxiliary buffer 
+					PFD_MAIN_PLANE,                 // main layer 
+					0,                              // reserved 
+					0, 0, 0                         // layer masks ignored 
 				};
 
 				int iPixelFormat = ChoosePixelFormat(hDC, &pfd);
@@ -174,14 +172,14 @@ namespace OGLSolarSystem {
 				return true;
 			}
 
-			int initOpenGL(GLvoid)
+			int _initOpenGL(GLvoid)
 			{
 				// Initialization
 				glEnable(GL_TEXTURE_2D);				// Enable Texture Mapping
 				glShadeModel(GL_SMOOTH);				// Enable Smooth Shading
 				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	// Black Background
 
-				// lighting set up
+				// Set up lights
 				glEnable(GL_LIGHT0);
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
@@ -201,51 +199,52 @@ namespace OGLSolarSystem {
 				glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
 				glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
 
-				//glEnable(GL_LIGHTING);
-				//glEnable(GL_LIGHT0);
-				//glDisable(GL_LIGHTING);
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
+				glDisable(GL_LIGHTING);
 
 				glClearDepth(1.0f);									// Depth Buffer Setup
-				//glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
+				glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
 				glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
 				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
-				//glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
+				glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
 
 				return TRUE;										// Initialization went OK
 			}
 
-			void DrawUniverse(void)
+			void _drawUniverse(void)
 			{
-				// draw the box with stars
+				glBegin(GL_QUADS);
+
+				// draw the box with stars on the sides
 				glBindTexture(GL_TEXTURE_2D, this->stars->getTextureHandle());
 
-				glBegin(GL_QUADS);
-				// new face
+				// side 1 
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-				// new face
+				// side 2
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-				// new face
+				// side 3
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-				// new face
+				// side 4
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-				// new face
+				// side 5
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-				// new face
+				// side 6
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
