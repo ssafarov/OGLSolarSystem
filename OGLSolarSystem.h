@@ -36,7 +36,7 @@ namespace OGLSolarSystem {
 			//TODO: Add the constructor code here
 			//
 			HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
-			_initializeOpenGL(GetDC(hWnd));
+			_initializeSystem(GetDC(hWnd));
 			_initOpenGL();
 		}
 
@@ -122,7 +122,7 @@ namespace OGLSolarSystem {
 				bool forward, backward, left, right, yawLeft, yawRight, pitchUp, pitchDown, rollLeft, rollRight;
 			} controls;
 
-			bool _initializeOpenGL(HDC hdc)
+			bool _initializeSystem(HDC hdc)
 			{
 				hDC = hdc;
 
@@ -267,6 +267,26 @@ namespace OGLSolarSystem {
 
 				// Initialization went OK
 				return TRUE;								
+			}
+
+			void _resize(int width, int height)
+			{
+				if (height <= 0)
+					height = 1;
+
+				int aspectratio = width / height;
+
+				glViewport(0, 0, width, height);
+
+				glMatrixMode(GL_PROJECTION);
+
+				glLoadIdentity();
+
+				gluPerspective(45.0f, aspectratio, 0.2f, 255.0f);
+
+				glMatrixMode(GL_MODELVIEW);
+
+				glLoadIdentity();
 			}
 
 			void _drawUniverse(void)
