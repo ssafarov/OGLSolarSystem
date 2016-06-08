@@ -96,7 +96,20 @@ namespace OGLSolarSystem {
 			// Toggles drawn of the orbits
 			bool showOrbits = true;
 
-			Texture *stars;
+			Texture *_starsTexture;
+			Texture *_sunTexture;
+			Texture *_mercuryTexture;
+			Texture *_venusTexture;
+			Texture *_earthTexture;
+			Texture *_moonTexture1;
+			Texture *_moonTexture2;
+			Texture *_moonTexture3;
+			Texture *_marsTexture;
+			Texture *_saturnTexture;
+			Texture *_jupiterTexture;
+			Texture *_neptuneTexture;
+			Texture *_uranusTexture;
+			Texture *_plutoTexture;
 
 			ref struct ControlStates
 			{
@@ -211,16 +224,48 @@ namespace OGLSolarSystem {
 								
 				// Initialize and load textures
 				// Begin from the Universe
-				this->stars = new Texture("textures/\stars.tga");
+				this->_starsTexture = new Texture("textures/\stars.tga");
 
-				return TRUE;										// Initialization went OK
+				//@todo It need to be makes all textures load inside it`s own classes
+				// Load Sun texture
+				this->_sunTexture = new Texture("textures/\sun.tga");
+
+				/*
+				// Load Mercury texture
+				this->_mercuryTexture = new Texture("textures/\mercury.tga");
+				// Load Venus texture
+				this->_venusTexture = new Texture("textures/\venus.tga");
+				// Load Earth texture
+				this->_earthTexture = new Texture("textures/\earth.tga");
+				// Load Mars texture
+				this->_marsTexture = new Texture("textures/\mars.tga");
+				// Load Saturn texture
+				this->_saturnTexture = new Texture("textures/\saturn.tga");
+				// Load Jupiter texture
+				this->_jupiterTexture = new Texture("textures/\jupiter.tga");
+				// Load Neptune texture
+				this->_neptuneTexture = new Texture("textures/\neptune.tga");
+				// Load Neptune texture
+				this->_uranusTexture = new Texture("textures/\uranus.tga");
+				// Load Pluto texture
+				this->_plutoTexture = new Texture("textures/\pluto.tga");
+				// Load Moon 1 texture
+				this->_moonTexture1 = new Texture("textures/\moon.tga");
+				// Load Moon 2 texture
+				this->_moonTexture2 = new Texture("textures/\moon.tga");
+				// Load Moon 3 texture
+				this->_moonTexture3 = new Texture("textures/\moon.tga");
+				*/
+
+				// Initialization went OK
+				return TRUE;								
 			}
 
 			void _drawUniverse(void)
 			{
 
 				// Draw the box with stars on the sides
-				glBindTexture(GL_TEXTURE_2D, this->stars->getTextureHandle());
+				glBindTexture(GL_TEXTURE_2D, this->_starsTexture->getTextureHandle());
 
 				glBegin(GL_QUADS);
 				// Side 1 
@@ -473,7 +518,7 @@ namespace OGLSolarSystem {
 			this->MainMenuStrip = this->menuStripMain;
 			this->Name = L"OGLSolarSystem";
 			this->Text = L"OGLSolarSystem";
-			this->Load += gcnew System::EventHandler(this, &OGLSolarSystem::OGLSolarSystem_Load);
+			this->Resize += gcnew System::EventHandler(this, &OGLSolarSystem::OGLSolarSystem_Resize);
 			this->menuStripMain->ResumeLayout(false);
 			this->menuStripMain->PerformLayout();
 			this->pControls->ResumeLayout(false);
@@ -487,8 +532,8 @@ namespace OGLSolarSystem {
 		private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			Application::Exit();
 		}
-		private: System::Void OGLSolarSystem_Load(System::Object^  sender, System::EventArgs^  e) {
-
+		private: System::Void OGLSolarSystem_Resize(System::Object^  sender, System::EventArgs^  e) {
+			Render();
 		}
 		private: System::Void pMainOGLViewport_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
 			Render();
