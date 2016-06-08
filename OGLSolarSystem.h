@@ -96,7 +96,7 @@ namespace OGLSolarSystem {
 			// Toggles drawn of the orbits
 			bool showOrbits = true;
 
-			Texture *stars = new Texture("textures/\stars.tga");
+			Texture *stars;
 
 			ref struct ControlStates
 			{
@@ -179,7 +179,7 @@ namespace OGLSolarSystem {
 				glShadeModel(GL_SMOOTH);				// Enable Smooth Shading
 				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	// Black Background
 
-				// Set up lights
+				// Set up lights and materials
 				glEnable(GL_LIGHT0);
 				glMatrixMode(GL_MODELVIEW);
 				glLoadIdentity();
@@ -208,43 +208,47 @@ namespace OGLSolarSystem {
 				glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
 				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
 				glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
+								
+				// Initialize and load textures
+				// Begin from the Universe
+				this->stars = new Texture("textures/\stars.tga");
 
 				return TRUE;										// Initialization went OK
 			}
 
 			void _drawUniverse(void)
 			{
-				glBegin(GL_QUADS);
 
-				// draw the box with stars on the sides
+				// Draw the box with stars on the sides
 				glBindTexture(GL_TEXTURE_2D, this->stars->getTextureHandle());
 
-				// side 1 
+				glBegin(GL_QUADS);
+				// Side 1 
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-				// side 2
+				// Side 2
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-				// side 3
+				// Side 3
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-				// side 4
+				// Side 4
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-				// side 5
+				// Side 5
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
 				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-				// side 6
+				// Side 6
 				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
 				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
