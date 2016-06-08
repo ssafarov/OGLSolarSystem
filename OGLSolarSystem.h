@@ -52,6 +52,12 @@ namespace OGLSolarSystem {
 			SwapBuffers(hDC);
 		}
 
+		void OGLShutdown(void)
+		{
+			wglMakeCurrent(hDC, NULL);		// release current device context
+			wglDeleteContext(hRC);		// delete rendering context
+		}
+
 		protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -187,6 +193,9 @@ namespace OGLSolarSystem {
 
 			int _initOpenGL(GLvoid)
 			{
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+
 				// Initialization
 				glEnable(GL_TEXTURE_2D);				// Enable Texture Mapping
 				glShadeModel(GL_SMOOTH);				// Enable Smooth Shading
@@ -194,8 +203,7 @@ namespace OGLSolarSystem {
 
 				// Set up lights and materials
 				glEnable(GL_LIGHT0);
-				glMatrixMode(GL_MODELVIEW);
-				glLoadIdentity();
+
 				GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
 				GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
 				GLfloat matShininess[] = { 20.0 };
@@ -530,6 +538,7 @@ namespace OGLSolarSystem {
 		}
 #pragma endregion
 		private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			OGLShutdown();
 			Application::Exit();
 		}
 		private: System::Void OGLSolarSystem_Resize(System::Object^  sender, System::EventArgs^  e) {
