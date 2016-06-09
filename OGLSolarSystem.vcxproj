@@ -136,6 +136,7 @@
     <ClCompile Include="planet.cpp" />
     <ClCompile Include="satellite.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="solarsystem.cpp" />
     <ClCompile Include="texture.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +147,7 @@
     </ClInclude>
     <ClInclude Include="planet.h" />
     <ClInclude Include="satellite.h" />
+    <ClInclude Include="solarsystem.h" />
     <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>

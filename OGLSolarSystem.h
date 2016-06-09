@@ -5,8 +5,10 @@
 #include <GL\glut.h>
 #include <vector>
 
+
 #include "texture.h"
 #include "camera.h"
+#include "solarsystem.h"
 
 
 namespace OGLSolarSystem {
@@ -24,39 +26,37 @@ namespace OGLSolarSystem {
 	public ref class OGLSolarSystem : public System::Windows::Forms::Form
 	{
 		public:
-			HDC		hDC;	// Private GDI Device Context
-			HGLRC	hRC;	// Get handle to panel on form and call initialization function
-							
 			Camera  *camera;	// The instance of the camera
+							
+			OGLSolarSystem(void)
+			{
+				InitializeComponent();
+				//
+				//TODO: Add the constructor code here
+				//
+				HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
+				this->_initializeSystem(GetDC(hWnd));
+				this->_initOpenGL();
+			}
 
-		OGLSolarSystem(void)
-		{
-			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
-			HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
-			_initializeSystem(GetDC(hWnd));
-			_initOpenGL();
-		}
+			void Render(void)
+			{
+				glLoadIdentity();
+				// clear the buffers
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				glColor3f(1.0, 1.0, 1.0);
 
-		void Render(void)
-		{
-			glLoadIdentity();
-			// clear the buffers
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			glColor3f(1.0, 1.0, 1.0);
+				this->_resize(pMainOGLViewport->Width, pMainOGLViewport->Height);
+				this->_drawUniverse();
 
-			this->_drawUniverse();
+				SwapBuffers(this->_hDC);
+			}
 
-			SwapBuffers(hDC);
-		}
-
-		void OGLShutdown(void)
-		{
-			wglMakeCurrent(hDC, NULL);		// release current device context
-			wglDeleteContext(hRC);		// delete rendering context
-		}
+			void OGLShutdown(void)
+			{
+				wglMakeCurrent(this->_hDC, NULL);	// release current device context
+				wglDeleteContext(this->_hRC);		// delete rendering context
+			}
 
 		protected:
 		/// <summary>
@@ -64,10 +64,12 @@ namespace OGLSolarSystem {
 		/// </summary>
 		~OGLSolarSystem()
 		{
+			this->OGLShutdown();
 			if (components)
 			{
 				delete components;
 			}
+
 		}
 
 		private: System::ComponentModel::IContainer^  components;
@@ -95,12 +97,14 @@ namespace OGLSolarSystem {
 		private: System::Windows::Forms::Timer^  timer1;
 
 		private:
-			// These control the simulation of time
-			double time;
-			double timeSpeed;
+			HDC		_hDC;	// Private GDI Device Context
+			HGLRC	_hRC;	// Get handle to panel on form and call initialization function						
 
-			// Toggles drawn of the orbits
-			bool showOrbits = true;
+			// These control the simulation of time line and scale
+			double _timeScale;
+			double _timeSpeed;
+
+			bool _showOrbits = true;	// Toggles on and off drawn of the orbits
 
 			Texture *_starsTexture;
 			Texture *_sunTexture;
@@ -117,34 +121,35 @@ namespace OGLSolarSystem {
 			Texture *_uranusTexture;
 			Texture *_plutoTexture;
 
+			SolarSystem *_solarSystem; // The main instance of the solar system
+
+
 			ref struct ControlStates
 			{
 				bool forward, backward, left, right, yawLeft, yawRight, pitchUp, pitchDown, rollLeft, rollRight;
-			} controls;
+			} _controls;
 
 			bool _initializeSystem(HDC hdc)
 			{
-				hDC = hdc;
-
+				this->_hDC = hdc;
 
 				// set up time scales
-				this->time = 2.552f;
-				this->timeSpeed = 0.1f;
+				this->_timeScale = 2.552f;
+				this->_timeSpeed = 0.1f;
 
 				// reset controls
-				this->controls.forward = false;
-				this->controls.backward = false;
-				this->controls.left = false;
-				this->controls.right = false;
-				this->controls.rollRight = false;
-				this->controls.rollLeft = false;
-				this->controls.pitchDown = false;
-				this->controls.pitchUp = false;
-				this->controls.yawLeft = false;
-				this->controls.yawRight = false;
+				this->_controls.forward = false;
+				this->_controls.backward = false;
+				this->_controls.left = false;
+				this->_controls.right = false;
+				this->_controls.rollRight = false;
+				this->_controls.rollLeft = false;
+				this->_controls.pitchDown = false;
+				this->_controls.pitchUp = false;
+				this->_controls.yawLeft = false;
+				this->_controls.yawRight = false;
 
-				// Set the pixel format description
-				PIXELFORMATDESCRIPTOR pfd = {
+				PIXELFORMATDESCRIPTOR pfd = {		// Set the pixel format description
 					sizeof(PIXELFORMATDESCRIPTOR),  // size of this pixel format description 
 					1,								// version number 
 					PFD_DRAW_TO_WINDOW |            // support window 
@@ -165,25 +170,25 @@ namespace OGLSolarSystem {
 					0, 0, 0                         // layer masks ignored 
 				};
 
-				int iPixelFormat = ChoosePixelFormat(hDC, &pfd);
+				int iPixelFormat = ChoosePixelFormat(_hDC, &pfd);
 
 				if (iPixelFormat == 0) {
 					MessageBox::Show("ChoosePixelFormat Failed");
 					return false;
 				}
 
-				if (SetPixelFormat(hDC, iPixelFormat, &pfd) == FALSE) {
+				if (SetPixelFormat(_hDC, iPixelFormat, &pfd) == FALSE) {
 					MessageBox::Show("SetPixelFormat Failed");
 					return false;
 				}
 
-				wglDeleteContext(hRC);
-				hRC = wglCreateContext(hDC);
-				if (hRC == NULL) {
+				wglDeleteContext(_hRC);
+				_hRC = wglCreateContext(_hDC);
+				if (_hRC == NULL) {
 					MessageBox::Show("wglCreateContext Failed");
 					return false;
 				}
-				if (wglMakeCurrent(hDC, hRC) == NULL) {
+				if (wglMakeCurrent(_hDC, _hRC) == NULL) {
 					MessageBox::Show("wglMakeCurrent Failed");
 					return false;
 				}
@@ -278,15 +283,12 @@ namespace OGLSolarSystem {
 
 				glViewport(0, 0, width, height);
 
-				glMatrixMode(GL_PROJECTION);
-
-				glLoadIdentity();
-
-				gluPerspective(45.0f, aspectratio, 0.2f, 255.0f);
+				gluPerspective(90.0f, aspectratio, 0.1f, 255.0f);
 
 				glMatrixMode(GL_MODELVIEW);
 
 				glLoadIdentity();
+
 			}
 
 			void _drawUniverse(void)
@@ -557,8 +559,8 @@ namespace OGLSolarSystem {
 			this->PerformLayout();
 		}
 #pragma endregion
+
 		private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			OGLShutdown();
 			Application::Exit();
 		}
 		private: System::Void OGLSolarSystem_Resize(System::Object^  sender, System::EventArgs^  e) {
