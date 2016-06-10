@@ -33,6 +33,7 @@ void OGLSolarSystem::OGLSolarSystem::Render(void)
 	glColor3f(1.0, 1.0, 1.0);
 
 	_resize(pMainOGLViewport->Width, pMainOGLViewport->Height);
+
 	_drawUniverse();
 	_drawSolarSystem();
 
@@ -42,25 +43,9 @@ void OGLSolarSystem::OGLSolarSystem::Render(void)
 
 
 
-bool OGLSolarSystem::OGLSolarSystem::_initializeSystem(HDC hdc)
+bool OGLSolarSystem::OGLSolarSystem::_initializeContexts(HDC hdc)
 {
 	_hDC = hdc;
-
-	// set up time scales
-	_timeScale = 2.552f;
-	_timeSpeed = 0.1f;
-
-	// reset controls
-	_controls.forward = false;
-	_controls.backward = false;
-	_controls.left = false;
-	_controls.right = false;
-	_controls.rollRight = false;
-	_controls.rollLeft = false;
-	_controls.pitchDown = false;
-	_controls.pitchUp = false;
-	_controls.yawLeft = false;
-	_controls.yawRight = false;
 
 	PIXELFORMATDESCRIPTOR pfd = {		// Set the pixel format description
 		sizeof(PIXELFORMATDESCRIPTOR),  // size of this pixel format description 
@@ -148,8 +133,43 @@ int OGLSolarSystem::OGLSolarSystem::_initializeOpenGL(GLvoid)
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
 	glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
 
-														// Initialize and load textures
-														// Begin from the Universe
+	glLoadIdentity();
+	// clear the buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f(1.0, 1.0, 1.0);
+
+	// Initialization went OK
+	return TRUE;
+}
+
+void OGLSolarSystem::OGLSolarSystem::_initializeSystem(void)
+{
+	// Set up times
+	_timeScale = 2.552f;
+	_timeSpeed = 0.1f;
+
+	// Toggles on and off drawn of the orbits
+	_showOrbits = true;
+
+	// reset controls
+	_controls.forward = false;
+	_controls.backward = false;
+	_controls.left = false;
+	_controls.right = false;
+	_controls.rollRight = false;
+	_controls.rollLeft = false;
+	_controls.pitchDown = false;
+	_controls.pitchUp = false;
+	_controls.yawLeft = false;
+	_controls.yawRight = false;
+
+
+	// Initialize solar system instance
+	_solarSystem = new SolarSystem();
+
+	// Initialize and load textures
+	// Begin from the Universe
+
 	_starsTexture = new Texture("textures/\stars.tga");
 
 	//@todo It need to be makes all textures load inside it`s own classes
@@ -183,11 +203,7 @@ int OGLSolarSystem::OGLSolarSystem::_initializeOpenGL(GLvoid)
 	_moonTexture3 = new Texture("textures/\moon.tga");
 	*/
 
-	_solarSystem = new SolarSystem();
 
-
-	// Initialization went OK
-	return TRUE;
 }
 
 void OGLSolarSystem::OGLSolarSystem::_resize(int width, int height)
@@ -246,7 +262,8 @@ void OGLSolarSystem::OGLSolarSystem::_drawUniverse(void)
 void OGLSolarSystem::OGLSolarSystem::_drawSolarSystem(void)
 {
 	// Add all the planets with accurate data. Distance measured in km, time measured in earth days.
-	_solarSystem->addPlanet(0, 1, 500, 695500, _sunTexture->getTextureHandle()); // Sun
+	_solarSystem->addPlanet(0, 1, 500, 695500, _sunTexture->getTextureHandle());				// Sun
+	_solarSystem->addPlanet(57910000, 88, 58.6, 2439.7, _mercuryTexture->getTextureHandle());	// Mercury
 
 
 	_solarSystem->renderAll();

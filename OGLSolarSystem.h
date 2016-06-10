@@ -33,8 +33,9 @@ namespace OGLSolarSystem {
 				//TODO: Add the constructor code here
 				//
 				HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
-				_initializeSystem(GetDC(hWnd));
+				_initializeContexts(GetDC(hWnd));
 				_initializeOpenGL();
+				_initializeSystem();
 			}
 
 			void Render(void);
@@ -87,7 +88,7 @@ namespace OGLSolarSystem {
 			double _timeScale;
 			double _timeSpeed;
 
-			bool _showOrbits = true;	// Toggles on and off drawn of the orbits
+			bool _showOrbits;	
 
 			Texture* _starsTexture;
 			Texture* _sunTexture;
@@ -114,8 +115,10 @@ namespace OGLSolarSystem {
 			} _controls;
 
 			// Custom functions for solar system
-			bool _initializeSystem(HDC hdc);
+			bool _initializeContexts(HDC hdc);
 			int _initializeOpenGL(GLvoid);
+
+			void _initializeSystem(void);
 			void _resize(int width, int height);
 			void _drawUniverse(void);
 			void _drawSolarSystem(void);
