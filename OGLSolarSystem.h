@@ -25,9 +25,7 @@ namespace OGLSolarSystem {
 	/// </summary>
 	public ref class OGLSolarSystem : public System::Windows::Forms::Form
 	{
-		public:
-			Camera  *camera;	// The instance of the camera
-							
+		public:					
 			OGLSolarSystem(void)
 			{
 				InitializeComponent();
@@ -35,42 +33,27 @@ namespace OGLSolarSystem {
 				//TODO: Add the constructor code here
 				//
 				HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
-				this->_initializeSystem(GetDC(hWnd));
-				this->_initOpenGL();
+				_initializeSystem(GetDC(hWnd));
+				_initializeOpenGL();
 			}
 
-			void Render(void)
-			{
-				glLoadIdentity();
-				// clear the buffers
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-				glColor3f(1.0, 1.0, 1.0);
-
-				this->_resize(pMainOGLViewport->Width, pMainOGLViewport->Height);
-				this->_drawUniverse();
-
-				SwapBuffers(this->_hDC);
-			}
-
-			void OGLShutdown(void)
-			{
-				wglMakeCurrent(this->_hDC, NULL);	// release current device context
-				wglDeleteContext(this->_hRC);		// delete rendering context
-			}
+			void Render(void);
+			void OGLShutdown(void);
 
 		protected:
-		/// <summary>
-		/// Clean up any resources being used.
-		/// </summary>
-		~OGLSolarSystem()
-		{
-			this->OGLShutdown();
-			if (components)
+			/// <summary>
+			/// Clean up any resources being used.
+			/// </summary>
+			~OGLSolarSystem()
 			{
-				delete components;
-			}
+				OGLShutdown();
 
-		}
+				if (components)
+				{
+					delete components;
+				}
+
+			}
 
 		private: System::ComponentModel::IContainer^  components;
 		private: System::Windows::Forms::MenuStrip^  menuStripMain;
@@ -106,231 +89,33 @@ namespace OGLSolarSystem {
 
 			bool _showOrbits = true;	// Toggles on and off drawn of the orbits
 
-			Texture *_starsTexture;
-			Texture *_sunTexture;
-			Texture *_mercuryTexture;
-			Texture *_venusTexture;
-			Texture *_earthTexture;
-			Texture *_moonTexture1;
-			Texture *_moonTexture2;
-			Texture *_moonTexture3;
-			Texture *_marsTexture;
-			Texture *_saturnTexture;
-			Texture *_jupiterTexture;
-			Texture *_neptuneTexture;
-			Texture *_uranusTexture;
-			Texture *_plutoTexture;
+			Texture* _starsTexture;
+			Texture* _sunTexture;
+			Texture* _mercuryTexture;
+			Texture* _venusTexture;
+			Texture* _earthTexture;
+			Texture* _moonTexture1;
+			Texture* _moonTexture2;
+			Texture* _moonTexture3;
+			Texture* _marsTexture;
+			Texture* _saturnTexture;
+			Texture* _jupiterTexture;
+			Texture* _neptuneTexture;
+			Texture* _uranusTexture;
+			Texture* _plutoTexture;
 
-			SolarSystem *_solarSystem; // The main instance of the solar system
-
-
+			Camera* _camera;	// The instance of the camera
+			
 			ref struct ControlStates
 			{
 				bool forward, backward, left, right, yawLeft, yawRight, pitchUp, pitchDown, rollLeft, rollRight;
 			} _controls;
 
-			bool _initializeSystem(HDC hdc)
-			{
-				this->_hDC = hdc;
-
-				// set up time scales
-				this->_timeScale = 2.552f;
-				this->_timeSpeed = 0.1f;
-
-				// reset controls
-				this->_controls.forward = false;
-				this->_controls.backward = false;
-				this->_controls.left = false;
-				this->_controls.right = false;
-				this->_controls.rollRight = false;
-				this->_controls.rollLeft = false;
-				this->_controls.pitchDown = false;
-				this->_controls.pitchUp = false;
-				this->_controls.yawLeft = false;
-				this->_controls.yawRight = false;
-
-				PIXELFORMATDESCRIPTOR pfd = {		// Set the pixel format description
-					sizeof(PIXELFORMATDESCRIPTOR),  // size of this pixel format description 
-					1,								// version number 
-					PFD_DRAW_TO_WINDOW |            // support window 
-					PFD_SUPPORT_OPENGL |            // support OpenGL 
-					PFD_DOUBLEBUFFER,               // double buffered 
-					PFD_TYPE_RGBA,                  // RGBA type 
-					24,                             // 24-bit color depth 
-					0, 0, 0, 0, 0, 0,               // color bits ignored 
-					0,                              // no alpha buffer 
-					0,                              // shift bit ignored 
-					0,                              // no accumulation buffer 
-					0, 0, 0, 0,                     // ignored bits
-					32,                             // 32-bit z-buffer     
-					0,                              // no stencil buffer 
-					0,                              // no auxiliary buffer 
-					PFD_MAIN_PLANE,                 // main layer 
-					0,                              // reserved 
-					0, 0, 0                         // layer masks ignored 
-				};
-
-				int iPixelFormat = ChoosePixelFormat(_hDC, &pfd);
-
-				if (iPixelFormat == 0) {
-					MessageBox::Show("ChoosePixelFormat Failed");
-					return false;
-				}
-
-				if (SetPixelFormat(_hDC, iPixelFormat, &pfd) == FALSE) {
-					MessageBox::Show("SetPixelFormat Failed");
-					return false;
-				}
-
-				wglDeleteContext(_hRC);
-				_hRC = wglCreateContext(_hDC);
-				if (_hRC == NULL) {
-					MessageBox::Show("wglCreateContext Failed");
-					return false;
-				}
-				if (wglMakeCurrent(_hDC, _hRC) == NULL) {
-					MessageBox::Show("wglMakeCurrent Failed");
-					return false;
-				}
-
-				return true;
-			}
-
-			int _initOpenGL(GLvoid)
-			{
-				glMatrixMode(GL_PROJECTION);
-				glLoadIdentity();
-
-				// Initialization
-				glEnable(GL_TEXTURE_2D);				// Enable Texture Mapping
-				glShadeModel(GL_SMOOTH);				// Enable Smooth Shading
-				glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	// Black Background
-
-				// Set up lights and materials
-				glEnable(GL_LIGHT0);
-
-				GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
-				GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
-				GLfloat matShininess[] = { 20.0 };
-
-				glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
-				glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
-				glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
-
-				GLfloat lightAmbient[] = { 0.9, 0.8, 0.3, 1.0 };
-				GLfloat lightDiffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-				GLfloat lightSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
-
-				glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
-				glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
-				glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
-
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-				glDisable(GL_LIGHTING);
-
-				glClearDepth(1.0f);									// Depth Buffer Setup
-				glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-				glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-				glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
-				glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
-								
-				// Initialize and load textures
-				// Begin from the Universe
-				this->_starsTexture = new Texture("textures/\stars.tga");
-
-				//@todo It need to be makes all textures load inside it`s own classes
-				// Load Sun texture
-				this->_sunTexture = new Texture("textures/\sun.tga");
-
-				/*
-				// Load Mercury texture
-				this->_mercuryTexture = new Texture("textures/\mercury.tga");
-				// Load Venus texture
-				this->_venusTexture = new Texture("textures/\venus.tga");
-				// Load Earth texture
-				this->_earthTexture = new Texture("textures/\earth.tga");
-				// Load Mars texture
-				this->_marsTexture = new Texture("textures/\mars.tga");
-				// Load Saturn texture
-				this->_saturnTexture = new Texture("textures/\saturn.tga");
-				// Load Jupiter texture
-				this->_jupiterTexture = new Texture("textures/\jupiter.tga");
-				// Load Neptune texture
-				this->_neptuneTexture = new Texture("textures/\neptune.tga");
-				// Load Neptune texture
-				this->_uranusTexture = new Texture("textures/\uranus.tga");
-				// Load Pluto texture
-				this->_plutoTexture = new Texture("textures/\pluto.tga");
-				// Load Moon 1 texture
-				this->_moonTexture1 = new Texture("textures/\moon.tga");
-				// Load Moon 2 texture
-				this->_moonTexture2 = new Texture("textures/\moon.tga");
-				// Load Moon 3 texture
-				this->_moonTexture3 = new Texture("textures/\moon.tga");
-				*/
-
-				// Initialization went OK
-				return TRUE;								
-			}
-
-			void _resize(int width, int height)
-			{
-				if (height <= 0)
-					height = 1;
-
-				int aspectratio = width / height;
-
-				glViewport(0, 0, width, height);
-
-				gluPerspective(90.0f, aspectratio, 0.1f, 255.0f);
-
-				glMatrixMode(GL_MODELVIEW);
-
-				glLoadIdentity();
-
-			}
-
-			void _drawUniverse(void)
-			{
-
-				// Draw the box with stars on the sides
-				glBindTexture(GL_TEXTURE_2D, this->_starsTexture->getTextureHandle());
-
-				glBegin(GL_QUADS);
-				// Side 1 
-				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
-				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-				// Side 2
-				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-				// Side 3
-				glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-				glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-				// Side 4
-				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-				glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
-				glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-				// Side 5
-				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-				// Side 6
-				glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-				glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-				glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-				glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
-
-				glEnd();
-			}
+			// Custom functions for solar system
+			bool _initializeSystem(HDC hdc);
+			int _initializeOpenGL(GLvoid);
+			void _resize(int width, int height);
+			void _drawUniverse(void);
 
 			/// <summary>
 			/// Required designer variable.
