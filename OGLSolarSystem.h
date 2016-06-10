@@ -106,6 +106,8 @@ namespace OGLSolarSystem {
 
 			Camera* _camera;	// The instance of the camera
 			
+			SolarSystem* _solarSystem; // The main instance of the solar system
+
 			ref struct ControlStates
 			{
 				bool forward, backward, left, right, yawLeft, yawRight, pitchUp, pitchDown, rollLeft, rollRight;
@@ -116,6 +118,7 @@ namespace OGLSolarSystem {
 			int _initializeOpenGL(GLvoid);
 			void _resize(int width, int height);
 			void _drawUniverse(void);
+			void _drawSolarSystem(void);
 
 			/// <summary>
 			/// Required designer variable.

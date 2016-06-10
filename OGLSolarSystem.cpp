@@ -242,3 +242,13 @@ void OGLSolarSystem::OGLSolarSystem::_drawUniverse(void)
 
 	glEnd();
 }
+
+void OGLSolarSystem::OGLSolarSystem::_drawSolarSystem(void)
+{
+	// Add all the planets with accurate data. Distance measured in km, time measured in earth days.
+	_solarSystem->addPlanet(0, 1, 500, 695500, _sunTexture->getTextureHandle()); // Sun
+
+
+	_solarSystem->renderAll();
+
+}
