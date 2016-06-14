@@ -38,7 +38,7 @@ namespace OGLSolarSystem {
 				_initializeSystem();
 			}
 
-			void Render(void);
+			void OGLRender(void);
 			void OGLShutdown(void);
 
 		protected:
@@ -111,15 +111,14 @@ namespace OGLSolarSystem {
 
 			ref struct ControlStates
 			{
-				bool forward, backward, left, right, yawLeft, yawRight, pitchUp, pitchDown, rollLeft, rollRight;
+				bool moveForward, moveBackward, slideLeft, slideRight, yawLeft, yawRight, pitchUp, pitchDown, rollLeft, rollRight;
 			} _controls;
 
 			// Custom functions for solar system
 			bool _initializeContexts(HDC hdc);
 			int _initializeOpenGL(GLvoid);
-
 			void _initializeSystem(void);
-			void _resize(int width, int height);
+			void _setViewport(int width, int height);
 			void _drawUniverse(void);
 			void _drawSolarSystem(void);
 
@@ -355,15 +354,15 @@ namespace OGLSolarSystem {
 			Application::Exit();
 		}
 		private: System::Void OGLSolarSystem_Resize(System::Object^  sender, System::EventArgs^  e) {
-			Render();
+			OGLRender();
 		}
 		private: System::Void pMainOGLViewport_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
-			Render();
+			OGLRender();
 		}
 		private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 			UNREFERENCED_PARAMETER(sender);
 			UNREFERENCED_PARAMETER(e);
-			Render();
+			OGLRender();
 		}
 	};
 }

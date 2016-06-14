@@ -25,17 +25,31 @@ void OGLSolarSystem::OGLSolarSystem::OGLShutdown(void)
 }
 
 
-void OGLSolarSystem::OGLSolarSystem::Render(void)
+void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
 {
-	glLoadIdentity();
+	// update the logic and simulation
+	_timeScale += _timeSpeed;
+	_solarSystem->calculatePositions(_timeScale);
+
+	if (_controls.moveForward) _camera->moveForward();		if (_controls.moveBackward) _camera->moveBackward();
+	if (_controls.slideLeft) _camera->slideLeft();			if (_controls.slideRight) _camera->slideRight();
+	if (_controls.yawLeft) _camera->yawLeft();		if (_controls.yawRight) _camera->yawRight();
+	if (_controls.rollLeft) _camera->rollLeft();	if (_controls.rollRight) _camera->rollRight();
+	if (_controls.pitchUp) _camera->pitchUp();		if (_controls.pitchDown) _camera->pitchDown();
+
 	// clear the buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glColor3f(1.0, 1.0, 1.0);
 
-	_resize(pMainOGLViewport->Width, pMainOGLViewport->Height);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 
 	_drawUniverse();
+
 	_drawSolarSystem();
+
+	// perform the camera orientation transform
+	_setViewport(pMainOGLViewport->Width, pMainOGLViewport->Height);
 
 	SwapBuffers(_hDC);
 }
@@ -96,26 +110,25 @@ bool OGLSolarSystem::OGLSolarSystem::_initializeContexts(HDC hdc)
 
 int OGLSolarSystem::OGLSolarSystem::_initializeOpenGL(GLvoid)
 {
-	glMatrixMode(GL_PROJECTION);
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_SMOOTH);
+	glEnable(GL_TEXTURE_2D);
+
+	// set up lighting
+	glEnable(GL_LIGHTING);
+	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	// Initialization
-	glEnable(GL_TEXTURE_2D);				// Enable Texture Mapping
-	glShadeModel(GL_SMOOTH);				// Enable Smooth Shading
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);	// Black Background
-
-											// Set up lights and materials
-	glEnable(GL_LIGHT0);
-
 	GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
 	GLfloat matShininess[] = { 20.0 };
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glShadeModel(GL_SMOOTH);
 
 	glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
 	glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
 
-	GLfloat lightAmbient[] = { 0.9, 0.8, 0.3, 1.0 };
+	GLfloat lightAmbient[] = { 0.3, 0.3, 0.3, 1.0 };
 	GLfloat lightDiffuse[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat lightSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
 
@@ -126,17 +139,6 @@ int OGLSolarSystem::OGLSolarSystem::_initializeOpenGL(GLvoid)
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glDisable(GL_LIGHTING);
-
-	glClearDepth(1.0f);									// Depth Buffer Setup
-	glEnable(GL_DEPTH_TEST);							// Enables Depth Testing
-	glDepthFunc(GL_LEQUAL);								// The Type Of Depth Testing To Do
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculations
-	glColor4f(0.6f, 0.0f, 0.0f, 1.0);					// Full Brightness.  50% Alpha
-
-	glLoadIdentity();
-	// clear the buffers
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glColor3f(1.0, 1.0, 1.0);
 
 	// Initialization went OK
 	return TRUE;
@@ -152,10 +154,10 @@ void OGLSolarSystem::OGLSolarSystem::_initializeSystem(void)
 	_showOrbits = true;
 
 	// reset controls
-	_controls.forward = false;
-	_controls.backward = false;
-	_controls.left = false;
-	_controls.right = false;
+	_controls.moveForward = false;
+	_controls.moveBackward = false;
+	_controls.slideLeft = false;
+	_controls.slideRight = false;
 	_controls.rollRight = false;
 	_controls.rollLeft = false;
 	_controls.pitchDown = false;
@@ -163,6 +165,9 @@ void OGLSolarSystem::OGLSolarSystem::_initializeSystem(void)
 	_controls.yawLeft = false;
 	_controls.yawRight = false;
 
+
+	// Initialize camera instance
+	_camera = new Camera();
 
 	// Initialize solar system instance
 	_solarSystem = new SolarSystem();
@@ -206,20 +211,29 @@ void OGLSolarSystem::OGLSolarSystem::_initializeSystem(void)
 
 }
 
-void OGLSolarSystem::OGLSolarSystem::_resize(int width, int height)
+void OGLSolarSystem::OGLSolarSystem::_setViewport(int width, int height)
 {
 	if (height <= 0)
 		height = 1;
 
 	int aspectratio = width / height;
+	// set up the perspective matrix for rendering the 3d world
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
 	glViewport(0, 0, width, height);
-	gluPerspective(90.0f, aspectratio, 0.1f, 255.0f);
+	gluPerspective(60.0f, aspectratio, 0.0f, 255.0f);
+
+	_camera->transformOrientation();
+	_camera->transformTranslation();
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
 
 void OGLSolarSystem::OGLSolarSystem::_drawUniverse(void)
 {
+	glPushMatrix();
 
 	// Draw the box with stars on the sides
 	glBindTexture(GL_TEXTURE_2D, _starsTexture->getTextureHandle());
@@ -257,6 +271,8 @@ void OGLSolarSystem::OGLSolarSystem::_drawUniverse(void)
 	glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
 
 	glEnd();
+
+	glPopMatrix();
 }
 
 void OGLSolarSystem::OGLSolarSystem::_drawSolarSystem(void)
@@ -264,7 +280,6 @@ void OGLSolarSystem::OGLSolarSystem::_drawSolarSystem(void)
 	// Add all the planets with accurate data. Distance measured in km, time measured in earth days.
 	_solarSystem->addPlanet(0, 1, 500, 695500, _sunTexture->getTextureHandle());				// Sun
 	_solarSystem->addPlanet(57910000, 88, 58.6, 2439.7, _mercuryTexture->getTextureHandle());	// Mercury
-
 
 	_solarSystem->renderAll();
 
