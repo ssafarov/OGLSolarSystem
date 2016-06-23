@@ -40,7 +40,8 @@ void Planet::calculatePosition(float time)
 	rotation = time * 360 / rotationTime;
 
 	// calculate positions of satellites
-	for (int i = 0; i < satellites.size(); i++)
+	int count = satellites.size();
+	for (int i = 0; i < count; i++)
 	{
 		satellites[i].calculatePosition(time);
 	}
@@ -55,7 +56,8 @@ void Planet::render(void)
 	glTranslatef(position[0] * distanceScale, position[1] * distanceScale, position[2] * distanceScale);
 
 	// Draw the satellites
-	for (int i = 0; i < satellites.size(); i++)
+	int count = satellites.size();
+	for (int i = 0; i < count; i++)
 	{
 		satellites[i].render();
 	}
@@ -71,20 +73,19 @@ void Planet::render(void)
 	gluQuadricTexture(quadric, true);
 	gluQuadricNormals(quadric, GLU_SMOOTH);
 
-	if (distanceFromSun < 0.001f) // if this is the sun, dont render it too big, and disable lighting
+	float radiusScaled = radius * planetSizeScale;
+	if (distanceFromSun == 0.0f) // if this is the sun, don't render it too big, and disable lighting
 	{
-		float radiusScaled = radius * planetSizeScale;
 		if (radiusScaled > 0.5f) radiusScaled = 0.5f;
 
 		glDisable(GL_LIGHTING);
-		gluSphere(quadric, radiusScaled, 30, 30);
+		gluSphere(quadric, radiusScaled, 128, 128);
 		glEnable(GL_LIGHTING);
 	}
 	else
 	{
-		gluSphere(quadric, radius * planetSizeScale, 30, 30);
+		gluSphere(quadric, radiusScaled, 128, 128);
 	}
-
 
 	glPopMatrix();
 }
@@ -96,7 +97,7 @@ void Planet::renderOrbit(void)
 	glBegin(GL_LINE_STRIP);
 
 	// loop round from 0 to 2*PI and draw around the radius of the orbit using trigonometry
-	for (float angle = 0.0f; angle < 6.283185307f; angle += 0.05f)
+	for (float angle = 0.0f; angle < doublePI; angle += 0.05f)
 	{
 		glVertex3f(sin(angle) * distanceFromSun * distanceScale, cos(angle) * distanceFromSun * distanceScale, 0.0f);
 	}
@@ -109,7 +110,8 @@ void Planet::renderOrbit(void)
 	// translate to the center of this planet to draw the moon orbit around it
 	glTranslatef(position[0] * distanceScale, position[1] * distanceScale, position[2] * distanceScale);
 	// draw all moon orbits
-	for (int i = 0; i < satellites.size(); i++)
+	int count = satellites.size();
+	for (int i = 0; i < count; i++)
 	{
 		satellites[i].renderOrbit();
 	}

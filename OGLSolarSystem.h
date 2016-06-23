@@ -33,9 +33,9 @@ namespace OGLSolarSystem {
 				//TODO: Add the constructor code here
 				//
 				HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
-				_initializeContexts(GetDC(hWnd));
-				_initializeOpenGL();
-				_initializeSystem();
+				if (initializeContexts(GetDC(hWnd)) && initializeOpenGL()) {
+					initializeSystem();
+				}
 			}
 
 			void OGLRender(void);
@@ -85,42 +85,43 @@ namespace OGLSolarSystem {
 			HGLRC	_hRC;	// Get handle to panel on form and call initialization function						
 
 			// These control the simulation of time line and scale
-			double _timeScale;
-			double _timeSpeed;
+			double timeScale;
+			double timeSpeed;
 
-			bool _showOrbits;	
+			bool showOrbits;	
 
-			Texture* _starsTexture;
-			Texture* _sunTexture;
-			Texture* _mercuryTexture;
-			Texture* _venusTexture;
-			Texture* _earthTexture;
-			Texture* _moonTexture1;
-			Texture* _moonTexture2;
-			Texture* _moonTexture3;
-			Texture* _marsTexture;
-			Texture* _saturnTexture;
-			Texture* _jupiterTexture;
-			Texture* _neptuneTexture;
-			Texture* _uranusTexture;
-			Texture* _plutoTexture;
+			Texture* starsTexture;
+			Texture* sunTexture;
+			Texture* mercuryTexture;
+			Texture* venusTexture;
+			Texture* earthTexture;
+			Texture* moonTexture1;
+			Texture* moonTexture2;
+			Texture* moonTexture3;
+			Texture* marsTexture;
+			Texture* saturnTexture;
+			Texture* jupiterTexture;
+			Texture* neptuneTexture;
+			Texture* uranusTexture;
+			Texture* plutoTexture;
 
-			Camera* _camera;	// The instance of the camera
+			Camera* camera;	// The instance of the camera
 			
-			SolarSystem* _solarSystem; // The main instance of the solar system
+			SolarSystem* solarSystem; // The main instance of the solar system
 
 			ref struct ControlStates
 			{
 				bool moveForward, moveBackward, slideLeft, slideRight, yawLeft, yawRight, pitchUp, pitchDown, rollLeft, rollRight;
-			} _controls;
+			} controls;
 
 			// Custom functions for solar system
-			bool _initializeContexts(HDC hdc);
-			int _initializeOpenGL(GLvoid);
-			void _initializeSystem(void);
-			void _setViewport(int width, int height);
+			bool initializeContexts(HDC hdc);
+			bool initializeOpenGL(GLvoid);
+			void initializeSystem(void);
+
+			void setViewport(int width, int height);
+			void setCamera(void);
 			void _drawUniverse(void);
-			void _drawSolarSystem(void);
 
 			/// <summary>
 			/// Required designer variable.
@@ -300,7 +301,6 @@ namespace OGLSolarSystem {
 			this->pMainOGLViewport->Name = L"pMainOGLViewport";
 			this->pMainOGLViewport->Size = System::Drawing::Size(758, 486);
 			this->pMainOGLViewport->TabIndex = 2;
-			this->pMainOGLViewport->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &OGLSolarSystem::pMainOGLViewport_Paint);
 			// 
 			// lCurrentDateTimeTitle
 			// 
@@ -354,9 +354,7 @@ namespace OGLSolarSystem {
 			Application::Exit();
 		}
 		private: System::Void OGLSolarSystem_Resize(System::Object^  sender, System::EventArgs^  e) {
-			OGLRender();
-		}
-		private: System::Void pMainOGLViewport_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+			setViewport(pMainOGLViewport->Width, pMainOGLViewport->Height);
 			OGLRender();
 		}
 		private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
