@@ -15,6 +15,9 @@ int main(array<String^>^ argv)
 }
 
 
+
+
+
 void OGLSolarSystem::OGLSolarSystem::OGLShutdown(void)
 {
 	wglMakeCurrent(_hDC, NULL);	// release current device context
@@ -24,62 +27,31 @@ void OGLSolarSystem::OGLSolarSystem::OGLShutdown(void)
 
 void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
 {
-	float aspectratio = pMainOGLViewport->Width / pMainOGLViewport->Height;
-
 	// update the logic and simulation
 	_timeScale += _timeSpeed;
 	_solarSystem->calculatePositions(_timeScale);
 
-	if (_controls.moveForward) _camera->moveForward();		
-	if (_controls.moveBackward) _camera->moveBackward();
-	if (_controls.slideLeft) _camera->slideLeft();			
-	if (_controls.slideRight) _camera->slideRight();
-	if (_controls.yawLeft) _camera->yawLeft();		
-	if (_controls.yawRight) _camera->yawRight();
-	if (_controls.rollLeft) _camera->rollLeft();	
-	if (_controls.rollRight) _camera->rollRight();
-	if (_controls.pitchUp) _camera->pitchUp();		
-	if (_controls.pitchDown) _camera->pitchDown();
+	if (_controls.moveForward) _camera->moveForward();		if (_controls.moveBackward) _camera->moveBackward();
+	if (_controls.slideLeft) _camera->slideLeft();			if (_controls.slideRight) _camera->slideRight();
+	if (_controls.yawLeft) _camera->yawLeft();		if (_controls.yawRight) _camera->yawRight();
+	if (_controls.rollLeft) _camera->rollLeft();	if (_controls.rollRight) _camera->rollRight();
+	if (_controls.pitchUp) _camera->pitchUp();		if (_controls.pitchDown) _camera->pitchDown();
 
 	// clear the buffers
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glColor3f(1.0, 1.0, 1.0);
 
-
-	// set up the perspective matrix for rendering the 3d world
-	glMatrixMode(GL_PROJECTION_MATRIX);
-	glLoadIdentity();
-	gluPerspective(70.0f, aspectratio, 0.001f, 500.0f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
+	_drawUniverse();
 
-	// perform the camera orientation
-	_camera->transformOrientation();
+	_drawSolarSystem();
 
-	// perform the camera translation transform
-	_camera->transformTranslation();
+	// perform the camera orientation transform
+	_setViewport(pMainOGLViewport->Width, pMainOGLViewport->Height);
 
-
-	GLfloat lightPosition[] = { 0.0, 0.0, 0.0, 1.0 };
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-
-	// render the solar system
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
-
-	_solarSystem->renderAll();
-	glDisable(GL_LIGHTING);
-
-	// possibly render orbits
-	if (_showOrbits)
-		_solarSystem->renderOrbits();
-
-	glDisable(GL_DEPTH_TEST);
-
-	
-	glFlush();
-	glutSwapBuffers();
+	SwapBuffers(_hDC);
 }
 
 
@@ -144,6 +116,8 @@ int OGLSolarSystem::OGLSolarSystem::_initializeOpenGL(GLvoid)
 
 	// set up lighting
 	glEnable(GL_LIGHTING);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 	GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
 	GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
 	GLfloat matShininess[] = { 20.0 };
@@ -165,9 +139,6 @@ int OGLSolarSystem::OGLSolarSystem::_initializeOpenGL(GLvoid)
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
 	glDisable(GL_LIGHTING);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 
 	// Initialization went OK
 	return TRUE;
@@ -212,8 +183,9 @@ void OGLSolarSystem::OGLSolarSystem::_initializeSystem(void)
 
 	// Load Mercury texture
 	_mercuryTexture = new Texture("textures/\mercury.tga");
+	/*
 	// Load Venus texture
-	_venusTexture = new Texture("textures/\mercury.tga");
+	_venusTexture = new Texture("textures/\venus.tga");
 	// Load Earth texture
 	_earthTexture = new Texture("textures/\earth.tga");
 	// Load Mars texture
@@ -223,8 +195,8 @@ void OGLSolarSystem::OGLSolarSystem::_initializeSystem(void)
 	// Load Jupiter texture
 	_jupiterTexture = new Texture("textures/\jupiter.tga");
 	// Load Neptune texture
-	_neptuneTexture = new Texture("textures/\mercury.tga");
-	// Load Uranus texture
+	_neptuneTexture = new Texture("textures/\neptune.tga");
+	// Load Neptune texture
 	_uranusTexture = new Texture("textures/\uranus.tga");
 	// Load Pluto texture
 	_plutoTexture = new Texture("textures/\pluto.tga");
@@ -234,19 +206,29 @@ void OGLSolarSystem::OGLSolarSystem::_initializeSystem(void)
 	_moonTexture2 = new Texture("textures/\moon.tga");
 	// Load Moon 3 texture
 	_moonTexture3 = new Texture("textures/\moon.tga");
-	/*	*/
-	//@TODO Need to perform checks about VENUS, and NEPTUNE textures.
-
-
-	_drawUniverse();
-	_makeSolarSystem();
+	*/
 
 
 }
 
 void OGLSolarSystem::OGLSolarSystem::_setViewport(int width, int height)
 {
+	if (height <= 0)
+		height = 1;
+
+	int aspectratio = width / height;
+	// set up the perspective matrix for rendering the 3d world
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
 	glViewport(0, 0, width, height);
+	gluPerspective(60.0f, aspectratio, 0.0f, 255.0f);
+
+	_camera->transformOrientation();
+	_camera->transformTranslation();
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 void OGLSolarSystem::OGLSolarSystem::_drawUniverse(void)
@@ -293,24 +275,12 @@ void OGLSolarSystem::OGLSolarSystem::_drawUniverse(void)
 	glPopMatrix();
 }
 
-void OGLSolarSystem::OGLSolarSystem::_makeSolarSystem(void)
+void OGLSolarSystem::OGLSolarSystem::_drawSolarSystem(void)
 {
 	// Add all the planets with accurate data. Distance measured in km, time measured in earth days.
-	_solarSystem->addPlanet(0, 1, 500, 695500, _sunTexture->getTextureHandle());						// Sun
+	_solarSystem->addPlanet(0, 1, 500, 695500, _sunTexture->getTextureHandle());				// Sun
+	_solarSystem->addPlanet(57910000, 88, 58.6, 2439.7, _mercuryTexture->getTextureHandle());	// Mercury
 
-	_solarSystem->addPlanet(57910000, 88, 58.6, 2439.7, _mercuryTexture->getTextureHandle());			// Mercury
-	_solarSystem->addPlanet(108200000, 224.65, 243, 6052, _venusTexture->getTextureHandle());			// Venus
-	_solarSystem->addPlanet(149600000, 365, 1, 6371, _earthTexture->getTextureHandle());				// Earth
-	_solarSystem->addPlanet(227939100, 686, 1.03f, 3389, _marsTexture->getTextureHandle());				// Mars
-	_solarSystem->addPlanet(778500000, 4332, 0.4139, 69911, _jupiterTexture->getTextureHandle());		// Jupiter
-	_solarSystem->addPlanet(1433000000, 10759, 0.44375, 58232, _saturnTexture->getTextureHandle());		// Saturn
-	_solarSystem->addPlanet(2877000000, 30685, 0.718056, 25362, _uranusTexture->getTextureHandle());	// Uranus
-	_solarSystem->addPlanet(4503000000, 60188, 0.6713, 24622, _neptuneTexture->getTextureHandle());		// Neptune
-	_solarSystem->addPlanet(5906380000, 90616, 6.39, 1137, _plutoTexture->getTextureHandle());			// Pluto
-
-	_solarSystem->addSatellite(3, 384467, 27.3, 27.3, 1738, _moonTexture1->getTextureHandle());			// Moon for the Earth
-
-	_solarSystem->addSatellite(4, 9489.2, 7.6, 7.3, 22, _moonTexture2->getTextureHandle());				// Phobos for the Mars
-	_solarSystem->addSatellite(4, 23723, 30.3, 17.3, 12.2, _moonTexture3->getTextureHandle());			// Deimos for the Mars
+	_solarSystem->renderAll();
 
 }

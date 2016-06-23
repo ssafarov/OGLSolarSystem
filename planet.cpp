@@ -71,19 +71,20 @@ void Planet::render(void)
 	gluQuadricTexture(quadric, true);
 	gluQuadricNormals(quadric, GLU_SMOOTH);
 
-	if (distanceFromSun == 0.0f) // if this is the sun, dont render it too big, and disable lighting
+	if (distanceFromSun < 0.001f) // if this is the sun, dont render it too big, and disable lighting
 	{
 		float radiusScaled = radius * planetSizeScale;
 		if (radiusScaled > 0.5f) radiusScaled = 0.5f;
 
 		glDisable(GL_LIGHTING);
-		gluSphere(quadric, radiusScaled, 64, 64);
+		gluSphere(quadric, radiusScaled, 30, 30);
 		glEnable(GL_LIGHTING);
 	}
 	else
 	{
-		gluSphere(quadric, radius * planetSizeScale, 64, 64);
+		gluSphere(quadric, radius * planetSizeScale, 30, 30);
 	}
+
 
 	glPopMatrix();
 }

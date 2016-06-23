@@ -88,8 +88,7 @@ namespace OGLSolarSystem {
 			double _timeScale;
 			double _timeSpeed;
 
-			bool _showOrbits;
-			int _planetSelected;
+			bool _showOrbits;	
 
 			Texture* _starsTexture;
 			Texture* _sunTexture;
@@ -121,7 +120,7 @@ namespace OGLSolarSystem {
 			void _initializeSystem(void);
 			void _setViewport(int width, int height);
 			void _drawUniverse(void);
-			void _makeSolarSystem(void);
+			void _drawSolarSystem(void);
 
 			/// <summary>
 			/// Required designer variable.
@@ -339,7 +338,6 @@ namespace OGLSolarSystem {
 			this->MainMenuStrip = this->menuStripMain;
 			this->Name = L"OGLSolarSystem";
 			this->Text = L"OGLSolarSystem";
-			this->Load += gcnew System::EventHandler(this, &OGLSolarSystem::OGLSolarSystem_Load);
 			this->Resize += gcnew System::EventHandler(this, &OGLSolarSystem::OGLSolarSystem_Resize);
 			this->menuStripMain->ResumeLayout(false);
 			this->menuStripMain->PerformLayout();
@@ -349,7 +347,6 @@ namespace OGLSolarSystem {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsTimeScale))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
-
 		}
 #pragma endregion
 
@@ -357,129 +354,15 @@ namespace OGLSolarSystem {
 			Application::Exit();
 		}
 		private: System::Void OGLSolarSystem_Resize(System::Object^  sender, System::EventArgs^  e) {
-			_setViewport(pMainOGLViewport->Width, pMainOGLViewport->Height);
+			OGLRender();
 		}
 		private: System::Void pMainOGLViewport_Paint(System::Object^  sender, System::Windows::Forms::PaintEventArgs^  e) {
+			OGLRender();
 		}
 		private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 			UNREFERENCED_PARAMETER(sender);
 			UNREFERENCED_PARAMETER(e);
 			OGLRender();
 		}
-		private: System::Void OGLSolarSystem_KeyDown(Object^ sender, KeyEventArgs^ e) {
-			// check for numerical keys
-			if ((e->KeyCode > Keys::D0 && e->KeyCode <= Keys::D8) || (e->KeyCode < Keys::NumPad0 && e->KeyCode > Keys::NumPad9))
-			{
-				// point at the specified planet
-				float point[3];
-				_solarSystem->getPlanetPosition(e->KeyValue - '0', point);
-				_camera->pointAt(point);
-
-				// select that planet
-				_planetSelected = e->KeyValue - '0';
-			}
-			switch (e->KeyValue)
-			{
-			case '-':
-				_timeSpeed /= 2.0f; // half the rate of time passing
-				break;
-			case '=':
-				_timeSpeed *= 2.0f; // double the rate of time passing
-				break;
-			case 'h':
-				//_helpDialogue = !helpDialogue; // toggle the dialog
-				break;
-			case '[':
-				//_planetSizeScale /= 1.2; // make planet scale smaller
-				break;
-			case ']':
-				//_planetSizeScale *= 1.2; // make planet scale bigger
-				break;
-			case 'o':
-				_showOrbits = !_showOrbits; // toggle show orbits
-				break;
-			case 'm':
-				//_solarSystem->addSatellite(); // add a moon to the selected planet
-				break;
-			case 'r':
-				//planetSizeScale = distanceScale;
-				break;
-			case ',':
-				_camera->speedDown(); // slow down camera
-				break;
-			case '.':
-				_camera->speedUp(); // speed up camera
-				break;
-				// these are all camera controls
-			case 'w':
-				_controls.moveForward = true;
-				break;
-			case 's':
-				_controls.moveBackward = true;
-				break;
-			case 'a':
-				_controls.slideLeft = true;
-				break;
-			case 'd':
-				_controls.slideRight = true;
-				break;
-			case 'l':
-				_controls.rollRight = true;
-				break;
-			case 'j':
-				_controls.rollLeft = true;
-				break;
-			case 'i':
-				_controls.pitchDown = true;
-				break;
-			case 'k':
-				_controls.pitchUp = true;
-				break;
-			case 'q':
-				_controls.yawLeft = true;
-				break;
-			case 'e':
-				_controls.yawRight = true;
-				break;
-			}
-		}
-		private: System::Void OGLSolarSystem_KeyUp(Object^ sender, KeyEventArgs^ e) {
-			switch (e->KeyValue)
-			{
-			case 'w':
-				_controls.moveForward = false;
-				break;
-			case 's':
-				_controls.moveBackward = false;
-				break;
-			case 'a':
-				_controls.slideLeft = false;
-				break;
-			case 'd':
-				_controls.slideRight = false;
-				break;
-			case 'l':
-				_controls.rollRight = false;
-				break;
-			case 'j':
-				_controls.rollLeft = false;
-				break;
-			case 'i':
-				_controls.pitchDown = false;
-				break;
-			case 'k':
-				_controls.pitchUp = false;
-				break;
-			case 'q':
-				_controls.yawLeft = false;
-				break;
-			case 'e':
-				_controls.yawRight = false;
-				break;
-			}
-		}
-
-	private: System::Void OGLSolarSystem_Load(System::Object^  sender, System::EventArgs^  e) {
-	}
-};
+	};
 }
