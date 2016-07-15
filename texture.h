@@ -6,7 +6,11 @@ See LICENSE.TXT*/
 // Sergey Safarov
 
 #include <Windows.h>
-#include <GL\glut.h>
+#include <Libraries\glew\GL\glew.h>
+
+#include <cstdio>
+#include <cstdlib>
+
 
 // Class for texture image files for OpenGL textures
 class Texture

@@ -6,11 +6,6 @@ See LICENSE.TXT*/
 // Satellite methods and properties
 
 #include "satellite.h"
-#include <cmath>
-
-#include <Windows.h>
-#include <GL\glut.h>
-#include "globals.h"
 
 Satellite::Satellite(float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
 {

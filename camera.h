@@ -8,39 +8,40 @@ See LICENSE.TXT*/
 //
 // Sergey Safarov
 //
+#include <Windows.h>
+#include <Libraries\glew\GL\glew.h>
+#include <Libraries\freeglut\GL\freeglut.h>
+#include <cmath>
 
 class Camera
 {
 private:
-	// A vector pointing in the direction you are facing
-	float _forwardVector[3];
+	// A vector pointing in the direction you are facing (Z Axis)
+	float forwardVector[3];
 
-	// A vector pointing to the right of where your facing (to describe orientation
-	float _rightVector[3];
+	// A vector pointing to the right of where your facing (to describe orientation) (X axis)
+	float rightVector[3];
 
-	// A vector pointing upwards from where you are facing
-	float _upVector[3];
+	// A vector pointing upwards from where you are facing (Y axis)
+	float upVector[3];
 
 	// The camera position point
-	float _position[3];
+	float position[3];
 
 	// The camera speeds
-	float _cameraMoveSpeed;
-	float _cameraTurnSpeed;
+	float cameraMoveSpeed;
+	float cameraTurnSpeed;
 	
 	// Service vector functions for help
-	void vectorSet(float* v, float x, float y, float z);	// Sets vector to (x,y,z)
-	void vectorAdd(float* v1, float* v2);	// Adds v2 to v1
-	void vectorCopy(float* v1, float* v2);	// Copies v2 into v1
-	void vectorMultiple(float* v, float scalar);	// Multiplies vectors by the scalar
-	float lengthOfVector(float* v);	// Finds the magnitude of a vector
-	void normaliseVector(float* v);	// Normalizes a vector to magnitude 1
+	void vectorSet(float* v, float x, float y, float z);		// Sets vector to (x,y,z)
+	void vectorAdd(float* v1, float* v2);						// Adds v2 to v1
+	void vectorCopy(float* v1, float* v2);						// Copies v2 into v1
+	void vectorMultiple(float* v, float scalar);				// Multiplies vectors by the scalar
+	float lengthOfVector(float* v);								// Finds the magnitude of a vector
+	void normaliseVector(float* v);								// Normalizes a vector to magnitude 1
 	void rotationMatrix(float* matrix, float* axis, float angle);	// Makes a 3x3 rotation matrix from the given angle and axis and pointer to a 3x3 matrix
-	void multipleVectorBy(float* v1, float* matrix, float* v2);	// Multiplies a vector v1 by a matrix and puts the results into vector v2
+	void multipleVectorBy(float* v1, float* matrix, float* v2);		// Multiplies a vector v1 by a matrix and puts the results into vector v2
 	void rotateAroundVector(float* v1, float* v2, float angle, float* v3);	// Rotate a vector v1 around the axis v2 by angle and put the result into v3
-
-
-
 
 public:
 	Camera(void);

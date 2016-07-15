@@ -9,11 +9,17 @@ See LICENSE.TXT*/
 // Sergey Safarov
 // 
 
-#include "satellite.h"
+#include "globals.h"
 
 #include <Windows.h>
 #include <vector>
-#include <GL\glut.h>
+#include <cmath>
+
+#include <Libraries\glew\GL\glew.h>
+#include <Libraries\freeglut\GL\freeglut.h>
+
+#include "satellite.h"
+
 
 class Planet
 {

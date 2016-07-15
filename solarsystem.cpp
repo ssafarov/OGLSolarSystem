@@ -60,7 +60,7 @@ void SolarSystem::renderOrbits()
 }
 
 // Render the solar system using OpenGL
-void SolarSystem::renderAll()
+void SolarSystem::render()
 {
 	int count = planets.size();
 	for (int i = 0; i < count; i++)

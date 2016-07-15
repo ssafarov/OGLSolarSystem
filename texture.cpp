@@ -6,10 +6,6 @@ See LICENSE.TXT*/
 #define _CRT_SECURE_NO_DEPRECATE
 
 #include "texture.h"
-#include <Windows.h>
-#include <GL\glut.h>
-#include <cstdio>
-#include <cstdlib>
 
 using namespace System::Windows::Forms;
 

@@ -3,9 +3,6 @@ See LICENSE.TXT*/
 
 // Sergey Safarov
 
-#include <Windows.h>
-#include <GL\glut.h>
-#include <cmath>
 
 #include "camera.h"
 
@@ -19,20 +16,26 @@ See LICENSE.TXT*/
 
 Camera::Camera(void)
 {
-	_cameraMoveSpeed = 0.005f;
-	_cameraTurnSpeed = 0.01f;
+	cameraMoveSpeed = 0.005f;
+	cameraTurnSpeed = 0.01f;
 
 	// set default vector values - obtained a nice viewing angle of the planets, got values using the debugger
 	/*
 	forwardVector	0x00ab354c {-0.398769796, 0.763009906, -0.508720219}	float[3]
 	upVector		0x00ab3564 {-0.235630989, 0.450859368, 0.860931039}		float[3]
 	rightVector		0x00ab3558 {0.886262059, 0.463184059, 0.000000000}		float[3]
-	position		0x00ab3570 {0.764331460, -1.66760659, 0.642456770}		float[3]
+	position		0x00ab3570 {0.764331460, -0.86760659, 0.642456770}		float[3]
 	*/
-	vectorSet(_position, 0.764331460f, -1.66760659f, 0.642456770f);
-	vectorSet(_forwardVector, -0.398769796f, 0.763009906f, -0.508720219f);
-	vectorSet(_rightVector, 0.886262059f, 0.463184059f, 0.000000000f);
-	vectorSet(_upVector, -0.235630989f, 0.450859368f, 0.860931039f);
+
+	//vectorSet(_position, 0.764331460f, -0.86760659f, -0.642456770f);
+	//vectorSet(forwardVector, -0.398769796f, 0.763009906f, -0.508720219f);
+	//vectorSet(rightVector, 0.886262059f, 0.463184059f, 0.000000000f);
+	//vectorSet(upVector, -0.235630989f, 0.450859368f, 0.860931039f);
+
+	vectorSet(position, 0.0f, 0.0f, -20.0f);
+	vectorSet(forwardVector, 0.0f, 0.0f, 1.0f);
+	vectorSet(rightVector, 1.0f, 0.0f, 0.0f);
+	vectorSet(upVector, 0.0f, 1.0f, 0.0f);
 }
 
 
@@ -130,14 +133,14 @@ void Camera::rotateAroundVector(float* v1, float* v2, float angle, float* v3)
 void Camera::transformOrientation(void)
 {
 	// Look in the direction of the orientation vectors
-	gluLookAt(0, 0, 0, _forwardVector[0], _forwardVector[1], _forwardVector[2], _upVector[0], _upVector[1], _upVector[2]);
+	//gluLookAt(0, 0, 0, forwardVector[0], forwardVector[1], forwardVector[2], upVector[0], upVector[1], upVector[2]);
 }
 
 // Transform the OpenGL view matrix for the translation
 void Camera::transformTranslation(void)
 {
 	// Translate to emulate camera position
-	glTranslatef(-_position[0], -_position[1], -_position[2]);
+	//glTranslatef(position[0], position[1], position[2]);
 }
 
 // Points the camera at the given point in 3d space
@@ -147,39 +150,39 @@ void Camera::pointAt(float* targetVector)
 	float up[3] = { 0.0f, 0.0f, 1.0f };
 
 	// First work out the new forward vector by subtracting the target position from the camera position
-	_forwardVector[0] = targetVector[0] - _position[0];
-	_forwardVector[1] = targetVector[1] - _position[1];
-	_forwardVector[2] = targetVector[2] - _position[2];
+	forwardVector[0] = targetVector[0] - position[0];
+	forwardVector[1] = targetVector[1] - position[1];
+	forwardVector[2] = targetVector[2] - position[2];
 
 	// Then normalize it to 1 length
-	normaliseVector(_forwardVector);
+	normaliseVector(forwardVector);
 
 	// Now to find the right vector we rotate the forward vector -pi/2 around the z axis
-	rotateAroundVector(_forwardVector, up, -1.57079632679f, tempVector);
+	rotateAroundVector(forwardVector, up, -1.57079632679f, tempVector);
 	// and remove the y component to make it flat
 	tempVector[2] = 0;
 	// then normalize it
 	normaliseVector(tempVector);
 	// and assign it to rightVec
-	vectorCopy(_rightVector, tempVector);
+	vectorCopy(rightVector, tempVector);
 
 	// Now work out the up vector by rotating the forward vector pi/2 around the right vector
-	rotateAroundVector(_forwardVector, _rightVector, 1.57079632679f, tempVector);
-	vectorCopy(_upVector, tempVector);
+	rotateAroundVector(forwardVector, rightVector, 1.57079632679f, tempVector);
+	vectorCopy(upVector, tempVector);
 }
 
 // Speed up the camera speed
 void Camera::speedUp(void)
 {
-	if (_cameraMoveSpeed < 1.0f)
-		_cameraMoveSpeed *= 2;
+	if (cameraMoveSpeed < 1.0f)
+		cameraMoveSpeed *= 2;
 }
 
 // Slow down the camera speed
 void Camera::speedDown(void)
 {
-	if (_cameraMoveSpeed > 0.000001f)
-		_cameraMoveSpeed /= 2;
+	if (cameraMoveSpeed > 0.000001f)
+		cameraMoveSpeed /= 2;
 }
 
 // Move the camera forward
@@ -188,11 +191,11 @@ void Camera::moveForward(void)
 	float tempVector[3];
 
 	// Make a movement vector the right speed facing the forward direction
-	vectorCopy(tempVector, _forwardVector);
-	vectorMultiple(tempVector, _cameraMoveSpeed);
+	vectorCopy(tempVector, forwardVector);
+	vectorMultiple(tempVector, cameraMoveSpeed);
 
 	// Add the movement tempVector to the position vector
-	vectorAdd(_position, tempVector);
+	vectorAdd(position, tempVector);
 }
 
 // Move the camera backward
@@ -201,11 +204,11 @@ void Camera::moveBackward(void)
 	float tempVector[3];
 
 	// Make a movement vector the right speed facing the backward direction
-	vectorCopy(tempVector, _forwardVector);
-	vectorMultiple(tempVector, -_cameraMoveSpeed); // -cameraSpeed for backwards
+	vectorCopy(tempVector, forwardVector);
+	vectorMultiple(tempVector, -cameraMoveSpeed); // -cameraSpeed for backwards
 
 	// Add the movement vector to the position vector
-	vectorAdd(_position, tempVector);
+	vectorAdd(position, tempVector);
 }
 
 // Slide the camera left
@@ -214,11 +217,11 @@ void Camera::slideLeft(void)
 	float tempVector[3];
 
 	// Make a movement vector the right speed facing the left direction
-	vectorCopy(tempVector, _rightVector);
-	vectorMultiple(tempVector, -_cameraMoveSpeed); // -cameraSpeed for left
+	vectorCopy(tempVector, rightVector);
+	vectorMultiple(tempVector, -cameraMoveSpeed); // -cameraSpeed for left
 
 	// Add the movement vector to the position vector
-	vectorAdd(_position, tempVector);
+	vectorAdd(position, tempVector);
 }
 
 // Slide the camera right
@@ -227,11 +230,11 @@ void Camera::slideRight(void)
 	float tempVector[3];
 
 	// Make a movement vector the right speed facing the right direction
-	vectorCopy(tempVector, _rightVector);
-	vectorMultiple(tempVector, _cameraMoveSpeed);
+	vectorCopy(tempVector, rightVector);
+	vectorMultiple(tempVector, cameraMoveSpeed);
 
 	// Add the movement vector to the position vector
-	vectorAdd(_position, tempVector);
+	vectorAdd(position, tempVector);
 }
 
 // Roll the camera to the right
@@ -240,11 +243,11 @@ void Camera::rollRight(void)
 	float tempVector[3];
 
 	// Rotate the up and right vectors around the forward vector axis for roll
-	rotateAroundVector(_upVector, _forwardVector, _cameraTurnSpeed, tempVector);
-	vectorCopy(_upVector, tempVector);
+	rotateAroundVector(upVector, forwardVector, cameraTurnSpeed, tempVector);
+	vectorCopy(upVector, tempVector);
 
-	rotateAroundVector(_rightVector, _forwardVector, _cameraTurnSpeed, tempVector);
-	vectorCopy(_rightVector, tempVector);
+	rotateAroundVector(rightVector, forwardVector, cameraTurnSpeed, tempVector);
+	vectorCopy(rightVector, tempVector);
 }
 
 // Roll the camera to the left
@@ -253,11 +256,11 @@ void Camera::rollLeft(void)
 	float tempVector[3];
 
 	// Rotate the up and right vectors around the forward vector axis for roll
-	rotateAroundVector(_upVector, _forwardVector, -_cameraTurnSpeed, tempVector);
-	vectorCopy(_upVector, tempVector);
+	rotateAroundVector(upVector, forwardVector, -cameraTurnSpeed, tempVector);
+	vectorCopy(upVector, tempVector);
 
-	rotateAroundVector(_rightVector, _forwardVector, -_cameraTurnSpeed, tempVector);
-	vectorCopy(_rightVector, tempVector);
+	rotateAroundVector(rightVector, forwardVector, -cameraTurnSpeed, tempVector);
+	vectorCopy(rightVector, tempVector);
 }
 
 // Pitch the camera up
@@ -266,11 +269,11 @@ void Camera::pitchUp(void)
 	float tempVector[3];
 
 	// Rotate the forward and up vectors around the right vector axis for pitch
-	rotateAroundVector(_forwardVector, _rightVector, _cameraTurnSpeed, tempVector);
-	vectorCopy(_forwardVector, tempVector);
+	rotateAroundVector(forwardVector, rightVector, cameraTurnSpeed, tempVector);
+	vectorCopy(forwardVector, tempVector);
 
-	rotateAroundVector(_upVector, _rightVector, _cameraTurnSpeed, tempVector);
-	vectorCopy(_upVector, tempVector);
+	rotateAroundVector(upVector, rightVector, cameraTurnSpeed, tempVector);
+	vectorCopy(upVector, tempVector);
 }
 
 // Pitch the camera down
@@ -279,11 +282,11 @@ void Camera::pitchDown(void)
 	float tempVector[3];
 
 	// Rotate the forward and up vectors around the right vector axis for pitch
-	rotateAroundVector(_forwardVector, _rightVector, -_cameraTurnSpeed, tempVector);
-	vectorCopy(_forwardVector, tempVector);
+	rotateAroundVector(forwardVector, rightVector, -cameraTurnSpeed, tempVector);
+	vectorCopy(forwardVector, tempVector);
 
-	rotateAroundVector(_upVector, _rightVector, -_cameraTurnSpeed, tempVector);
-	vectorCopy(_upVector, tempVector);
+	rotateAroundVector(upVector, rightVector, -cameraTurnSpeed, tempVector);
+	vectorCopy(upVector, tempVector);
 }
 
 // Yaw the camera left
@@ -292,11 +295,11 @@ void Camera::yawLeft(void)
 	float tempVector[3];
 
 	// Rotate the forward and right vectors around the up vector axis for yaw
-	rotateAroundVector(_forwardVector, _upVector, _cameraTurnSpeed, tempVector);
-	vectorCopy(_forwardVector, tempVector);
+	rotateAroundVector(forwardVector, upVector, cameraTurnSpeed, tempVector);
+	vectorCopy(forwardVector, tempVector);
 
-	rotateAroundVector(_rightVector, _upVector, _cameraTurnSpeed, tempVector);
-	vectorCopy(_rightVector, tempVector);
+	rotateAroundVector(rightVector, upVector, cameraTurnSpeed, tempVector);
+	vectorCopy(rightVector, tempVector);
 }
 
 // Yaw the camera right
@@ -305,9 +308,9 @@ void Camera::yawRight(void)
 	float tempVector[3];
 
 	// Rotate the forward and right vectors around the up vector axis for yaw
-	rotateAroundVector(_forwardVector, _upVector, -_cameraTurnSpeed, tempVector);
-	vectorCopy(_forwardVector, tempVector);
+	rotateAroundVector(forwardVector, upVector, -cameraTurnSpeed, tempVector);
+	vectorCopy(forwardVector, tempVector);
 
-	rotateAroundVector(_rightVector, _upVector, -_cameraTurnSpeed, tempVector);
-	vectorCopy(_rightVector, tempVector);
+	rotateAroundVector(rightVector, upVector, -cameraTurnSpeed, tempVector);
+	vectorCopy(rightVector, tempVector);
 }

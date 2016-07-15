@@ -7,10 +7,13 @@ See LICENSE.TXT*/
 // 
 // Definitions for the satellite class in the system.
 
+#include "globals.h"
 #include <Windows.h>
-#include <GL\glut.h>
+#include <Libraries\glew\GL\glew.h>
+
 #include <vector>
-#include "satellite.h"
+#include <cmath>
+
 
 class Satellite
 {

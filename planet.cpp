@@ -7,12 +7,7 @@ See LICENSE.TXT*/
 // Sergey Safarov
 // 
 
-#include "globals.h"
 #include "planet.h"
-
-#include <cmath>
-#include <Windows.h>
-#include <GL\glut.h>
 
 Planet::Planet(float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
 {
@@ -62,11 +57,14 @@ void Planet::render(void)
 		satellites[i].render();
 	}
 
-	/// rotate for the planet's spin
+	// rotate for the planet's spin
 	glRotatef(rotation, 0.0f, 0.0f, 1.0f);
 
 	// bind the planets texture
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
+
+
+
 
 	// render as a GLU sphere quadric object
 	GLUquadricObj* quadric = gluNewQuadric();
@@ -74,20 +72,46 @@ void Planet::render(void)
 	gluQuadricNormals(quadric, GLU_SMOOTH);
 
 	float radiusScaled = radius * planetSizeScale;
-	if (distanceFromSun == 0.0f) // if this is the sun, don't render it too big, and disable lighting
+	if (distanceFromSun == 0.0f) // if this is the sun
 	{
 		if (radiusScaled > 0.5f) radiusScaled = 0.5f;
 
 		glDisable(GL_LIGHTING);
-		gluSphere(quadric, radiusScaled, 128, 128);
+		glDisable(GL_LIGHT1);
+
+
+		GLfloat matAmbience[] = { 0.1, 0.1, 0.1, 0.1 };
+		GLfloat matDiffuse[] = { 0.9, 0.9, 0.9, 0.9 };
+		GLfloat matEmission[] = { 1, 1, 1, 0.01 };
+
+		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matAmbience);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiffuse);
+		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matEmission);
+
+		GLfloat lightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+		GLfloat lightDiffuse[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+		GLfloat lightPosition[] = { position[0],position[1],position[2], 1.0f };
+
+		glLightfv(GL_LIGHT1, GL_AMBIENT, lightAmbient);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, lightDiffuse);
+		glLightfv(GL_LIGHT1, GL_POSITION, lightPosition);
+
+		gluSphere(quadric, radiusScaled, 512, 512);
+
 		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT1);
+		glEnable(GL_CULL_FACE);
+
 	}
 	else
 	{
 		gluSphere(quadric, radiusScaled, 128, 128);
 	}
 
+
 	glPopMatrix();
+
+
 }
 
 // render this planets orbit circle

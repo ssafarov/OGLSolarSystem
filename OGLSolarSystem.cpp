@@ -25,45 +25,6 @@ void OGLSolarSystem::OGLSolarSystem::OGLShutdown(void)
 }
 
 
-void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
-{
-	if (controls.moveForward) camera->moveForward();		
-	if (controls.moveBackward) camera->moveBackward();
-	if (controls.slideLeft) camera->slideLeft();			
-	if (controls.slideRight) camera->slideRight();
-	if (controls.yawLeft) camera->yawLeft();		
-	if (controls.yawRight) camera->yawRight();
-	if (controls.rollLeft) camera->rollLeft();	
-	if (controls.rollRight) camera->rollRight();
-	if (controls.pitchUp) camera->pitchUp();		
-	if (controls.pitchDown) camera->pitchDown();
-
-	// update the logic and simulation
-	timeScale += timeSpeed;
-	solarSystem->calculatePositions(timeScale);
-
-	// clear the buffer
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glColor3f(1.0, 1.0, 1.0);
-
-	// @TODO Need to investigate!!!! ???????
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	// Render the Universe and solar system
-	_drawUniverse();
-
-	solarSystem->renderAll();
-
-	// Perform the camera orientation transform
-	setCamera();
-
-	SwapBuffers(_hDC);
-}
-
-
-
-
 bool OGLSolarSystem::OGLSolarSystem::initializeContexts(HDC hdc)
 {
 	_hDC = hdc;
@@ -115,47 +76,43 @@ bool OGLSolarSystem::OGLSolarSystem::initializeContexts(HDC hdc)
 	return true;
 }
 
-bool OGLSolarSystem::OGLSolarSystem::initializeOpenGL(GLvoid)
+void OGLSolarSystem::OGLSolarSystem::initializeOpenGL(GLvoid)
 {
-	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearDepth(1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glShadeModel(GL_SMOOTH);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
+	glDepthFunc(GL_LEQUAL);
+//	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); 
+//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//	glEnable(GL_BLEND);
 
-	// set up lighting
-	glEnable(GL_LIGHTING);
+//	GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
+//	GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
+//	GLfloat matShininess[] = { 20.0 };
+
+//	glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
+//	glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
+//	glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
+	
+//	setViewport(pMainOGLViewport->Width, pMainOGLViewport->Height);
+	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
-	GLfloat matShininess[] = { 20.0 };
-	glClearColor(0.0, 0.0, 0.0, 0.0);
-	glShadeModel(GL_SMOOTH);
 
-	glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
-
-	GLfloat lightAmbient[] = { 0.3, 0.3, 0.3, 1.0 };
-	GLfloat lightDiffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat lightSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
-
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpecular);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glDisable(GL_LIGHTING);
-
-	// Initialization went OK
-	return true;
+	//	glDisable(GL_LIGHTING);
 }
 
 void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 {
+	// Initialize camera instance
+	camera = new Camera();
+
 	// Set up times
-	timeScale = 2.552f;
-	timeSpeed = 0.9f;
+	timeScale = 1.0f;
+	timeSpeed = 1.0f;
 
 	// Toggles on and off drawn of the orbits
 	showOrbits = true;
@@ -172,37 +129,22 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	controls.yawLeft = false;
 	controls.yawRight = false;
 
-
 	//@todo It need to be makes all textures load inside it`s own classes
 	// Initialize and load textures
-	// Begin from the Universe
-	starsTexture = new Texture("textures/stars.tga");
-	// Load Sun texture
-	sunTexture = new Texture("textures/sun.tga");
-	// Load Mercury texture
-	mercuryTexture = new Texture("textures/mercury.tga");
-	// Load Venus texture
-	venusTexture = new Texture("textures/venus.tga");
-	// Load Earth texture
-	earthTexture = new Texture("textures/earth.tga");
-	// Load Mars texture
-	marsTexture = new Texture("textures/mars.tga");
-	// Load Saturn texture
-	saturnTexture = new Texture("textures/saturn.tga");
-	// Load Jupiter texture
-	jupiterTexture = new Texture("textures/jupiter.tga");
-	// Load Neptune texture
-	neptuneTexture = new Texture("textures/neptune.tga");
-	// Load Neptune texture
-	uranusTexture = new Texture("textures/uranus.tga");
-	// Load Pluto texture
-	plutoTexture = new Texture("textures/pluto.tga");
-	// Load Moon 1 texture
-	moonTexture1 = new Texture("textures/moon.tga");
-	// Load Moon 2 texture
-	moonTexture2 = new Texture("textures/moon.tga");
-	// Load Moon 3 texture
-	moonTexture3 = new Texture("textures/moon.tga");
+	starsTexture = new Texture("textures/stars.tga");		// Begin from the Universe
+	sunTexture = new Texture("textures/sun.tga");			// Load Sun texture
+	mercuryTexture = new Texture("textures/mercury.tga");	// Load Mercury texture
+	venusTexture = new Texture("textures/venus.tga");		// Load Venus texture
+	earthTexture = new Texture("textures/earth.tga");		// Load Earth texture
+	marsTexture = new Texture("textures/mars.tga");			// Load Mars texture
+	saturnTexture = new Texture("textures/saturn.tga");		// Load Saturn texture
+	jupiterTexture = new Texture("textures/jupiter.tga");	// Load Jupiter texture
+	neptuneTexture = new Texture("textures/neptune.tga");	// Load Neptune texture
+	uranusTexture = new Texture("textures/uranus.tga");		// Load Neptune texture
+	plutoTexture = new Texture("textures/pluto.tga");		// Load Pluto texture
+	moonTexture1 = new Texture("textures/moon.tga");		// Load Moon 1 texture
+	moonTexture2 = new Texture("textures/moon.tga");		// Load Moon 2 texture
+	moonTexture3 = new Texture("textures/moon.tga");		// Load Moon 3 texture
 
 	// Initialize solar system instance
 	solarSystem = new SolarSystem();
@@ -223,26 +165,13 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	solarSystem->addSatellite(4, 9489.2, 7.6, 7.3, 22, moonTexture2->getTextureHandle());			// Phobos for the Mars
 	solarSystem->addSatellite(4, 23723, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());		// Deimos for the Mars
 
-	// Initialize camera instance
-	camera = new Camera();
-
-	setViewport(pMainOGLViewport->Width, pMainOGLViewport->Height);
+	trotor = 0;
 
 }
 
 void OGLSolarSystem::OGLSolarSystem::setViewport(int width, int height)
 {
-	if (height <= 0)
-		height = 1;
-
-	int aspectratio = width / height;
-	// set up the perspective matrix for rendering the 3d world
-	glMatrixMode(GL_PROJECTION_MATRIX);
-	glLoadIdentity();
-
 	glViewport(0, 0, width, height);
-	gluPerspective(90.0f, aspectratio, 0.0f, 512.0f);
-
 }
 
 void OGLSolarSystem::OGLSolarSystem::setCamera(void)
@@ -251,46 +180,195 @@ void OGLSolarSystem::OGLSolarSystem::setCamera(void)
 	camera->transformTranslation();
 }
 
-void OGLSolarSystem::OGLSolarSystem::_drawUniverse(void)
+void OGLSolarSystem::OGLSolarSystem::initializeUniverse(void)
 {
-	glPushMatrix();
-
 	// Draw the box with stars on the sides
-	glBindTexture(GL_TEXTURE_2D, starsTexture->getTextureHandle());
+	glBindTexture(GL_TEXTURE_2D, earthTexture->getTextureHandle());
 
+	glPushMatrix();
+	
 	glBegin(GL_QUADS);
-	// Side 1 
-	glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-	// Side 2
-	glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-	// Side 3
-	glTexCoord2f(0.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-	// Side 4
-	glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-	// Side 5
-	glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, 1.0f, -1.0f);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, 1.0f, -1.0f);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, 1.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, 1.0f, 1.0f);
-	// Side 6
-	glTexCoord2f(0.0f, 0.0f);	glVertex3f(-1.0f, -1.0f, -1.0f);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3f(1.0f, -1.0f, -1.0f);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3f(1.0f, -1.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f);	glVertex3f(-1.0f, -1.0f, 1.0f);
+
+	// Front face
+	glNormal3f(0.0f, 0.0f, 1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, 1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, 1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, 1.0f);
+	// Rear face
+	glNormal3f(0.0f, 0.0f, -1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+
+	// Top face
+	glNormal3f(0.0f, 1.0f, 0.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f, 1.0f, -1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, 1.0f,  1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, 1.0f,  1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f, 1.0f, -1.0f);
+
+	// Bottom face
+	glNormal3f(0.0f, -1.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+
+	// Right face
+	glNormal3f(1.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(1.0f, -1.0f, -1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(1.0f,  1.0f, -1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(1.0f,  1.0f,  1.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(1.0f, -1.0f,  1.0f);
+
+	// Left face
+	glNormal3f(-1.0f, 0.0f, 0.0f);
+	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
+	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
+	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
+	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
 
 	glEnd();
 
 	glPopMatrix();
+
+	// Setup global lighting for the universe -- BEGIN
+	GLfloat lightAmbient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+	GLfloat lightDiffuse[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	GLfloat lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+	glEnable(GL_LIGHT0);
+	// Setup global lighting of the universe -- END
 }
+
+void OGLSolarSystem::OGLSolarSystem::OGLviewportResize(void)
+{
+	int _iWidth = pMainOGLViewport->Width;
+	int _iHeight = pMainOGLViewport->Height;
+
+	if (_iHeight == 0) _iHeight = 1;
+
+	glViewport(0, 0, _iWidth, _iHeight);
+
+	viewPortAspectRatio = viewPortAspectRatio = _iWidth / _iHeight;
+
+	glMatrixMode(GL_PROJECTION_MATRIX);
+	glLoadIdentity();
+
+	gluPerspective(90.0f, viewPortAspectRatio, 0.0f, 100.0f);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+
+
+void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
+{
+	// clear the buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	gluPerspective(90, 1, 0, 1000);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glColor3f(1, 0, 0);
+	glBegin(GL_LINE_LOOP);
+	glColor3f(1, 0, 0);
+	glVertex3f(0, 0, 0);
+	glVertex3f(200, 0, 0);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glColor3f(0, 1, 0);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 200, 0);
+	glEnd();
+	glBegin(GL_LINE_LOOP);
+	glColor3f(0, 0, 1);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 0, 200);
+	glEnd();
+
+	glTranslatef(0.0f, 0.0f, 0.0f);
+
+	glColor3f(0, 1, 1);
+	glBegin(GL_LINES);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 0, 100);
+	glEnd();
+	glBegin(GL_LINES);
+	glVertex3f(0, 0, 0);
+	glVertex3f(0, 100, 0);
+	glEnd();
+	glBegin(GL_LINES);
+	glVertex3f(0, 0, 0);
+	glVertex3f(100, 0, 0);
+	glEnd();
+
+
+	if (controls.moveForward) camera->moveForward();
+	if (controls.moveBackward) camera->moveBackward();
+	if (controls.slideLeft) camera->slideLeft();
+	if (controls.slideRight) camera->slideRight();
+	if (controls.yawLeft) camera->yawLeft();
+	if (controls.yawRight) camera->yawRight();
+	if (controls.rollLeft) camera->rollLeft();
+	if (controls.rollRight) camera->rollRight();
+	if (controls.pitchUp) camera->pitchUp();
+	if (controls.pitchDown) camera->pitchDown();
+
+	// update the logic and simulation
+	timeScale += timeSpeed;
+	//solarSystem->calculatePositions(timeScale);
+
+/*	// set up the perspective matrix for rendering the 3d world
+	glMatrixMode(GL_PROJECTION_MATRIX);
+	glLoadIdentity();
+
+	// set up the model matrix for rendering the 3d objects
+	gluPerspective(70.0f, viewPortAspectRatio, 0.01f, 500.0f);
+
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	// perform the camera orientation transform
+	camera->transformOrientation();
+*/
+	// Render the Universe
+	//glDisable(GL_LIGHTING);
+//	glDisable(GL_CULL_FACE);
+	//initializeUniverse();
+	//glEnable(GL_LIGHTING);
+//	glEnable(GL_CULL_FACE);
+
+	//camera->transformTranslation();
+
+
+	// Going to render solar system
+	//GLfloat lightPosition[] = { 0.0, 0.0, 0.0, 1.0 };
+	//glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+
+	// render the solar system
+	//glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_LIGHTING);
+
+	//solarSystem->render();
+
+	//glDisable(GL_LIGHTING);
+	//if (showOrbits)
+	//	solarSystem->renderOrbits();
+	//glEnable(GL_LIGHTING);
+
+	//glDisable(GL_DEPTH_TEST);
+
+	glFlush();
+	SwapBuffers(_hDC);
+}
+

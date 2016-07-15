@@ -16,7 +16,9 @@ See LICENSE.TXT*/
 
 #include <Windows.h>
 #include <vector>
-#include <GL\glut.h>
+
+#include <Libraries\glew\GL\glew.h>
+
 #include "planet.h"
 
 // Class for Solar system logic 
@@ -47,6 +49,6 @@ public:
 	void renderOrbits();
 
 	// Render the solar system using OpenGL
-	void renderAll();
+	void render();
 
 };
