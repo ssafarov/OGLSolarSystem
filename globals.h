@@ -19,6 +19,6 @@ const float PI = 3.141592654f;
 const float doublePI = PI * 2;
 const float halfPI = PI / 2;
 
-const float cameraMoveSpeed = 0.01f;
-const float cameraTurnSpeed = 0.05f;
+const float CMS = 0.01f;
+const float CTS = 0.05f;
 

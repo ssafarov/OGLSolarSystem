@@ -81,7 +81,7 @@ void OGLSolarSystem::OGLSolarSystem::initializeOpenGL(GLvoid)
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	glDepthFunc(GL_LEQUAL);
+	glDepthFunc(GL_LESS);
 
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); 
 	glEnable(GL_BLEND);
@@ -221,7 +221,7 @@ void OGLSolarSystem::OGLSolarSystem::OGLviewportResize(void)
 	gluPerspective(80.0f, viewPortAspectRatio, 0.01f, 512.0f);
 
 	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	//glLoadIdentity();
 }
 
 void OGLSolarSystem::OGLSolarSystem::OGLupdateGUI(void)
