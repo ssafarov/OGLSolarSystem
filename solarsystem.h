@@ -17,7 +17,8 @@ See LICENSE.TXT*/
 #include <Windows.h>
 #include <vector>
 
-#include <Libraries\glew\GL\glew.h>
+#include "Libraries\glew\GL\glew.h"
+#include "Libraries\freeglut\GL\freeglut.h"
 
 #include "planet.h"
 

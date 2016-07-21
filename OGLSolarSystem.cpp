@@ -15,9 +15,6 @@ int main(array<String^>^ argv)
 }
 
 
-
-
-
 void OGLSolarSystem::OGLSolarSystem::OGLShutdown(void)
 {
 	wglMakeCurrent(_hDC, NULL);	// release current device context
@@ -85,34 +82,26 @@ void OGLSolarSystem::OGLSolarSystem::initializeOpenGL(GLvoid)
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
 	glDepthFunc(GL_LEQUAL);
-//	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); 
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//	glEnable(GL_BLEND);
 
-//	GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
-//	GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
-//	GLfloat matShininess[] = { 20.0 };
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-//	glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
-//	glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
-//	glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
-	
-//	setViewport(pMainOGLViewport->Width, pMainOGLViewport->Height);
-	
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	glDisable(GL_LIGHTING);
 
-	//	glDisable(GL_LIGHTING);
+	OGLviewportResize();
 }
 
 void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 {
+	// Set up times
+	__time64_t rawTime;
+	_time64(&rawTime);
+	timeScale = 1.0f;// rawTime;
+	timeSpeed = 0.01f;
+
 	// Initialize camera instance
 	camera = new Camera();
-
-	// Set up times
-	timeScale = 1.0f;
-	timeSpeed = 1.0f;
 
 	// Toggles on and off drawn of the orbits
 	showOrbits = true;
@@ -146,13 +135,13 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	moonTexture2 = new Texture("textures/moon.tga");		// Load Moon 2 texture
 	moonTexture3 = new Texture("textures/moon.tga");		// Load Moon 3 texture
 
-	// Initialize solar system instance
+															// Initialize solar system instance
 	solarSystem = new SolarSystem();
 	// Add all the planets with it's data. Distance measured in km, time measured in earth days.
 	solarSystem->addPlanet(0, 1, 500, 695500, sunTexture->getTextureHandle());						// Sun
 	solarSystem->addPlanet(57910000, 88, 58.6, 2439.7, mercuryTexture->getTextureHandle());			// Mercury
 	solarSystem->addPlanet(108200000, 224.65, 243, 6052, venusTexture->getTextureHandle());			// Venus
-	solarSystem->addPlanet(149600000, 365, 1, 6371, earthTexture->getTextureHandle());				// Earth
+	solarSystem->addPlanet(149600000, 365, 1, 6378.16, earthTexture->getTextureHandle());				// Earth
 	solarSystem->addPlanet(227939100, 686, 1.03f, 3389, marsTexture->getTextureHandle());			// Mars
 	solarSystem->addPlanet(778500000, 4332, 0.4139, 69911, jupiterTexture->getTextureHandle());		// Jupiter
 	solarSystem->addPlanet(1433000000, 10759, 0.44375, 58232, saturnTexture->getTextureHandle());	// Saturn
@@ -162,10 +151,8 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	
 	solarSystem->addSatellite(3, 384467, 27.3, 27.3, 1738, moonTexture1->getTextureHandle());		// Moon for the Earth
 	
-	solarSystem->addSatellite(4, 9489.2, 7.6, 7.3, 22, moonTexture2->getTextureHandle());			// Phobos for the Mars
-	solarSystem->addSatellite(4, 23723, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());		// Deimos for the Mars
-
-	trotor = 0;
+	solarSystem->addSatellite(4, 948920, 7.6, 7.3, 22, moonTexture2->getTextureHandle());			// Phobos for the Mars
+	solarSystem->addSatellite(4, 2372300, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());		// Deimos for the Mars
 
 }
 
@@ -180,70 +167,40 @@ void OGLSolarSystem::OGLSolarSystem::setCamera(void)
 	camera->transformTranslation();
 }
 
-void OGLSolarSystem::OGLSolarSystem::initializeUniverse(void)
+void OGLSolarSystem::OGLSolarSystem::renderUniverse(void)
 {
-	// Draw the box with stars on the sides
-	glBindTexture(GL_TEXTURE_2D, earthTexture->getTextureHandle());
-
 	glPushMatrix();
-	
-	glBegin(GL_QUADS);
 
-	// Front face
-	glNormal3f(0.0f, 0.0f, 1.0f);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, 1.0f);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -1.0f, 1.0f);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  1.0f, 1.0f);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, 1.0f);
-	// Rear face
-	glNormal3f(0.0f, 0.0f, -1.0f);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,  1.0f, -1.0f);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
+	// translate to the right position
+	glTranslatef(0.0f, 0.0f, 0.0f);
 
-	// Top face
-	glNormal3f(0.0f, 1.0f, 0.0f);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f, 1.0f, -1.0f);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, 1.0f,  1.0f);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, 1.0f,  1.0f);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f, 1.0f, -1.0f);
+	// Draw the box with stars on the sides
+	glBindTexture(GL_TEXTURE_2D, starsTexture->getTextureHandle());
 
-	// Bottom face
-	glNormal3f(0.0f, -1.0f, 0.0f);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -1.0f, -1.0f);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -1.0f,  1.0f);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-
-	// Right face
-	glNormal3f(1.0f, 0.0f, 0.0f);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(1.0f, -1.0f, -1.0f);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(1.0f,  1.0f, -1.0f);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(1.0f,  1.0f,  1.0f);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(1.0f, -1.0f,  1.0f);
-
-	// Left face
-	glNormal3f(-1.0f, 0.0f, 0.0f);
-	glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f, -1.0f);
-	glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);
-	glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,  1.0f,  1.0f);
-	glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);
-
-	glEnd();
-
-	glPopMatrix();
+	// render as a GLU sphere quadric object
+	GLUquadricObj* OQquadric = gluNewQuadric();
+	gluQuadricTexture(OQquadric, true);
+	gluQuadricNormals(OQquadric, GLU_SMOOTH);
+	gluQuadricOrientation(OQquadric, GLU_INSIDE);
+	float universeRadius = 100.0f;
 
 	// Setup global lighting for the universe -- BEGIN
-	GLfloat lightAmbient[] = { 0.8f, 0.8f, 0.8f, 1.0f };
-	GLfloat lightDiffuse[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	glDisable(GL_LIGHTING);
+	glDisable(GL_LIGHT0);
+	GLfloat lightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	GLfloat lightDiffuse[] = { 0.9f, 0.9f, 0.9f, 1.0f };
 	GLfloat lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f };
-
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHTING);
 	// Setup global lighting of the universe -- END
+
+	gluSphere(OQquadric, universeRadius, 512, 512);
+
+	glPopMatrix();
+
 }
 
 void OGLSolarSystem::OGLSolarSystem::OGLviewportResize(void)
@@ -255,63 +212,31 @@ void OGLSolarSystem::OGLSolarSystem::OGLviewportResize(void)
 
 	glViewport(0, 0, _iWidth, _iHeight);
 
-	viewPortAspectRatio = viewPortAspectRatio = _iWidth / _iHeight;
+	viewPortAspectRatio = _iWidth / _iHeight;
+	viewPortAspectRatio = 1;
 
-	glMatrixMode(GL_PROJECTION_MATRIX);
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	gluPerspective(90.0f, viewPortAspectRatio, 0.0f, 100.0f);
+	gluPerspective(80.0f, viewPortAspectRatio, 0.01f, 512.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
 
+void OGLSolarSystem::OGLSolarSystem::OGLupdateGUI(void)
+{
+
+	lPosX->Text = String::Format("{0:0.000000000}", camera->position[0]);
+	lPosY->Text = String::Format("{0:0.000000000}", camera->position[1]);
+	lPosZ->Text = String::Format("{0:0.000000000}", camera->position[2]);
+
+	lCurrentDateTime->Text = String::Format("{0:0.000000000}", timeScale);
+}
 
 
 void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
 {
-	// clear the buffers
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	gluPerspective(90, 1, 0, 1000);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	glColor3f(1, 0, 0);
-	glBegin(GL_LINE_LOOP);
-	glColor3f(1, 0, 0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(200, 0, 0);
-	glEnd();
-	glBegin(GL_LINE_LOOP);
-	glColor3f(0, 1, 0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, 200, 0);
-	glEnd();
-	glBegin(GL_LINE_LOOP);
-	glColor3f(0, 0, 1);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, 0, 200);
-	glEnd();
-
-	glTranslatef(0.0f, 0.0f, 0.0f);
-
-	glColor3f(0, 1, 1);
-	glBegin(GL_LINES);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, 0, 100);
-	glEnd();
-	glBegin(GL_LINES);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, 100, 0);
-	glEnd();
-	glBegin(GL_LINES);
-	glVertex3f(0, 0, 0);
-	glVertex3f(100, 0, 0);
-	glEnd();
-
-
 	if (controls.moveForward) camera->moveForward();
 	if (controls.moveBackward) camera->moveBackward();
 	if (controls.slideLeft) camera->slideLeft();
@@ -325,50 +250,33 @@ void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
 
 	// update the logic and simulation
 	timeScale += timeSpeed;
-	//solarSystem->calculatePositions(timeScale);
+	solarSystem->calculatePositions(timeScale);
 
-/*	// set up the perspective matrix for rendering the 3d world
-	glMatrixMode(GL_PROJECTION_MATRIX);
-	glLoadIdentity();
+	// clear the buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// set up the model matrix for rendering the 3d objects
-	gluPerspective(70.0f, viewPortAspectRatio, 0.01f, 500.0f);
-
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
 	// perform the camera orientation transform
-	camera->transformOrientation();
-*/
+	setCamera();
+
+
 	// Render the Universe
-	//glDisable(GL_LIGHTING);
-//	glDisable(GL_CULL_FACE);
-	//initializeUniverse();
-	//glEnable(GL_LIGHTING);
-//	glEnable(GL_CULL_FACE);
+	renderUniverse();
 
-	//camera->transformTranslation();
-
-
-	// Going to render solar system
-	//GLfloat lightPosition[] = { 0.0, 0.0, 0.0, 1.0 };
-	//glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+	glDisable(GL_LIGHTING);
+	if (showOrbits)
+		solarSystem->renderOrbits();
 
 	// render the solar system
-	//glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_LIGHTING);
-
-	//solarSystem->render();
-
-	//glDisable(GL_LIGHTING);
-	//if (showOrbits)
-	//	solarSystem->renderOrbits();
-	//glEnable(GL_LIGHTING);
-
-	//glDisable(GL_DEPTH_TEST);
+	solarSystem->render();
+	glEnable(GL_LIGHTING);
 
 	glFlush();
 	SwapBuffers(_hDC);
+
+	OGLupdateGUI();
 }
 

@@ -6,7 +6,8 @@ See LICENSE.TXT*/
 // Sergey Safarov
 
 #include <Windows.h>
-#include <Libraries\glew\GL\glew.h>
+#include "Libraries\glew\GL\glew.h"
+#include "Libraries\freeglut\GL\freeglut.h"
 
 #include <cstdio>
 #include <cstdlib>

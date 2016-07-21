@@ -16,4 +16,9 @@ const float distanceScale = 0.00000001f;
 const float planetSizeScale = 0.000005f;
 
 const float PI = 3.141592654f;
-const float doublePI = 2 * PI;
+const float doublePI = PI * 2;
+const float halfPI = PI / 2;
+
+const float cameraMoveSpeed = 0.01f;
+const float cameraTurnSpeed = 0.05f;
+

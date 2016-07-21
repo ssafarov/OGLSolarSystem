@@ -15,8 +15,8 @@ See LICENSE.TXT*/
 #include <vector>
 #include <cmath>
 
-#include <Libraries\glew\GL\glew.h>
-#include <Libraries\freeglut\GL\freeglut.h>
+#include "Libraries\glew\GL\glew.h"
+#include "Libraries\freeglut\GL\freeglut.h"
 
 #include "satellite.h"
 

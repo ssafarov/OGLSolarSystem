@@ -16,8 +16,9 @@ See LICENSE.TXT*/
 
 Camera::Camera(void)
 {
-	cameraMoveSpeed = 0.005f;
-	cameraTurnSpeed = 0.01f;
+	cameraMoveSpeed = CMS;
+	cameraTurnSpeed = CTS;
+
 
 	// set default vector values - obtained a nice viewing angle of the planets, got values using the debugger
 	/*
@@ -27,15 +28,18 @@ Camera::Camera(void)
 	position		0x00ab3570 {0.764331460, -0.86760659, 0.642456770}		float[3]
 	*/
 
-	//vectorSet(_position, 0.764331460f, -0.86760659f, -0.642456770f);
-	//vectorSet(forwardVector, -0.398769796f, 0.763009906f, -0.508720219f);
-	//vectorSet(rightVector, 0.886262059f, 0.463184059f, 0.000000000f);
-	//vectorSet(upVector, -0.235630989f, 0.450859368f, 0.860931039f);
+	vectorSet(positionDefault, -0.398769796f, -3.86760659f, 7.642456770f);
+	vectorSet(forwardDefaultVector, -1.398769796f, 2.763009906f, -0.508720219f);
+	vectorSet(rightDefaultVector, 0.886262059f, 0.463184059f, 0.000000000f);
+	vectorSet(upDefaultVector, -0.235630989f, 0.450859368f, 0.860931039f);
 
-	vectorSet(position, 0.0f, 0.0f, -20.0f);
-	vectorSet(forwardVector, 0.0f, 0.0f, 1.0f);
-	vectorSet(rightVector, 1.0f, 0.0f, 0.0f);
-	vectorSet(upVector, 0.0f, 1.0f, 0.0f);
+	//vectorSet(positionDefault, 0.0f, 0.0f, -1.0f);
+	//vectorSet(forwardDefaultVector, 0.0f, 0.0f, 1.0f);
+	//vectorSet(rightDefaultVector, 1.0f, 0.0f, 0.0f);
+	//vectorSet(upDefaultVector, 0.0f, 1.0f, 0.0f);
+
+	reset();
+
 }
 
 
@@ -133,14 +137,14 @@ void Camera::rotateAroundVector(float* v1, float* v2, float angle, float* v3)
 void Camera::transformOrientation(void)
 {
 	// Look in the direction of the orientation vectors
-	//gluLookAt(0, 0, 0, forwardVector[0], forwardVector[1], forwardVector[2], upVector[0], upVector[1], upVector[2]);
+	gluLookAt(0, 0, 0, forwardVector[0], forwardVector[1], forwardVector[2], upVector[0], upVector[1], upVector[2]);
 }
 
 // Transform the OpenGL view matrix for the translation
 void Camera::transformTranslation(void)
 {
 	// Translate to emulate camera position
-	//glTranslatef(position[0], position[1], position[2]);
+	glTranslatef(position[0], position[1], position[2]);
 }
 
 // Points the camera at the given point in 3d space
@@ -313,4 +317,12 @@ void Camera::yawRight(void)
 
 	rotateAroundVector(rightVector, upVector, -cameraTurnSpeed, tempVector);
 	vectorCopy(rightVector, tempVector);
+}
+
+void Camera::reset(void)
+{
+	vectorCopy(position, positionDefault);
+	vectorCopy(forwardVector, forwardDefaultVector);
+	vectorCopy(rightVector, rightDefaultVector);
+	vectorCopy(upVector, upDefaultVector);
 }

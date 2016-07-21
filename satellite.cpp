@@ -62,7 +62,7 @@ void Satellite::renderOrbit(void)
 	glBegin(GL_LINE_STRIP);
 
 	// loop round from 0 to double PI and draw around the radius of the orbit using trigonometry
-	for (float angle = 0.0f; angle < doublePI; angle += 0.1f)
+	for (float angle = 0.0f; angle < doublePI; angle += 0.01f)
 	{
 		glVertex3f(sin(angle) * distanceFromPlanet * distanceScale, cos(angle) * distanceFromPlanet * distanceScale, 0.0f);
 	}

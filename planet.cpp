@@ -63,9 +63,6 @@ void Planet::render(void)
 	// bind the planets texture
 	glBindTexture(GL_TEXTURE_2D, textureHandle);
 
-
-
-
 	// render as a GLU sphere quadric object
 	GLUquadricObj* quadric = gluNewQuadric();
 	gluQuadricTexture(quadric, true);
@@ -76,17 +73,17 @@ void Planet::render(void)
 	{
 		if (radiusScaled > 0.5f) radiusScaled = 0.5f;
 
-		glDisable(GL_LIGHTING);
 		glDisable(GL_LIGHT1);
 
+		GLfloat matAmbience[] = { 0.1f, 0.1f, 0.1f, 0.1f };
+		GLfloat matDiffuse[] = { 0.9f, 0.9f, 0.9f, 0.9f };
+		GLfloat matEmission[] = { 1.0f, 1.0f, 1.0f, 0.0f };
+		GLfloat matShininess[] = { 20.0 };
 
-		GLfloat matAmbience[] = { 0.1, 0.1, 0.1, 0.1 };
-		GLfloat matDiffuse[] = { 0.9, 0.9, 0.9, 0.9 };
-		GLfloat matEmission[] = { 1, 1, 1, 0.01 };
-
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matAmbience);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiffuse);
-		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matEmission);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse);
+		glMaterialfv(GL_FRONT, GL_EMISSION, matEmission);
+		glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
 
 		GLfloat lightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 		GLfloat lightDiffuse[] = { 0.9f, 0.9f, 0.9f, 1.0f };
@@ -96,18 +93,22 @@ void Planet::render(void)
 		glLightfv(GL_LIGHT1, GL_DIFFUSE, lightDiffuse);
 		glLightfv(GL_LIGHT1, GL_POSITION, lightPosition);
 
-		gluSphere(quadric, radiusScaled, 512, 512);
-
-		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT1);
-		glEnable(GL_CULL_FACE);
-
 	}
 	else
 	{
-		gluSphere(quadric, radiusScaled, 128, 128);
+		
+		GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
+		GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
+		GLfloat matShininess[] = { 0.0 };
+
+		glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
+		glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
+		glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
 	}
 
+
+	gluSphere(quadric, radiusScaled, 128, 128);
 
 	glPopMatrix();
 
@@ -117,11 +118,13 @@ void Planet::render(void)
 // render this planets orbit circle
 void Planet::renderOrbit(void)
 {
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glDisable(GL_TEXTURE_2D);
 	// draw a line strip
 	glBegin(GL_LINE_STRIP);
 
 	// loop round from 0 to 2*PI and draw around the radius of the orbit using trigonometry
-	for (float angle = 0.0f; angle < doublePI; angle += 0.05f)
+	for (float angle = 0.0f; angle < doublePI; angle += 0.01f)
 	{
 		glVertex3f(sin(angle) * distanceFromSun * distanceScale, cos(angle) * distanceFromSun * distanceScale, 0.0f);
 	}
@@ -139,6 +142,7 @@ void Planet::renderOrbit(void)
 	{
 		satellites[i].renderOrbit();
 	}
+	glEnable(GL_TEXTURE_2D);
 	glPopMatrix();
 
 }

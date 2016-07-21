@@ -1,13 +1,15 @@
 #pragma once
 
 #include <Windows.h>
+#include <string>
+#include <ctime>
 
 #include "texture.h"
 #include "camera.h"
 #include "solarsystem.h"
 
-#include <Libraries\glew\GL\glew.h>
-#include <Libraries\freeglut\GL\freeglut.h>
+#include "Libraries\glew\GL\glew.h"
+#include "Libraries\freeglut\GL\freeglut.h"
 
 
 namespace OGLSolarSystem {
@@ -34,7 +36,7 @@ namespace OGLSolarSystem {
 				HWND hWnd = (HWND)pMainOGLViewport->Handle.ToInt64();
 				if (initializeContexts(GetDC(hWnd))) {
 					initializeOpenGL();
-					//initializeSystem();
+					initializeSystem();
 				}
 			}
 
@@ -65,7 +67,7 @@ namespace OGLSolarSystem {
 		private: System::Windows::Forms::ToolStripMenuItem^  aboutToolStripMenuItem;
 		private: System::Windows::Forms::Panel^  pControls;
 		private: System::Windows::Forms::Panel^  pMainOGLViewport;
-	private: System::Windows::Forms::NumericUpDown^  nudParamsTimeSpeed;
+		private: System::Windows::Forms::NumericUpDown^  nudParamsTimeSpeed;
 
 		private: System::Windows::Forms::NumericUpDown^  nudParamsDistanceScale;
 
@@ -88,8 +90,9 @@ namespace OGLSolarSystem {
 			// These control the simulation of time line and scale
 			double timeScale;
 			double timeSpeed;
-			double trotor;
-			bool showOrbits;	
+
+			bool showOrbits;
+			int planetSelected;
 
 			ref struct ControlStates
 			{
@@ -103,10 +106,12 @@ namespace OGLSolarSystem {
 
 			void setViewport(int width, int height);
 			void setCamera(void);
-			void initializeUniverse(void);
+			void renderUniverse(void);
 			void OGLviewportResize(void);
+			void OGLupdateGUI(void);
 
 			float viewPortAspectRatio;
+
 
 			Texture* starsTexture;
 			Texture* sunTexture;
@@ -124,21 +129,21 @@ namespace OGLSolarSystem {
 			Texture* plutoTexture;
 
 			Camera* camera;	// The instance of the camera
-			
+
 			SolarSystem* solarSystem; // The main instance of the solar system
 
+
+			private: System::Windows::Forms::Label^  lPosZ;
+			private: System::Windows::Forms::Label^  lPosY;
+			private: System::Windows::Forms::Label^  lPosX;
+			private: System::Windows::Forms::Label^  lRoll;
+			private: System::Windows::Forms::Label^  lHeading;
+			private: System::Windows::Forms::Label^  lPitch;
 			private: System::Windows::Forms::Label^  label1;
 			private: System::Windows::Forms::Label^  label3;
-			private: System::Windows::Forms::NumericUpDown^  numericUpDown4;
-			private: System::Windows::Forms::NumericUpDown^  numericUpDown5;
-			private: System::Windows::Forms::NumericUpDown^  numericUpDown6;
 			private: System::Windows::Forms::Label^  label7;
 			private: System::Windows::Forms::Label^  label8;
 			private: System::Windows::Forms::Label^  label9;
-
-			private: System::Windows::Forms::NumericUpDown^  numericUpDown3;
-			private: System::Windows::Forms::NumericUpDown^  numericUpDown2;
-			private: System::Windows::Forms::NumericUpDown^  numericUpDown1;
 			private: System::Windows::Forms::Label^  label6;
 			private: System::Windows::Forms::Label^  label5;
 			private: System::Windows::Forms::Label^  label4;
@@ -165,16 +170,16 @@ namespace OGLSolarSystem {
 			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pControls = (gcnew System::Windows::Forms::Panel());
+			this->lRoll = (gcnew System::Windows::Forms::Label());
+			this->lHeading = (gcnew System::Windows::Forms::Label());
+			this->lPitch = (gcnew System::Windows::Forms::Label());
+			this->lPosZ = (gcnew System::Windows::Forms::Label());
+			this->lPosY = (gcnew System::Windows::Forms::Label());
+			this->lPosX = (gcnew System::Windows::Forms::Label());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->numericUpDown4 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown5 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown6 = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->label9 = (gcnew System::Windows::Forms::Label());
-			this->numericUpDown3 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown2 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown1 = (gcnew System::Windows::Forms::NumericUpDown());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->label5 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
@@ -194,12 +199,6 @@ namespace OGLSolarSystem {
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->menuStripMain->SuspendLayout();
 			this->pControls->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown4))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown5))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown6))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown3))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown2))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsDistanceScale))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsTimeSpeed))->BeginInit();
 			this->SuspendLayout();
@@ -248,16 +247,16 @@ namespace OGLSolarSystem {
 			this->pControls->Anchor = static_cast<System::Windows::Forms::AnchorStyles>(((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
 				| System::Windows::Forms::AnchorStyles::Left));
 			this->pControls->AutoScroll = true;
+			this->pControls->Controls->Add(this->lRoll);
+			this->pControls->Controls->Add(this->lHeading);
+			this->pControls->Controls->Add(this->lPitch);
+			this->pControls->Controls->Add(this->lPosZ);
+			this->pControls->Controls->Add(this->lPosY);
+			this->pControls->Controls->Add(this->lPosX);
 			this->pControls->Controls->Add(this->button1);
-			this->pControls->Controls->Add(this->numericUpDown4);
-			this->pControls->Controls->Add(this->numericUpDown5);
-			this->pControls->Controls->Add(this->numericUpDown6);
 			this->pControls->Controls->Add(this->label7);
 			this->pControls->Controls->Add(this->label8);
 			this->pControls->Controls->Add(this->label9);
-			this->pControls->Controls->Add(this->numericUpDown3);
-			this->pControls->Controls->Add(this->numericUpDown2);
-			this->pControls->Controls->Add(this->numericUpDown1);
 			this->pControls->Controls->Add(this->label6);
 			this->pControls->Controls->Add(this->label5);
 			this->pControls->Controls->Add(this->label4);
@@ -276,6 +275,60 @@ namespace OGLSolarSystem {
 			this->pControls->Size = System::Drawing::Size(271, 522);
 			this->pControls->TabIndex = 1;
 			// 
+			// lRoll
+			// 
+			this->lRoll->AutoSize = true;
+			this->lRoll->Location = System::Drawing::Point(201, 231);
+			this->lRoll->Name = L"lRoll";
+			this->lRoll->Size = System::Drawing::Size(44, 13);
+			this->lRoll->TabIndex = 75;
+			this->lRoll->Text = L"Z-coord";
+			// 
+			// lHeading
+			// 
+			this->lHeading->AutoSize = true;
+			this->lHeading->Location = System::Drawing::Point(201, 210);
+			this->lHeading->Name = L"lHeading";
+			this->lHeading->Size = System::Drawing::Size(44, 13);
+			this->lHeading->TabIndex = 74;
+			this->lHeading->Text = L"Y-coord";
+			// 
+			// lPitch
+			// 
+			this->lPitch->AutoSize = true;
+			this->lPitch->Location = System::Drawing::Point(201, 187);
+			this->lPitch->Name = L"lPitch";
+			this->lPitch->Size = System::Drawing::Size(44, 13);
+			this->lPitch->TabIndex = 73;
+			this->lPitch->Text = L"X-coord";
+			// 
+			// lPosZ
+			// 
+			this->lPosZ->AutoSize = true;
+			this->lPosZ->Location = System::Drawing::Point(69, 229);
+			this->lPosZ->Name = L"lPosZ";
+			this->lPosZ->Size = System::Drawing::Size(44, 13);
+			this->lPosZ->TabIndex = 72;
+			this->lPosZ->Text = L"Z-coord";
+			// 
+			// lPosY
+			// 
+			this->lPosY->AutoSize = true;
+			this->lPosY->Location = System::Drawing::Point(69, 208);
+			this->lPosY->Name = L"lPosY";
+			this->lPosY->Size = System::Drawing::Size(44, 13);
+			this->lPosY->TabIndex = 71;
+			this->lPosY->Text = L"Y-coord";
+			// 
+			// lPosX
+			// 
+			this->lPosX->AutoSize = true;
+			this->lPosX->Location = System::Drawing::Point(69, 185);
+			this->lPosX->Name = L"lPosX";
+			this->lPosX->Size = System::Drawing::Size(44, 13);
+			this->lPosX->TabIndex = 70;
+			this->lPosX->Text = L"X-coord";
+			// 
 			// button1
 			// 
 			this->button1->Location = System::Drawing::Point(61, 146);
@@ -284,30 +337,7 @@ namespace OGLSolarSystem {
 			this->button1->TabIndex = 69;
 			this->button1->Text = L"Reset";
 			this->button1->UseVisualStyleBackColor = true;
-			// 
-			// numericUpDown4
-			// 
-			this->numericUpDown4->Location = System::Drawing::Point(210, 229);
-			this->numericUpDown4->Name = L"numericUpDown4";
-			this->numericUpDown4->Size = System::Drawing::Size(47, 20);
-			this->numericUpDown4->TabIndex = 68;
-			this->numericUpDown4->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-			// 
-			// numericUpDown5
-			// 
-			this->numericUpDown5->Location = System::Drawing::Point(210, 208);
-			this->numericUpDown5->Name = L"numericUpDown5";
-			this->numericUpDown5->Size = System::Drawing::Size(47, 20);
-			this->numericUpDown5->TabIndex = 67;
-			this->numericUpDown5->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-			// 
-			// numericUpDown6
-			// 
-			this->numericUpDown6->Location = System::Drawing::Point(210, 185);
-			this->numericUpDown6->Name = L"numericUpDown6";
-			this->numericUpDown6->Size = System::Drawing::Size(47, 20);
-			this->numericUpDown6->TabIndex = 66;
-			this->numericUpDown6->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
+			this->button1->Click += gcnew System::EventHandler(this, &OGLSolarSystem::button1_Click);
 			// 
 			// label7
 			// 
@@ -335,30 +365,6 @@ namespace OGLSolarSystem {
 			this->label9->Size = System::Drawing::Size(47, 13);
 			this->label9->TabIndex = 63;
 			this->label9->Text = L"Pitch (X)";
-			// 
-			// numericUpDown3
-			// 
-			this->numericUpDown3->Location = System::Drawing::Point(78, 227);
-			this->numericUpDown3->Name = L"numericUpDown3";
-			this->numericUpDown3->Size = System::Drawing::Size(47, 20);
-			this->numericUpDown3->TabIndex = 61;
-			this->numericUpDown3->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-			// 
-			// numericUpDown2
-			// 
-			this->numericUpDown2->Location = System::Drawing::Point(78, 206);
-			this->numericUpDown2->Name = L"numericUpDown2";
-			this->numericUpDown2->Size = System::Drawing::Size(47, 20);
-			this->numericUpDown2->TabIndex = 60;
-			this->numericUpDown2->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
-			// 
-			// numericUpDown1
-			// 
-			this->numericUpDown1->Location = System::Drawing::Point(78, 183);
-			this->numericUpDown1->Name = L"numericUpDown1";
-			this->numericUpDown1->Size = System::Drawing::Size(47, 20);
-			this->numericUpDown1->TabIndex = 59;
-			this->numericUpDown1->Value = System::Decimal(gcnew cli::array< System::Int32 >(4) { 1, 0, 0, 0 });
 			// 
 			// label6
 			// 
@@ -526,20 +532,18 @@ namespace OGLSolarSystem {
 			this->Controls->Add(this->pMainOGLViewport);
 			this->Controls->Add(this->pControls);
 			this->Controls->Add(this->menuStripMain);
+			this->KeyPreview = true;
 			this->MainMenuStrip = this->menuStripMain;
 			this->Name = L"OGLSolarSystem";
 			this->Text = L"OGLSolarSystem";
+			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &OGLSolarSystem::OGLSolarSystem_KeyDown);
+			this->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &OGLSolarSystem::OGLSolarSystem_KeyPress);
+			this->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &OGLSolarSystem::OGLSolarSystem_KeyUp);
 			this->Resize += gcnew System::EventHandler(this, &OGLSolarSystem::OGLSolarSystem_Resize);
 			this->menuStripMain->ResumeLayout(false);
 			this->menuStripMain->PerformLayout();
 			this->pControls->ResumeLayout(false);
 			this->pControls->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown4))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown5))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown6))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown3))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown2))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->numericUpDown1))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsDistanceScale))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->nudParamsTimeSpeed))->EndInit();
 			this->ResumeLayout(false);
@@ -552,8 +556,8 @@ namespace OGLSolarSystem {
 			Application::Exit();
 		}
 		private: System::Void OGLSolarSystem_Resize(System::Object^  sender, System::EventArgs^  e) {
-//			OGLviewportResize();
-//			OGLRender();
+			OGLviewportResize();
+			OGLRender();
 		}
 		private: System::Void timer1_Tick(System::Object^  sender, System::EventArgs^  e) {
 			UNREFERENCED_PARAMETER(sender);
@@ -563,5 +567,123 @@ namespace OGLSolarSystem {
 		private: System::Void nudParamsTimeScale_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
 			timeSpeed = (double)nudParamsTimeSpeed->Value;
 		}
-	};
+	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+		camera->reset();
+	}
+
+private: System::Void OGLSolarSystem_KeyDown(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+
+	switch (e->KeyCode)
+	{
+	case Keys::W:
+		controls.moveForward = true;
+		break;
+	case Keys::S:
+		controls.moveBackward = true;
+		break;
+	case Keys::A:
+		controls.slideLeft = true;
+		break;
+	case Keys::D:
+		controls.slideRight = true;
+		break;
+	case Keys::L:
+		controls.rollRight = true;
+		break;
+	case Keys::J:
+		controls.rollLeft = true;
+		break;
+	case Keys::I:
+		controls.pitchDown = true;
+		break;
+	case Keys::K:
+		controls.pitchUp = true;
+		break;
+	case Keys::Q:
+		controls.yawLeft = true;
+		break;
+	case Keys::E:
+		controls.yawRight = true;
+		break;
+	}
+
+}
+
+private: System::Void OGLSolarSystem_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) 
+{
+	// check for numerical keys
+	if (Char::IsDigit(e->KeyChar) == true)
+	{
+		// point at the specified planet
+		float selected[3];
+		solarSystem->getPlanetPosition(e->KeyChar - '0', selected);
+		camera->pointAt(selected);
+
+		// select that planet
+		planetSelected = e->KeyChar - '0';
+	}
+
+	switch (e->KeyChar)
+	{
+	case '-':
+		timeSpeed /= 2.0f; // half the rate of time passing
+		break;
+	case '=':
+		timeSpeed *= 2.0f; // double the rate of time passing
+		break;
+	case '+':
+		timeSpeed *= 2.0f; // double the rate of time passing
+		break;
+	case 'o':
+		showOrbits = !showOrbits; // toggle show orbits
+		break;
+	case ',':
+		camera->speedDown(); // slow down camera
+		break;
+	case '.':
+		camera->speedUp(); // speed up camera
+		break;
+	}
+
+	OGLupdateGUI();
+
+}
+
+private: System::Void OGLSolarSystem_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
+	switch (e->KeyCode)
+	{
+	case Keys::W:
+		controls.moveForward = false;
+		break;
+	case Keys::S:
+		controls.moveBackward = false;
+		break;
+	case Keys::A:
+		controls.slideLeft = false;
+		break;
+	case Keys::D:
+		controls.slideRight = false;
+		break;
+	case Keys::L:
+		controls.rollRight = false;
+		break;
+	case Keys::J:
+		controls.rollLeft = false;
+		break;
+	case Keys::I:
+		controls.pitchDown = false;
+		break;
+	case Keys::K:
+		controls.pitchUp = false;
+		break;
+	case Keys::Q:
+		controls.yawLeft = false;
+		break;
+	case Keys::E:
+		controls.yawRight = false;
+		break;
+	}
+
+}
+};
 }
