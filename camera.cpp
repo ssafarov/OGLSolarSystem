@@ -30,96 +30,6 @@ Camera::Camera(void)
 }
 
 
-// Service vector functions for help
-
-// Sets vector to (x,y,z)
-void Camera::vectorSet(float* v, float x, float y, float z)
-{
-	v[0] = x;
-	v[1] = y;
-	v[2] = z;
-}
-
-// Adds v2 to v1
-void Camera::vectorAdd(float* v1, float* v2)
-{
-	v1[0] += v2[0];
-	v1[1] += v2[1];
-	v1[2] += v2[2];
-}
-
-// Copies v2 into v1
-void Camera::vectorCopy(float* v1, float* v2)
-{
-	v1[0] = v2[0];
-	v1[1] = v2[1];
-	v1[2] = v2[2];
-}
-
-// Multiplies vectors by the scalar
-void Camera::vectorMultiple(float* v, float scalar)
-{
-	v[0] *= scalar;
-	v[1] *= scalar;
-	v[2] *= scalar;
-}
-
-// Finds the magnitude of a vector
-float Camera::lengthOfVector(float* v)
-{
-	return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-}
-
-// Normalizes a vector to magnitude 1
-void Camera::normaliseVector(float* v)
-{
-	vectorMultiple(v, 1 / lengthOfVector(v));
-}
-
-// Makes a 3x3 rotation matrix from the given angle and axis and pointer to a 3x3 matrix
-void Camera::rotationMatrix(float* matrix, float* axis, float angle)
-{
-	float cos1 = cos(angle);
-	float cos2 = 1 - cos1;
-	float sin1 = sin(angle);
-
-	matrix[0] = cos1 + axis[0] * axis[0] * cos2;
-	matrix[1] = axis[0] * axis[1] * cos2 - axis[2] * sin1;
-	matrix[2] = axis[0] * axis[2] * cos2 + axis[1] * sin1;
-
-	matrix[3] = axis[1] * axis[0] * cos2 + axis[2] * sin1;
-	matrix[4] = cos1 + axis[1] * axis[1] * cos2;
-	matrix[5] = axis[1] * axis[2] * cos2 - axis[0] * sin1;
-
-	matrix[6] = axis[2] * axis[0] * cos2 - axis[1] * sin1;
-	matrix[7] = axis[2] * axis[1] * cos2 + axis[0] * sin1;
-	matrix[8] = cos1 + axis[2] * axis[2] * cos2;
-}
-
-// Multiplies a vector v1 by a matrix and puts the results into vector v2
-void Camera::multipleVectorBy(float* v1, float* matrix, float* v2)
-{
-	v2[0] = v1[0] * matrix[0] + v1[1] * matrix[1] + v1[2] * matrix[2];
-	v2[1] = v1[0] * matrix[3] + v1[1] * matrix[4] + v1[2] * matrix[5];
-	v2[2] = v1[0] * matrix[6] + v1[1] * matrix[7] + v1[2] * matrix[8];
-}
-
-// Rotate a vector v1 around the axis v2 by angle and put the result into v3
-void Camera::rotateAroundVector(float* v1, float* v2, float angle, float* v3)
-{
-	// Make a rotation matrix for it
-	float matrix[16];
-	rotationMatrix(matrix, v2, angle);
-
-	// Multiply by the matrix
-	multipleVectorBy(v1, matrix, v3);
-}
-
-// Service functions ends
-
-
-
-
 // Transform the OpenGL view matrix for the camera
 void Camera::transformOrientation(void)
 {
@@ -149,7 +59,7 @@ void Camera::pointAt(float* targetVector)
 	normaliseVector(forwardVector);
 
 	// Now to find the right vector we rotate the forward vector -pi/2 around the z axis
-	rotateAroundVector(forwardVector, up, -1.57079632679f, tempVector);
+	rotateAroundVector(forwardVector, up, -halfPI, tempVector);
 	// and remove the y component to make it flat
 	tempVector[2] = 0;
 	// then normalize it
@@ -158,7 +68,7 @@ void Camera::pointAt(float* targetVector)
 	vectorCopy(rightVector, tempVector);
 
 	// Now work out the up vector by rotating the forward vector pi/2 around the right vector
-	rotateAroundVector(forwardVector, rightVector, 1.57079632679f, tempVector);
+	rotateAroundVector(forwardVector, rightVector, halfPI, tempVector);
 	vectorCopy(upVector, tempVector);
 }
 
@@ -313,3 +223,91 @@ void Camera::reset(void)
 	vectorCopy(rightVector, rightDefaultVector);
 	vectorCopy(upVector, upDefaultVector);
 }
+
+
+// Service vector functions for help
+
+// Sets vector to (x,y,z)
+void Camera::vectorSet(float* v, float x, float y, float z)
+{
+	v[0] = x;
+	v[1] = y;
+	v[2] = z;
+}
+
+// Adds v2 to v1
+void Camera::vectorAdd(float* v1, float* v2)
+{
+	v1[0] += v2[0];
+	v1[1] += v2[1];
+	v1[2] += v2[2];
+}
+
+// Copies v2 into v1
+void Camera::vectorCopy(float* v1, float* v2)
+{
+	v1[0] = v2[0];
+	v1[1] = v2[1];
+	v1[2] = v2[2];
+}
+
+// Multiplies vectors by the scalar
+void Camera::vectorMultiple(float* v, float scalar)
+{
+	v[0] *= scalar;
+	v[1] *= scalar;
+	v[2] *= scalar;
+}
+
+// Finds the magnitude of a vector
+float Camera::lengthOfVector(float* v)
+{
+	return sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+}
+
+// Normalizes a vector to magnitude 1
+void Camera::normaliseVector(float* v)
+{
+	vectorMultiple(v, 1 / lengthOfVector(v));
+}
+
+// Makes a 3x3 rotation matrix from the given angle and axis and pointer to a 3x3 matrix
+void Camera::rotationMatrix(float* matrix, float* axis, float angle)
+{
+	float cos1 = cos(angle);
+	float cos2 = 1 - cos1;
+	float sin1 = sin(angle);
+
+	matrix[0] = cos1 + axis[0] * axis[0] * cos2;
+	matrix[1] = axis[0] * axis[1] * cos2 - axis[2] * sin1;
+	matrix[2] = axis[0] * axis[2] * cos2 + axis[1] * sin1;
+
+	matrix[3] = axis[1] * axis[0] * cos2 + axis[2] * sin1;
+	matrix[4] = cos1 + axis[1] * axis[1] * cos2;
+	matrix[5] = axis[1] * axis[2] * cos2 - axis[0] * sin1;
+
+	matrix[6] = axis[2] * axis[0] * cos2 - axis[1] * sin1;
+	matrix[7] = axis[2] * axis[1] * cos2 + axis[0] * sin1;
+	matrix[8] = cos1 + axis[2] * axis[2] * cos2;
+}
+
+// Multiplies a vector v1 by a matrix and puts the results into vector v2
+void Camera::multipleVectorBy(float* v1, float* matrix, float* v2)
+{
+	v2[0] = v1[0] * matrix[0] + v1[1] * matrix[1] + v1[2] * matrix[2];
+	v2[1] = v1[0] * matrix[3] + v1[1] * matrix[4] + v1[2] * matrix[5];
+	v2[2] = v1[0] * matrix[6] + v1[1] * matrix[7] + v1[2] * matrix[8];
+}
+
+// Rotate a vector v1 around the axis v2 by angle and put the result into v3
+void Camera::rotateAroundVector(float* v1, float* v2, float angle, float* v3)
+{
+	// Make a rotation matrix for it
+	float matrix[16];
+	rotationMatrix(matrix, v2, angle);
+
+	// Multiply by the matrix
+	multipleVectorBy(v1, matrix, v3);
+}
+
+// Service functions ends

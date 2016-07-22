@@ -94,6 +94,9 @@ void OGLSolarSystem::OGLSolarSystem::initializeOpenGL(GLvoid)
 
 void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 {
+	//Set Default time scale 
+	cbTimeScale->SelectedItem = cbTimeScale->Items[9];
+
 	// Set up times
 	__time64_t rawTime;
 	_time64(&rawTime);
@@ -230,6 +233,10 @@ void OGLSolarSystem::OGLSolarSystem::OGLupdateGUI(void)
 	lPosX->Text = String::Format("{0:0.000000000}", camera->position[0]);
 	lPosY->Text = String::Format("{0:0.000000000}", camera->position[1]);
 	lPosZ->Text = String::Format("{0:0.000000000}", camera->position[2]);
+
+	lHeadingX->Text = String::Format("{0:0.000000000}", camera->forwardVector[0]);
+	lHeadingY->Text = String::Format("{0:0.000000000}", camera->forwardVector[1]);
+	lHeadingZ->Text = String::Format("{0:0.000000000}", camera->forwardVector[2]);
 
 	lCurrentDateTime->Text = String::Format("{0:0.000000000}", timeScale);
 }

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cmath>
+#include <string>
+
 /*Published under The MIT License (MIT)
 See LICENSE.TXT*/
 
@@ -16,9 +19,10 @@ const float distanceScale = 0.00000001f;
 const float planetSizeScale = 0.000005f;
 
 const float PI = 3.141592654f;
-const float doublePI = PI * 2;
-const float halfPI = PI / 2;
+const float doublePI = 6.283185308f;
+const float halfPI = 1.570796327f;
 
 const float CMS = 0.01f;
 const float CTS = 0.05f;
 
+const float TIME_SCALE_MULTIPLIERS[17] = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f, 1.1f, 1.2f, 1.5f, 2.0f, 3.0f, 5.0f, 10.0f };
