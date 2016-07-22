@@ -36,6 +36,15 @@ private:
 	// Radius of the planet itself
 	float radius;
 
+	// Mass of the planet itself
+	float mass;
+
+	// Velocity of the planet itself
+	float velocity;
+
+	// Acceleration of the planet itself
+	float acceleration;
+
 	// The texture used for rendering
 	GLuint textureHandle;
 
@@ -49,8 +58,8 @@ private:
 	std::vector<Satellite> satellites;
 
 public:
-	// Distance is in units of km (kilometers) and time is in units of earth days (365.25 orbit time for earth)
-	Planet(float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
+	// Mass in kilograms, distance is in units of km (kilometers) and time is in units of earth days (365.25 orbit time for earth)
+	Planet(float mass, float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
 
 	// Calculate its position in 3D space in the orbit using the given time value
 	void calculatePosition(float time);
@@ -67,6 +76,8 @@ public:
 	// Get the radius of the current planet
 	float getRadius(void);
 
+	float getMass(void);
+
 	// Add a satellite to the current planet
-	void addSatellite(float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
+	void addSatellite(float mass, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
 };

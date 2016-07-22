@@ -7,8 +7,9 @@ See LICENSE.TXT*/
 
 #include "satellite.h"
 
-Satellite::Satellite(float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
+Satellite::Satellite(float mass, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
 {
+	this->mass = mass;
 	this->distanceFromPlanet = distanceFromPlanet;
 	this->orbitTime = orbitTime;
 	this->rotationTime = rotationTime;
@@ -32,6 +33,12 @@ void Satellite::calculatePosition(float time)
 	// find the rotation angle of the satellite around its axis
 	rotation = time * 360 / rotationTime;
 }
+
+float Satellite::getMass(void)
+{
+	return mass;
+}
+
 
 // Render it to the screen
 void Satellite::render(void)

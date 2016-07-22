@@ -31,6 +31,15 @@ private:
 	// Radius of the satellite itself
 	float radius;
 
+	// Mass of the satellite itself
+	float mass;
+
+	// Velocity of the satellite itself
+	float velocity;
+
+	// Acceleration of the satellite itself
+	float acceleration;
+
 	// The texture used for rendering
 	GLuint textureHandle;
 
@@ -41,11 +50,13 @@ private:
 	float rotation;
 
 public:
-	// Distance is in units of km (kilometers) and time is in units of earth days
-	Satellite(float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
+	// Mass in kilograms, distance is in units of km (kilometers) and time is in units of earth days
+	Satellite(float mass, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
 
 	// Calculate its position in 3D space relative to the planet in the orbit using the given time value
 	void calculatePosition(float time);
+
+	float getMass(void);
 
 	// Render it to the screen
 	void render(void);

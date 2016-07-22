@@ -9,8 +9,9 @@ See LICENSE.TXT*/
 
 #include "planet.h"
 
-Planet::Planet(float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
+Planet::Planet(float mass, float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
 {
+	this->mass = mass;
 	this->distanceFromSun = distanceFromSun;
 	this->orbitTime = orbitTime;
 	this->rotationTime = rotationTime;
@@ -162,8 +163,13 @@ float Planet::getRadius(void)
 	return radius;
 }
 
-// add a moon to this planet
-void Planet::addSatellite(float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
+float Planet::getMass(void)
 {
-	satellites.push_back(Satellite(distanceFromPlanet, orbitTime, rotationTime, radius, textureHandle));
+	return mass;
+}
+
+// add a moon to this planet
+void Planet::addSatellite(float mass, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
+{
+	satellites.push_back(Satellite(mass, distanceFromPlanet, orbitTime, rotationTime, radius, textureHandle));
 }

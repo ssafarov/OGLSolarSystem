@@ -32,13 +32,15 @@ public:
 	SolarSystem();
 
 	// Add a planet with the given data
-	void addPlanet(float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
+	void addPlanet(float mass, float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
 
 	// Add a satellite to the specified planet
-	void addSatellite(int planetIndex, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
+	void addSatellite(int planetIndex, float mass, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
 
 	// Get the position in 3D space units of the given planet (specified by its index in the list) and put it into the 3D vector
 	void getPlanetPosition(int index, float *vector);
+
+	float getPlanetMass(int index);
 
 	// Get the radius of the planet at the given index in the planets list
 	float getRadiusOfPlanet(int index);

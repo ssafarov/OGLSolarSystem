@@ -133,6 +133,20 @@ namespace OGLSolarSystem {
 private: System::Windows::Forms::Label^  label25;
 private: System::Windows::Forms::Label^  label24;
 private: System::Windows::Forms::CheckBox^  checkBox1;
+private: System::Windows::Forms::Label^  label38;
+private: System::Windows::Forms::Label^  label39;
+private: System::Windows::Forms::Label^  label37;
+private: System::Windows::Forms::Label^  label36;
+private: System::Windows::Forms::Label^  label35;
+private: System::Windows::Forms::Label^  label34;
+private: System::Windows::Forms::Label^  label33;
+private: System::Windows::Forms::Label^  label32;
+private: System::Windows::Forms::Label^  label31;
+private: System::Windows::Forms::Label^  label30;
+private: System::Windows::Forms::Label^  label29;
+private: System::Windows::Forms::Label^  label28;
+private: System::Windows::Forms::Label^  label27;
+private: System::Windows::Forms::Label^  label26;
 
 			ref struct ControlStates
 			{
@@ -203,7 +217,37 @@ private: System::Windows::Forms::CheckBox^  checkBox1;
 			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pControls = (gcnew System::Windows::Forms::Panel());
+			this->gbSolarSystemSettings = (gcnew System::Windows::Forms::GroupBox());
+			this->label38 = (gcnew System::Windows::Forms::Label());
+			this->label39 = (gcnew System::Windows::Forms::Label());
+			this->label37 = (gcnew System::Windows::Forms::Label());
+			this->label36 = (gcnew System::Windows::Forms::Label());
+			this->label35 = (gcnew System::Windows::Forms::Label());
+			this->label34 = (gcnew System::Windows::Forms::Label());
+			this->label33 = (gcnew System::Windows::Forms::Label());
+			this->label32 = (gcnew System::Windows::Forms::Label());
+			this->label31 = (gcnew System::Windows::Forms::Label());
+			this->label30 = (gcnew System::Windows::Forms::Label());
+			this->label29 = (gcnew System::Windows::Forms::Label());
+			this->label28 = (gcnew System::Windows::Forms::Label());
+			this->label27 = (gcnew System::Windows::Forms::Label());
+			this->label26 = (gcnew System::Windows::Forms::Label());
+			this->label25 = (gcnew System::Windows::Forms::Label());
+			this->label24 = (gcnew System::Windows::Forms::Label());
+			this->label23 = (gcnew System::Windows::Forms::Label());
+			this->label22 = (gcnew System::Windows::Forms::Label());
+			this->label21 = (gcnew System::Windows::Forms::Label());
+			this->label20 = (gcnew System::Windows::Forms::Label());
+			this->label19 = (gcnew System::Windows::Forms::Label());
+			this->label18 = (gcnew System::Windows::Forms::Label());
+			this->label17 = (gcnew System::Windows::Forms::Label());
+			this->label16 = (gcnew System::Windows::Forms::Label());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->label11 = (gcnew System::Windows::Forms::Label());
+			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 			this->cbParamsShowOrbits = (gcnew System::Windows::Forms::CheckBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
 			this->lRoll = (gcnew System::Windows::Forms::Label());
@@ -233,27 +277,11 @@ private: System::Windows::Forms::CheckBox^  checkBox1;
 			this->lCurrentDateTime = (gcnew System::Windows::Forms::Label());
 			this->timer1 = (gcnew System::Windows::Forms::Timer(this->components));
 			this->cbTimeScale = (gcnew System::Windows::Forms::ComboBox());
-			this->gbSolarSystemSettings = (gcnew System::Windows::Forms::GroupBox());
-			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->label10 = (gcnew System::Windows::Forms::Label());
-			this->label11 = (gcnew System::Windows::Forms::Label());
-			this->label12 = (gcnew System::Windows::Forms::Label());
-			this->label16 = (gcnew System::Windows::Forms::Label());
-			this->label17 = (gcnew System::Windows::Forms::Label());
-			this->label18 = (gcnew System::Windows::Forms::Label());
-			this->label19 = (gcnew System::Windows::Forms::Label());
-			this->label20 = (gcnew System::Windows::Forms::Label());
-			this->label21 = (gcnew System::Windows::Forms::Label());
-			this->label22 = (gcnew System::Windows::Forms::Label());
-			this->label23 = (gcnew System::Windows::Forms::Label());
-			this->label24 = (gcnew System::Windows::Forms::Label());
-			this->label25 = (gcnew System::Windows::Forms::Label());
-			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 			this->menuStripMain->SuspendLayout();
 			this->pControls->SuspendLayout();
+			this->gbSolarSystemSettings->SuspendLayout();
 			this->groupBox2->SuspendLayout();
 			this->groupBox1->SuspendLayout();
-			this->gbSolarSystemSettings->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStripMain
@@ -308,6 +336,298 @@ private: System::Windows::Forms::CheckBox^  checkBox1;
 			this->pControls->Size = System::Drawing::Size(297, 584);
 			this->pControls->TabIndex = 1;
 			// 
+			// gbSolarSystemSettings
+			// 
+			this->gbSolarSystemSettings->Controls->Add(this->label38);
+			this->gbSolarSystemSettings->Controls->Add(this->label39);
+			this->gbSolarSystemSettings->Controls->Add(this->label37);
+			this->gbSolarSystemSettings->Controls->Add(this->label36);
+			this->gbSolarSystemSettings->Controls->Add(this->label35);
+			this->gbSolarSystemSettings->Controls->Add(this->label34);
+			this->gbSolarSystemSettings->Controls->Add(this->label33);
+			this->gbSolarSystemSettings->Controls->Add(this->label32);
+			this->gbSolarSystemSettings->Controls->Add(this->label31);
+			this->gbSolarSystemSettings->Controls->Add(this->label30);
+			this->gbSolarSystemSettings->Controls->Add(this->label29);
+			this->gbSolarSystemSettings->Controls->Add(this->label28);
+			this->gbSolarSystemSettings->Controls->Add(this->label27);
+			this->gbSolarSystemSettings->Controls->Add(this->label26);
+			this->gbSolarSystemSettings->Controls->Add(this->label25);
+			this->gbSolarSystemSettings->Controls->Add(this->label24);
+			this->gbSolarSystemSettings->Controls->Add(this->label23);
+			this->gbSolarSystemSettings->Controls->Add(this->label22);
+			this->gbSolarSystemSettings->Controls->Add(this->label21);
+			this->gbSolarSystemSettings->Controls->Add(this->label20);
+			this->gbSolarSystemSettings->Controls->Add(this->label19);
+			this->gbSolarSystemSettings->Controls->Add(this->label18);
+			this->gbSolarSystemSettings->Controls->Add(this->label17);
+			this->gbSolarSystemSettings->Controls->Add(this->label16);
+			this->gbSolarSystemSettings->Controls->Add(this->label12);
+			this->gbSolarSystemSettings->Controls->Add(this->label11);
+			this->gbSolarSystemSettings->Controls->Add(this->label10);
+			this->gbSolarSystemSettings->Controls->Add(this->label2);
+			this->gbSolarSystemSettings->Location = System::Drawing::Point(8, 203);
+			this->gbSolarSystemSettings->Name = L"gbSolarSystemSettings";
+			this->gbSolarSystemSettings->Size = System::Drawing::Size(279, 340);
+			this->gbSolarSystemSettings->TabIndex = 77;
+			this->gbSolarSystemSettings->TabStop = false;
+			this->gbSolarSystemSettings->Text = L"Solar System";
+			// 
+			// label38
+			// 
+			this->label38->AutoSize = true;
+			this->label38->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->label38->Location = System::Drawing::Point(80, 311);
+			this->label38->Name = L"label38";
+			this->label38->Size = System::Drawing::Size(26, 13);
+			this->label38->TabIndex = 116;
+			this->label38->Text = L"Sun";
+			this->label38->Click += gcnew System::EventHandler(this, &OGLSolarSystem::label38_Click);
+			// 
+			// label39
+			// 
+			this->label39->AutoSize = true;
+			this->label39->Location = System::Drawing::Point(13, 311);
+			this->label39->Name = L"label39";
+			this->label39->Size = System::Drawing::Size(31, 13);
+			this->label39->TabIndex = 115;
+			this->label39->Text = L"Pluto";
+			this->label39->Click += gcnew System::EventHandler(this, &OGLSolarSystem::label39_Click);
+			// 
+			// label37
+			// 
+			this->label37->AutoSize = true;
+			this->label37->Location = System::Drawing::Point(80, 289);
+			this->label37->Name = L"label37";
+			this->label37->Size = System::Drawing::Size(26, 13);
+			this->label37->TabIndex = 114;
+			this->label37->Text = L"Sun";
+			// 
+			// label36
+			// 
+			this->label36->AutoSize = true;
+			this->label36->Location = System::Drawing::Point(80, 266);
+			this->label36->Name = L"label36";
+			this->label36->Size = System::Drawing::Size(26, 13);
+			this->label36->TabIndex = 113;
+			this->label36->Text = L"Sun";
+			// 
+			// label35
+			// 
+			this->label35->AutoSize = true;
+			this->label35->Location = System::Drawing::Point(80, 243);
+			this->label35->Name = L"label35";
+			this->label35->Size = System::Drawing::Size(26, 13);
+			this->label35->TabIndex = 112;
+			this->label35->Text = L"Sun";
+			// 
+			// label34
+			// 
+			this->label34->AutoSize = true;
+			this->label34->Location = System::Drawing::Point(80, 220);
+			this->label34->Name = L"label34";
+			this->label34->Size = System::Drawing::Size(26, 13);
+			this->label34->TabIndex = 111;
+			this->label34->Text = L"Sun";
+			// 
+			// label33
+			// 
+			this->label33->AutoSize = true;
+			this->label33->Location = System::Drawing::Point(80, 197);
+			this->label33->Name = L"label33";
+			this->label33->Size = System::Drawing::Size(26, 13);
+			this->label33->TabIndex = 110;
+			this->label33->Text = L"Sun";
+			// 
+			// label32
+			// 
+			this->label32->AutoSize = true;
+			this->label32->Location = System::Drawing::Point(80, 174);
+			this->label32->Name = L"label32";
+			this->label32->Size = System::Drawing::Size(26, 13);
+			this->label32->TabIndex = 109;
+			this->label32->Text = L"Sun";
+			// 
+			// label31
+			// 
+			this->label31->AutoSize = true;
+			this->label31->Location = System::Drawing::Point(80, 151);
+			this->label31->Name = L"label31";
+			this->label31->Size = System::Drawing::Size(26, 13);
+			this->label31->TabIndex = 108;
+			this->label31->Text = L"Sun";
+			// 
+			// label30
+			// 
+			this->label30->AutoSize = true;
+			this->label30->Location = System::Drawing::Point(80, 128);
+			this->label30->Name = L"label30";
+			this->label30->Size = System::Drawing::Size(26, 13);
+			this->label30->TabIndex = 107;
+			this->label30->Text = L"Sun";
+			// 
+			// label29
+			// 
+			this->label29->AutoSize = true;
+			this->label29->Location = System::Drawing::Point(80, 105);
+			this->label29->Name = L"label29";
+			this->label29->Size = System::Drawing::Size(26, 13);
+			this->label29->TabIndex = 106;
+			this->label29->Text = L"Sun";
+			// 
+			// label28
+			// 
+			this->label28->AutoSize = true;
+			this->label28->Location = System::Drawing::Point(80, 82);
+			this->label28->Name = L"label28";
+			this->label28->Size = System::Drawing::Size(26, 13);
+			this->label28->TabIndex = 105;
+			this->label28->Text = L"Sun";
+			// 
+			// label27
+			// 
+			this->label27->AutoSize = true;
+			this->label27->Location = System::Drawing::Point(80, 59);
+			this->label27->Name = L"label27";
+			this->label27->Size = System::Drawing::Size(26, 13);
+			this->label27->TabIndex = 104;
+			this->label27->Text = L"Sun";
+			// 
+			// label26
+			// 
+			this->label26->AutoSize = true;
+			this->label26->Location = System::Drawing::Point(80, 36);
+			this->label26->Name = L"label26";
+			this->label26->Size = System::Drawing::Size(26, 13);
+			this->label26->TabIndex = 103;
+			this->label26->Text = L"Sun";
+			// 
+			// label25
+			// 
+			this->label25->AutoSize = true;
+			this->label25->Location = System::Drawing::Point(26, 197);
+			this->label25->Name = L"label25";
+			this->label25->Size = System::Drawing::Size(45, 13);
+			this->label25->TabIndex = 102;
+			this->label25->Text = L"Deymos";
+			// 
+			// label24
+			// 
+			this->label24->AutoSize = true;
+			this->label24->Location = System::Drawing::Point(26, 174);
+			this->label24->Name = L"label24";
+			this->label24->Size = System::Drawing::Size(43, 13);
+			this->label24->TabIndex = 101;
+			this->label24->Text = L"Phobos";
+			// 
+			// label23
+			// 
+			this->label23->AutoSize = true;
+			this->label23->Location = System::Drawing::Point(13, 289);
+			this->label23->Name = L"label23";
+			this->label23->Size = System::Drawing::Size(41, 13);
+			this->label23->TabIndex = 100;
+			this->label23->Text = L"Uranus";
+			// 
+			// label22
+			// 
+			this->label22->AutoSize = true;
+			this->label22->Location = System::Drawing::Point(13, 266);
+			this->label22->Name = L"label22";
+			this->label22->Size = System::Drawing::Size(48, 13);
+			this->label22->TabIndex = 99;
+			this->label22->Text = L"Neptune";
+			// 
+			// label21
+			// 
+			this->label21->AutoSize = true;
+			this->label21->Location = System::Drawing::Point(13, 243);
+			this->label21->Name = L"label21";
+			this->label21->Size = System::Drawing::Size(41, 13);
+			this->label21->TabIndex = 98;
+			this->label21->Text = L"Juniper";
+			// 
+			// label20
+			// 
+			this->label20->AutoSize = true;
+			this->label20->Location = System::Drawing::Point(13, 220);
+			this->label20->Name = L"label20";
+			this->label20->Size = System::Drawing::Size(38, 13);
+			this->label20->TabIndex = 97;
+			this->label20->Text = L"Saturn";
+			// 
+			// label19
+			// 
+			this->label19->AutoSize = true;
+			this->label19->Location = System::Drawing::Point(13, 151);
+			this->label19->Name = L"label19";
+			this->label19->Size = System::Drawing::Size(30, 13);
+			this->label19->TabIndex = 96;
+			this->label19->Text = L"Mars";
+			// 
+			// label18
+			// 
+			this->label18->AutoSize = true;
+			this->label18->Location = System::Drawing::Point(26, 128);
+			this->label18->Name = L"label18";
+			this->label18->Size = System::Drawing::Size(34, 13);
+			this->label18->TabIndex = 95;
+			this->label18->Text = L"Moon";
+			// 
+			// label17
+			// 
+			this->label17->AutoSize = true;
+			this->label17->Location = System::Drawing::Point(13, 105);
+			this->label17->Name = L"label17";
+			this->label17->Size = System::Drawing::Size(32, 13);
+			this->label17->TabIndex = 94;
+			this->label17->Text = L"Earth";
+			// 
+			// label16
+			// 
+			this->label16->AutoSize = true;
+			this->label16->Location = System::Drawing::Point(13, 82);
+			this->label16->Name = L"label16";
+			this->label16->Size = System::Drawing::Size(37, 13);
+			this->label16->TabIndex = 93;
+			this->label16->Text = L"Venus";
+			// 
+			// label12
+			// 
+			this->label12->AutoSize = true;
+			this->label12->Location = System::Drawing::Point(13, 59);
+			this->label12->Name = L"label12";
+			this->label12->Size = System::Drawing::Size(45, 13);
+			this->label12->TabIndex = 92;
+			this->label12->Text = L"Mercury";
+			// 
+			// label11
+			// 
+			this->label11->AutoSize = true;
+			this->label11->Location = System::Drawing::Point(13, 36);
+			this->label11->Name = L"label11";
+			this->label11->Size = System::Drawing::Size(26, 13);
+			this->label11->TabIndex = 91;
+			this->label11->Text = L"Sun";
+			// 
+			// label10
+			// 
+			this->label10->AutoSize = true;
+			this->label10->Location = System::Drawing::Point(143, 16);
+			this->label10->Name = L"label10";
+			this->label10->Size = System::Drawing::Size(47, 13);
+			this->label10->TabIndex = 90;
+			this->label10->Text = L"V (km/s)";
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(80, 16);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(37, 13);
+			this->label2->TabIndex = 89;
+			this->label2->Text = L"M (Mt)";
+			// 
 			// groupBox2
 			// 
 			this->groupBox2->Controls->Add(this->checkBox1);
@@ -318,6 +638,17 @@ private: System::Windows::Forms::CheckBox^  checkBox1;
 			this->groupBox2->TabIndex = 76;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Global settings";
+			// 
+			// checkBox1
+			// 
+			this->checkBox1->AutoSize = true;
+			this->checkBox1->Enabled = false;
+			this->checkBox1->Location = System::Drawing::Point(9, 42);
+			this->checkBox1->Name = L"checkBox1";
+			this->checkBox1->Size = System::Drawing::Size(81, 17);
+			this->checkBox1->TabIndex = 5;
+			this->checkBox1->Text = L"Use Gravity";
+			this->checkBox1->UseVisualStyleBackColor = true;
 			// 
 			// cbParamsShowOrbits
 			// 
@@ -608,168 +939,6 @@ private: System::Windows::Forms::CheckBox^  checkBox1;
 			this->cbTimeScale->TabIndex = 50;
 			this->cbTimeScale->SelectedIndexChanged += gcnew System::EventHandler(this, &OGLSolarSystem::cbTimeScale_SelectedIndexChanged);
 			// 
-			// gbSolarSystemSettings
-			// 
-			this->gbSolarSystemSettings->Controls->Add(this->label25);
-			this->gbSolarSystemSettings->Controls->Add(this->label24);
-			this->gbSolarSystemSettings->Controls->Add(this->label23);
-			this->gbSolarSystemSettings->Controls->Add(this->label22);
-			this->gbSolarSystemSettings->Controls->Add(this->label21);
-			this->gbSolarSystemSettings->Controls->Add(this->label20);
-			this->gbSolarSystemSettings->Controls->Add(this->label19);
-			this->gbSolarSystemSettings->Controls->Add(this->label18);
-			this->gbSolarSystemSettings->Controls->Add(this->label17);
-			this->gbSolarSystemSettings->Controls->Add(this->label16);
-			this->gbSolarSystemSettings->Controls->Add(this->label12);
-			this->gbSolarSystemSettings->Controls->Add(this->label11);
-			this->gbSolarSystemSettings->Controls->Add(this->label10);
-			this->gbSolarSystemSettings->Controls->Add(this->label2);
-			this->gbSolarSystemSettings->Location = System::Drawing::Point(8, 203);
-			this->gbSolarSystemSettings->Name = L"gbSolarSystemSettings";
-			this->gbSolarSystemSettings->Size = System::Drawing::Size(279, 315);
-			this->gbSolarSystemSettings->TabIndex = 77;
-			this->gbSolarSystemSettings->TabStop = false;
-			this->gbSolarSystemSettings->Text = L"Solar System";
-			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Location = System::Drawing::Point(80, 16);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(37, 13);
-			this->label2->TabIndex = 89;
-			this->label2->Text = L"M (kg)";
-			this->label2->Click += gcnew System::EventHandler(this, &OGLSolarSystem::label2_Click);
-			// 
-			// label10
-			// 
-			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(133, 16);
-			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(47, 13);
-			this->label10->TabIndex = 90;
-			this->label10->Text = L"V (km/s)";
-			// 
-			// label11
-			// 
-			this->label11->AutoSize = true;
-			this->label11->Location = System::Drawing::Point(13, 36);
-			this->label11->Name = L"label11";
-			this->label11->Size = System::Drawing::Size(26, 13);
-			this->label11->TabIndex = 91;
-			this->label11->Text = L"Sun";
-			// 
-			// label12
-			// 
-			this->label12->AutoSize = true;
-			this->label12->Location = System::Drawing::Point(13, 59);
-			this->label12->Name = L"label12";
-			this->label12->Size = System::Drawing::Size(45, 13);
-			this->label12->TabIndex = 92;
-			this->label12->Text = L"Mercury";
-			// 
-			// label16
-			// 
-			this->label16->AutoSize = true;
-			this->label16->Location = System::Drawing::Point(13, 82);
-			this->label16->Name = L"label16";
-			this->label16->Size = System::Drawing::Size(37, 13);
-			this->label16->TabIndex = 93;
-			this->label16->Text = L"Venus";
-			// 
-			// label17
-			// 
-			this->label17->AutoSize = true;
-			this->label17->Location = System::Drawing::Point(13, 105);
-			this->label17->Name = L"label17";
-			this->label17->Size = System::Drawing::Size(32, 13);
-			this->label17->TabIndex = 94;
-			this->label17->Text = L"Earth";
-			// 
-			// label18
-			// 
-			this->label18->AutoSize = true;
-			this->label18->Location = System::Drawing::Point(26, 128);
-			this->label18->Name = L"label18";
-			this->label18->Size = System::Drawing::Size(34, 13);
-			this->label18->TabIndex = 95;
-			this->label18->Text = L"Moon";
-			// 
-			// label19
-			// 
-			this->label19->AutoSize = true;
-			this->label19->Location = System::Drawing::Point(13, 151);
-			this->label19->Name = L"label19";
-			this->label19->Size = System::Drawing::Size(30, 13);
-			this->label19->TabIndex = 96;
-			this->label19->Text = L"Mars";
-			// 
-			// label20
-			// 
-			this->label20->AutoSize = true;
-			this->label20->Location = System::Drawing::Point(13, 220);
-			this->label20->Name = L"label20";
-			this->label20->Size = System::Drawing::Size(38, 13);
-			this->label20->TabIndex = 97;
-			this->label20->Text = L"Saturn";
-			// 
-			// label21
-			// 
-			this->label21->AutoSize = true;
-			this->label21->Location = System::Drawing::Point(13, 243);
-			this->label21->Name = L"label21";
-			this->label21->Size = System::Drawing::Size(41, 13);
-			this->label21->TabIndex = 98;
-			this->label21->Text = L"Juniper";
-			// 
-			// label22
-			// 
-			this->label22->AutoSize = true;
-			this->label22->Location = System::Drawing::Point(13, 266);
-			this->label22->Name = L"label22";
-			this->label22->Size = System::Drawing::Size(48, 13);
-			this->label22->TabIndex = 99;
-			this->label22->Text = L"Neptune";
-			// 
-			// label23
-			// 
-			this->label23->AutoSize = true;
-			this->label23->Location = System::Drawing::Point(13, 289);
-			this->label23->Name = L"label23";
-			this->label23->Size = System::Drawing::Size(41, 13);
-			this->label23->TabIndex = 100;
-			this->label23->Text = L"Uranus";
-			this->label23->Click += gcnew System::EventHandler(this, &OGLSolarSystem::label23_Click);
-			// 
-			// label24
-			// 
-			this->label24->AutoSize = true;
-			this->label24->Location = System::Drawing::Point(26, 174);
-			this->label24->Name = L"label24";
-			this->label24->Size = System::Drawing::Size(43, 13);
-			this->label24->TabIndex = 101;
-			this->label24->Text = L"Phobos";
-			// 
-			// label25
-			// 
-			this->label25->AutoSize = true;
-			this->label25->Location = System::Drawing::Point(26, 197);
-			this->label25->Name = L"label25";
-			this->label25->Size = System::Drawing::Size(45, 13);
-			this->label25->TabIndex = 102;
-			this->label25->Text = L"Deymos";
-			// 
-			// checkBox1
-			// 
-			this->checkBox1->AutoSize = true;
-			this->checkBox1->Enabled = false;
-			this->checkBox1->Location = System::Drawing::Point(9, 42);
-			this->checkBox1->Name = L"checkBox1";
-			this->checkBox1->Size = System::Drawing::Size(81, 17);
-			this->checkBox1->TabIndex = 5;
-			this->checkBox1->Text = L"Use Gravity";
-			this->checkBox1->UseVisualStyleBackColor = true;
-			// 
 			// OGLSolarSystem
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -793,12 +962,12 @@ private: System::Windows::Forms::CheckBox^  checkBox1;
 			this->menuStripMain->ResumeLayout(false);
 			this->menuStripMain->PerformLayout();
 			this->pControls->ResumeLayout(false);
+			this->gbSolarSystemSettings->ResumeLayout(false);
+			this->gbSolarSystemSettings->PerformLayout();
 			this->groupBox2->ResumeLayout(false);
 			this->groupBox2->PerformLayout();
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
-			this->gbSolarSystemSettings->ResumeLayout(false);
-			this->gbSolarSystemSettings->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -937,10 +1106,6 @@ private: System::Void OGLSolarSystem_KeyUp(System::Object^  sender, System::Wind
 }
 private: System::Void cbTimeScale_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 	timeSpeed *= TIME_SCALE_MULTIPLIERS[cbTimeScale->SelectedIndex];
-}
-private: System::Void label2_Click(System::Object^  sender, System::EventArgs^  e) {
-}
-private: System::Void label23_Click(System::Object^  sender, System::EventArgs^  e) {
 }
 };
 }

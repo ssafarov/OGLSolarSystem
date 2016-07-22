@@ -16,21 +16,26 @@ SolarSystem::SolarSystem()
 }
 
 // Add a planet with the given data
-void SolarSystem::addPlanet(float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
+void SolarSystem::addPlanet(float mass, float distanceFromSun, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
 {
-	planets.push_back(Planet(distanceFromSun, orbitTime, rotationTime, radius, textureHandle));
+	planets.push_back(Planet(mass, distanceFromSun, orbitTime, rotationTime, radius, textureHandle));
 }
 
 // Add a satellite to the specified planet
-void SolarSystem::addSatellite(int planetIndex, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
+void SolarSystem::addSatellite(int planetIndex, float mass, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
 {
-	planets[planetIndex].addSatellite(distanceFromPlanet, orbitTime, rotationTime, radius, textureHandle);
+	planets[planetIndex].addSatellite(mass, distanceFromPlanet, orbitTime, rotationTime, radius, textureHandle);
 }
 
 // Get the position in 3D space units of the given planet (specified by its index in the list) and put it into the 3D vector
 void SolarSystem::getPlanetPosition(int index, float *vector)
 {
 	planets[index].getPosition(vector);
+}
+
+float getPlanetMass(int index)
+{
+	return planets[index].getMass();
 }
 
 // Get the radius of the planet at the given index in the planets list

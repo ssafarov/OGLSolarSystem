@@ -141,21 +141,21 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 															// Initialize solar system instance
 	solarSystem = new SolarSystem();
 	// Add all the planets with it's data. Distance measured in km, time measured in earth days.
-	solarSystem->addPlanet(0, 1, 500, 695500, sunTexture->getTextureHandle());						// Sun
-	solarSystem->addPlanet(57910000, 88, 58.6, 2439.7, mercuryTexture->getTextureHandle());			// Mercury
-	solarSystem->addPlanet(108200000, 224.65, 243, 6052, venusTexture->getTextureHandle());			// Venus
-	solarSystem->addPlanet(149600000, 365, 1, 6378.16, earthTexture->getTextureHandle());				// Earth
-	solarSystem->addPlanet(227939100, 686, 1.03f, 3389, marsTexture->getTextureHandle());			// Mars
-	solarSystem->addPlanet(778500000, 4332, 0.4139, 69911, jupiterTexture->getTextureHandle());		// Jupiter
-	solarSystem->addPlanet(1433000000, 10759, 0.44375, 58232, saturnTexture->getTextureHandle());	// Saturn
-	solarSystem->addPlanet(2877000000, 30685, 0.718056, 25362, uranusTexture->getTextureHandle());	// Uranus
-	solarSystem->addPlanet(4503000000, 60188, 0.6713, 24622, neptuneTexture->getTextureHandle());	// Neptune
-	solarSystem->addPlanet(5906380000, 90616, 6.39, 1137, plutoTexture->getTextureHandle());		// Pluto
+	solarSystem->addPlanet(2E30, 0, 1, 500, 695500, sunTexture->getTextureHandle());						// Sun
+	solarSystem->addPlanet(3.3E23, 57910000, 88, 58.6, 2439.7, mercuryTexture->getTextureHandle());			// Mercury
+	solarSystem->addPlanet(4.81068E24, 108200000, 224.65, 243, 6052, venusTexture->getTextureHandle());			// Venus
+	solarSystem->addPlanet(5.9736E24, 149600000, 365, 1, 6378.16, earthTexture->getTextureHandle());				// Earth
+	solarSystem->addPlanet(0.6418E24, 227939100, 686, 1.03f, 3389, marsTexture->getTextureHandle());			// Mars
+	solarSystem->addPlanet(1.8986E27, 778500000, 4332, 0.4139, 69911, jupiterTexture->getTextureHandle());		// Jupiter
+	solarSystem->addPlanet(561.80376E24, 1433000000, 10759, 0.44375, 58232, saturnTexture->getTextureHandle());	// Saturn
+	solarSystem->addPlanet(86.0544E24, 2877000000, 30685, 0.718056, 25362, uranusTexture->getTextureHandle());	// Uranus
+	solarSystem->addPlanet(101.592E24, 4503000000, 60188, 0.6713, 24622, neptuneTexture->getTextureHandle());	// Neptune
+	solarSystem->addPlanet(0.01195E24, 5906380000, 90616, 6.39, 1137, plutoTexture->getTextureHandle());		// Pluto
 	
-	solarSystem->addSatellite(3, 384467, 27.3, 27.3, 1738, moonTexture1->getTextureHandle());		// Moon for the Earth
+	solarSystem->addSatellite(3, 7.3477E22, 384467, 27.3, 27.3, 1738, moonTexture1->getTextureHandle());		// Moon for the Earth
 	
-	solarSystem->addSatellite(4, 948920, 7.6, 7.3, 22, moonTexture2->getTextureHandle());			// Phobos for the Mars
-	solarSystem->addSatellite(4, 2372300, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());		// Deimos for the Mars
+	solarSystem->addSatellite(4, 1.072E16, 948920, 7.6, 7.3, 22, moonTexture2->getTextureHandle());			// Phobos for the Mars
+	solarSystem->addSatellite(4, 1.48E15, 2372300, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());		// Deimos for the Mars
 
 }
 
@@ -239,6 +239,18 @@ void OGLSolarSystem::OGLSolarSystem::OGLupdateGUI(void)
 	lHeadingZ->Text = String::Format("{0:0.000000000}", camera->forwardVector[2]);
 
 	lCurrentDateTime->Text = String::Format("{0:0.000000000}", timeScale);
+
+	label26->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[0]);
+	label27->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[1]);
+	label28->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[2]);
+	label29->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[3]);
+	label31->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[4]);
+	label34->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[5]);
+	label35->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[6]);
+	label36->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[7]);
+	label37->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[8]);
+	label38->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[9]);
+
 }
 
 
