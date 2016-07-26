@@ -94,6 +94,8 @@ void Satellite::render(void)
 // render this planets orbit circle
 void Satellite::renderOrbit(void)
 {
+	glColor3f(0.3f, 0.3f, 0.3f);
+
 	// draw a line strip
 	glBegin(GL_LINE_STRIP);
 
