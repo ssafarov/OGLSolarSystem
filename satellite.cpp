@@ -76,7 +76,17 @@ void Satellite::render(void)
 	gluQuadricTexture(quadric, true);
 	gluQuadricNormals(quadric, GLU_SMOOTH);
 
-	gluSphere(quadric, radius * planetSizeScale, 30, 30);
+	GLfloat matAmbience[] = { 0.1f, 0.1f, 0.1f, 0.1f };
+	GLfloat matDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GLfloat matEmission[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	GLfloat matShininess[] = { 7.0f };
+
+	glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse);
+	glMaterialfv(GL_FRONT, GL_EMISSION, matEmission);
+	glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
+
+	gluSphere(quadric, radius * planetSizeScale, 64, 64);
 
 	glPopMatrix();
 }

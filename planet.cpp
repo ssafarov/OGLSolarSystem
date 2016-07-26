@@ -68,6 +68,7 @@ void Planet::render(void)
 	GLUquadricObj* quadric = gluNewQuadric();
 	gluQuadricTexture(quadric, true);
 	gluQuadricNormals(quadric, GLU_SMOOTH);
+	gluQuadricOrientation(quadric, GLU_OUTSIDE);
 
 	float radiusScaled = radius * planetSizeScale;
 	if (distanceFromSun == 0.0f) // if this is the sun
@@ -76,36 +77,39 @@ void Planet::render(void)
 
 		glDisable(GL_LIGHT1);
 
+		GLfloat lightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+		GLfloat lightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat lightSpecular[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+		GLfloat lightPosition[] = { position[0],position[1],position[2], 1.0f };
+
+		glLightfv(GL_LIGHT1, GL_AMBIENT, lightAmbient);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, lightDiffuse);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, lightSpecular);
+		glLightfv(GL_LIGHT1, GL_POSITION, lightPosition);
+
+		glEnable(GL_LIGHT1);
+
 		GLfloat matAmbience[] = { 0.1f, 0.1f, 0.1f, 0.1f };
 		GLfloat matDiffuse[] = { 0.9f, 0.9f, 0.9f, 0.9f };
-		GLfloat matEmission[] = { 1.0f, 1.0f, 1.0f, 0.0f };
-		GLfloat matShininess[] = { 20.0 };
+		GLfloat matEmission[] = { 1.0f, 0.9f, 0.9f, 0.0f };
+		GLfloat matShininess[] = { 100.0 };
 
 		glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse);
 		glMaterialfv(GL_FRONT, GL_EMISSION, matEmission);
 		glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
-
-		GLfloat lightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-		GLfloat lightDiffuse[] = { 0.9f, 0.9f, 0.9f, 1.0f };
-		GLfloat lightPosition[] = { position[0],position[1],position[2], 1.0f };
-
-		glLightfv(GL_LIGHT1, GL_AMBIENT, lightAmbient);
-		glLightfv(GL_LIGHT1, GL_DIFFUSE, lightDiffuse);
-		glLightfv(GL_LIGHT1, GL_POSITION, lightPosition);
-
-		glEnable(GL_LIGHT1);
 	}
 	else
 	{
-		
-		GLfloat matSpecular[] = { 1.0, 1.0, 1.0, 1.0 };
-		GLfloat matAmbience[] = { 0.3, 0.3, 0.3, 1.0 };
-		GLfloat matShininess[] = { 0.0 };
+		GLfloat matAmbience[] = { 0.1f, 0.1f, 0.1f, 0.1f };
+		GLfloat matDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+		GLfloat matEmission[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		GLfloat matShininess[] = { 100.0f };
 
-		glMaterialfv(GL_FRONT, GL_SPECULAR, matSpecular);
-		glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
 		glMaterialfv(GL_FRONT, GL_AMBIENT, matAmbience);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, matDiffuse);
+		glMaterialfv(GL_FRONT, GL_EMISSION, matEmission);
+		glMaterialfv(GL_FRONT, GL_SHININESS, matShininess);
 	}
 
 
@@ -119,7 +123,7 @@ void Planet::render(void)
 // render this planets orbit circle
 void Planet::renderOrbit(void)
 {
-	glColor3f(1.0f, 1.0f, 1.0f);
+	glColor3f(0.7f, 0.7f, 0.7f);
 	glDisable(GL_TEXTURE_2D);
 	// draw a line strip
 	glBegin(GL_LINE_STRIP);

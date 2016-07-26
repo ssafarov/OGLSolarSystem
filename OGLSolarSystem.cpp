@@ -106,6 +106,8 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	// Initialize camera instance
 	camera = new Camera();
 
+	light = true;
+
 	// Toggles on and off drawn of the orbits
 	showOrbits = true;
 
@@ -139,7 +141,7 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	moonTexture3 = new Texture("textures/eris.bmp");		// Load Moon 3 texture
 	moonTexture4 = new Texture("textures/haumea.bmp");		// Load Moon 4 texture
 
-															// Initialize solar system instance
+	// Initialize solar system instance
 	solarSystem = new SolarSystem();
 	// Add all the planets with it's data. Distance measured in km, time measured in earth days.
 	solarSystem->addPlanet(1.985E30, 0, 1, 500, 695500, sunTexture->getTextureHandle());						// Sun
@@ -153,10 +155,13 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	solarSystem->addPlanet(101.592E24, 4503000000, 60188, 0.6713, 24622, neptuneTexture->getTextureHandle());	// Neptune
 	solarSystem->addPlanet(0.01195E24, 5906380000, 90616, 6.39, 1137, plutoTexture->getTextureHandle());		// Pluto
 	
-	solarSystem->addSatellite(3, 7.3477E22, 384467, 27.3, 27.3, 1738, moonTexture1->getTextureHandle());		// Moon for the Earth
+	// @todo set the proper scale for moon orbit
+	solarSystem->addSatellite(3, 7.3477E22, 384467 * 20, 27.3, 27.3, 1738, moonTexture1->getTextureHandle());	// Moon for the Earth
 	
-	solarSystem->addSatellite(4, 1.072E16, 948920, 7.6, 7.3, 22, moonTexture2->getTextureHandle());			// Phobos for the Mars
-	solarSystem->addSatellite(4, 1.48E15, 2372300, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());		// Deimos for the Mars
+	// @todo set the proper scale for moon orbit
+	solarSystem->addSatellite(4, 1.072E16, 948920 * 10, 7.6, 7.3, 22, moonTexture2->getTextureHandle());			// Phobos for the Mars
+	// @todo set the proper scale for moon orbit
+	solarSystem->addSatellite(4, 1.48E15, 2372300 * 10, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());		// Deimos for the Mars
 
 }
 
@@ -189,16 +194,16 @@ void OGLSolarSystem::OGLSolarSystem::renderUniverse(void)
 	float universeRadius = 100.0f;
 
 	// Setup global lighting for the universe -- BEGIN
-	glDisable(GL_LIGHTING);
 	glDisable(GL_LIGHT0);
-	GLfloat lightAmbient[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-	GLfloat lightDiffuse[] = { 0.9f, 0.9f, 0.9f, 1.0f };
+	GLfloat lightDiffuse[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	GLfloat lightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	GLfloat lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f };
+
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbient);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 	glEnable(GL_LIGHT0);
-	glEnable(GL_LIGHTING);
+
 	// Setup global lighting of the universe -- END
 
 	gluSphere(OQquadric, universeRadius, 512, 512);
@@ -255,6 +260,10 @@ void OGLSolarSystem::OGLSolarSystem::OGLupdateGUI(void)
 	label30->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(3).getSatellite(0).getMass());
 	label32->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(4).getSatellite(0).getMass());
 	label33->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(4).getSatellite(1).getMass());
+
+	cbLightSwitch->Checked = light;
+	cbParamsShowOrbits->Checked = showOrbits;
+
 }
 
 
@@ -289,13 +298,24 @@ void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
 	// Render the Universe
 	renderUniverse();
 
-	glDisable(GL_LIGHTING);
 	if (showOrbits)
+	{
+		glDisable(GL_LIGHTING);
 		solarSystem->renderOrbits();
+	}
+
+	if (!light)
+	{
+		glDisable(GL_LIGHTING);
+	}
+	else
+	{
+		glEnable(GL_LIGHTING);
+	}
 
 	// render the solar system
 	solarSystem->render();
-	glEnable(GL_LIGHTING);
+
 
 	glFlush();
 	SwapBuffers(_hDC);

@@ -86,6 +86,7 @@ namespace OGLSolarSystem {
 			double timeScale;
 			double timeSpeed;
 
+			bool light;
 			bool showOrbits;
 			int planetSelected;
 
@@ -147,6 +148,7 @@ private: System::Windows::Forms::Label^  label29;
 private: System::Windows::Forms::Label^  label28;
 private: System::Windows::Forms::Label^  label27;
 private: System::Windows::Forms::Label^  label26;
+private: System::Windows::Forms::CheckBox^  cbLightSwitch;
 
 			ref struct ControlStates
 			{
@@ -248,6 +250,7 @@ private: System::Windows::Forms::Label^  label26;
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->cbLightSwitch = (gcnew System::Windows::Forms::CheckBox());
 			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 			this->cbParamsShowOrbits = (gcnew System::Windows::Forms::CheckBox());
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
@@ -372,7 +375,7 @@ private: System::Windows::Forms::Label^  label26;
 			this->gbSolarSystemSettings->Size = System::Drawing::Size(279, 340);
 			this->gbSolarSystemSettings->TabIndex = 77;
 			this->gbSolarSystemSettings->TabStop = false;
-			this->gbSolarSystemSettings->Text = L"Solar System";
+			this->gbSolarSystemSettings->Text = L"Solar System Data";
 			// 
 			// label38
 			// 
@@ -629,6 +632,7 @@ private: System::Windows::Forms::Label^  label26;
 			// 
 			// groupBox2
 			// 
+			this->groupBox2->Controls->Add(this->cbLightSwitch);
 			this->groupBox2->Controls->Add(this->checkBox1);
 			this->groupBox2->Controls->Add(this->cbParamsShowOrbits);
 			this->groupBox2->Location = System::Drawing::Point(8, 10);
@@ -637,6 +641,19 @@ private: System::Windows::Forms::Label^  label26;
 			this->groupBox2->TabIndex = 76;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Global settings";
+			// 
+			// cbLightSwitch
+			// 
+			this->cbLightSwitch->AutoSize = true;
+			this->cbLightSwitch->Checked = true;
+			this->cbLightSwitch->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->cbLightSwitch->Location = System::Drawing::Point(99, 19);
+			this->cbLightSwitch->Name = L"cbLightSwitch";
+			this->cbLightSwitch->Size = System::Drawing::Size(105, 17);
+			this->cbLightSwitch->TabIndex = 6;
+			this->cbLightSwitch->Text = L"Lightning On/Off";
+			this->cbLightSwitch->UseVisualStyleBackColor = true;
+			this->cbLightSwitch->CheckedChanged += gcnew System::EventHandler(this, &OGLSolarSystem::cbLightSwitch_CheckedChanged);
 			// 
 			// checkBox1
 			// 
@@ -660,6 +677,7 @@ private: System::Windows::Forms::Label^  label26;
 			this->cbParamsShowOrbits->TabIndex = 4;
 			this->cbParamsShowOrbits->Text = L"Show orbits";
 			this->cbParamsShowOrbits->UseVisualStyleBackColor = true;
+			this->cbParamsShowOrbits->CheckedChanged += gcnew System::EventHandler(this, &OGLSolarSystem::cbParamsShowOrbits_CheckedChanged);
 			// 
 			// groupBox1
 			// 
@@ -1055,6 +1073,9 @@ private: System::Void OGLSolarSystem_KeyPress(System::Object^  sender, System::W
 	case 'o':
 		showOrbits = !showOrbits; // toggle show orbits
 		break;
+	case '`':
+		light = !light; // toggle show light On / Off
+		break;
 	case ',':
 		camera->speedDown(); // slow down camera
 		break;
@@ -1103,8 +1124,17 @@ private: System::Void OGLSolarSystem_KeyUp(System::Object^  sender, System::Wind
 	}
 
 }
-private: System::Void cbTimeScale_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void cbTimeScale_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) 
+{
 	timeSpeed *= TIME_SCALE_MULTIPLIERS[cbTimeScale->SelectedIndex];
+}
+private: System::Void cbParamsShowOrbits_CheckedChanged(System::Object^  sender, System::EventArgs^  e) 
+{
+	showOrbits = cbParamsShowOrbits->Checked;
+}
+private: System::Void cbLightSwitch_CheckedChanged(System::Object^  sender, System::EventArgs^  e) 
+{
+	light = cbLightSwitch->Checked;
 }
 };
 }
