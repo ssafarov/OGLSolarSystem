@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OGLSolarSystem.cpp" />
+    <ClCompile Include="OGLSSAbout.cpp" />
     <ClCompile Include="planet.cpp" />
     <ClCompile Include="satellite.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -147,6 +148,9 @@
     <ClInclude Include="OGLSolarSystem.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="OGLSSAbout.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="planet.h" />
     <ClInclude Include="satellite.h" />
     <ClInclude Include="solarsystem.h" />
@@ -155,6 +159,9 @@
   <ItemGroup>
     <EmbeddedResource Include="OGLSolarSystem.resx">
       <DependentUpon>OGLSolarSystem.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OGLSSAbout.resx">
+      <DependentUpon>OGLSSAbout.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
