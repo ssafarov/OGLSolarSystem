@@ -145,9 +145,9 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	solarSystem = new SolarSystem();
 	// Add all the planets with it's data. Distance measured in km, time measured in earth days.
 	solarSystem->addPlanet(1.985E30, 0, 1, 500, 695500, sunTexture->getTextureHandle());						// Sun
-	solarSystem->addPlanet(3.3E23, 57910000, 88, 58.6, 2439.7, mercuryTexture->getTextureHandle());			// Mercury
+	solarSystem->addPlanet(3.3E23, 57910000, 88, 58.6, 2439.7, mercuryTexture->getTextureHandle());				// Mercury
 	solarSystem->addPlanet(4.81068E24, 108200000, 224.65, 243, 6052, venusTexture->getTextureHandle());			// Venus
-	solarSystem->addPlanet(5.9736E24, 149600000, 365, 1, 6378.16, earthTexture->getTextureHandle());				// Earth
+	solarSystem->addPlanet(5.9736E24, 149600000, 365, 1, 6378.16, earthTexture->getTextureHandle());			// Earth
 	solarSystem->addPlanet(0.6418E24, 227939100, 686, 1.03f, 3389, marsTexture->getTextureHandle());			// Mars
 	solarSystem->addPlanet(1.8986E27, 778500000, 4332, 0.4139, 69911, jupiterTexture->getTextureHandle());		// Jupiter
 	solarSystem->addPlanet(561.80376E24, 1433000000, 10759, 0.44375, 58232, saturnTexture->getTextureHandle());	// Saturn
@@ -159,9 +159,9 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	solarSystem->addSatellite(3, 7.3477E22, 384467 * 20, 27.3, 27.3, 1738, moonTexture1->getTextureHandle());	// Moon for the Earth
 	
 	// @todo set the proper scale for moon orbit
-	solarSystem->addSatellite(4, 1.072E16, 948920 * 10, 7.6, 7.3, 22, moonTexture2->getTextureHandle());			// Phobos for the Mars
+	solarSystem->addSatellite(4, 1.072E16, 948920 * 10, 7.6, 7.3, 22, moonTexture2->getTextureHandle());		// Phobos for the Mars
 	// @todo set the proper scale for moon orbit
-	solarSystem->addSatellite(4, 1.48E15, 2372300 * 10, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());		// Deimos for the Mars
+	solarSystem->addSatellite(4, 1.48E15, 2372300 * 10, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());	// Deimos for the Mars
 
 }
 
