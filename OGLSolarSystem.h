@@ -1,6 +1,8 @@
 #pragma once
 
 #include <Windows.h>
+#include "OGLSSAbout.h"
+
 #include <string>
 #include <ctime>
 
@@ -81,7 +83,6 @@ namespace OGLSolarSystem {
 		private:
 			HDC		_hDC;	// Private GDI Device Context
 			HGLRC	_hRC;	// Get handle to panel on form and call initialization function						
-
 			// These control the simulation of time line and scale
 			double timeScale;
 			double timeSpeed;
@@ -329,8 +330,9 @@ private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
 			// aboutToolStripMenuItem
 			// 
 			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
-			this->aboutToolStripMenuItem->Size = System::Drawing::Size(119, 22);
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->aboutToolStripMenuItem->Text = L"About ...";
+			this->aboutToolStripMenuItem->Click += gcnew System::EventHandler(this, &OGLSolarSystem::aboutToolStripMenuItem_Click);
 			// 
 			// pControls
 			// 
@@ -655,9 +657,9 @@ private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
 			this->cbSpaceFogSwitch->CheckState = System::Windows::Forms::CheckState::Checked;
 			this->cbSpaceFogSwitch->Location = System::Drawing::Point(99, 42);
 			this->cbSpaceFogSwitch->Name = L"cbSpaceFogSwitch";
-			this->cbSpaceFogSwitch->Size = System::Drawing::Size(80, 17);
+			this->cbSpaceFogSwitch->Size = System::Drawing::Size(140, 17);
 			this->cbSpaceFogSwitch->TabIndex = 7;
-			this->cbSpaceFogSwitch->Text = L"Fog On/Off";
+			this->cbSpaceFogSwitch->Text = L"Glow (fog) On/Off - beta";
 			this->cbSpaceFogSwitch->UseVisualStyleBackColor = true;
 			this->cbSpaceFogSwitch->CheckedChanged += gcnew System::EventHandler(this, &OGLSolarSystem::cbSpaceFogSwitch_CheckedChanged);
 			// 
@@ -1165,6 +1167,10 @@ private: System::Void cbLightSwitch_CheckedChanged(System::Object^  sender, Syst
 }
 private: System::Void cbSpaceFogSwitch_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 	fog = cbSpaceFogSwitch->Checked;
+}
+private: System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+	OGLSSAbout ^ aboutForm = gcnew OGLSSAbout();
+	aboutForm->Show();
 }
 };
 }

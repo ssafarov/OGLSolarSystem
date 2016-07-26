@@ -123,7 +123,7 @@ void Planet::render(void)
 // render this planets orbit circle
 void Planet::renderOrbit(void)
 {
-	glColor3f(0.7f, 0.7f, 0.7f);
+	glColor3f(0.5f, 0.5f, 0.5f);
 	glDisable(GL_TEXTURE_2D);
 	// draw a line strip
 	glBegin(GL_LINE_STRIP);
