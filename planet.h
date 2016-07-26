@@ -76,8 +76,18 @@ public:
 	// Get the radius of the current planet
 	float getRadius(void);
 
+	// get the mass of this planet
 	float getMass(void);
+
+	// get the velocity of this planet
+	float getVelocity(void);
+
+	// get the acceleration of this planet
+	float getAcceleration(void);
 
 	// Add a satellite to the current planet
 	void addSatellite(float mass, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle);
+
+	// Get satellite object data
+	Satellite getSatellite(int index);
 };

@@ -40,10 +40,7 @@ public:
 	// Get the position in 3D space units of the given planet (specified by its index in the list) and put it into the 3D vector
 	void getPlanetPosition(int index, float *vector);
 
-	float getPlanetMass(int index);
-
-	// Get the radius of the planet at the given index in the planets list
-	float getRadiusOfPlanet(int index);
+	Planet getPlanet(int index);
 
 	// Calculate the positions according the accepted logic for all planets
 	void calculatePositions(float time);

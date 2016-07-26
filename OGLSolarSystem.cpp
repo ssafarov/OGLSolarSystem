@@ -123,25 +123,26 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 
 	//@todo It need to be makes all textures load inside it`s own classes
 	// Initialize and load textures
-	starsTexture = new Texture("textures/stars.tga");		// Begin from the Universe
-	sunTexture = new Texture("textures/sun.tga");			// Load Sun texture
-	mercuryTexture = new Texture("textures/mercury.tga");	// Load Mercury texture
-	venusTexture = new Texture("textures/venus.tga");		// Load Venus texture
-	earthTexture = new Texture("textures/earth.tga");		// Load Earth texture
-	marsTexture = new Texture("textures/mars.tga");			// Load Mars texture
-	saturnTexture = new Texture("textures/saturn.tga");		// Load Saturn texture
-	jupiterTexture = new Texture("textures/jupiter.tga");	// Load Jupiter texture
-	neptuneTexture = new Texture("textures/neptune.tga");	// Load Neptune texture
-	uranusTexture = new Texture("textures/uranus.tga");		// Load Neptune texture
-	plutoTexture = new Texture("textures/pluto.tga");		// Load Pluto texture
-	moonTexture1 = new Texture("textures/moon.tga");		// Load Moon 1 texture
-	moonTexture2 = new Texture("textures/moon.tga");		// Load Moon 2 texture
-	moonTexture3 = new Texture("textures/moon.tga");		// Load Moon 3 texture
+	starsTexture = new Texture("textures/stars4.bmp");		// Begin from the Universe
+	sunTexture = new Texture("textures/sun.bmp");			// Load Sun texture
+	mercuryTexture = new Texture("textures/mercury.bmp");	// Load Mercury texture
+	venusTexture = new Texture("textures/venus_surface.bmp");		// Load Venus texture
+	earthTexture = new Texture("textures/earth_daymap.bmp");		// Load Earth texture
+	marsTexture = new Texture("textures/mars.bmp");			// Load Mars texture
+	saturnTexture = new Texture("textures/saturn.bmp");		// Load Saturn texture
+	jupiterTexture = new Texture("textures/jupiter.bmp");	// Load Jupiter texture
+	neptuneTexture = new Texture("textures/neptune.bmp");	// Load Neptune texture
+	uranusTexture = new Texture("textures/uranus.bmp");		// Load Neptune texture
+	plutoTexture = new Texture("textures/pluto.bmp");		// Load Pluto texture
+	moonTexture1 = new Texture("textures/moon.bmp");		// Load Moon 1 texture
+	moonTexture2 = new Texture("textures/ceres.bmp");		// Load Moon 2 texture
+	moonTexture3 = new Texture("textures/eris.bmp");		// Load Moon 3 texture
+	moonTexture4 = new Texture("textures/haumea.bmp");		// Load Moon 4 texture
 
 															// Initialize solar system instance
 	solarSystem = new SolarSystem();
 	// Add all the planets with it's data. Distance measured in km, time measured in earth days.
-	solarSystem->addPlanet(2E30, 0, 1, 500, 695500, sunTexture->getTextureHandle());						// Sun
+	solarSystem->addPlanet(1.985E30, 0, 1, 500, 695500, sunTexture->getTextureHandle());						// Sun
 	solarSystem->addPlanet(3.3E23, 57910000, 88, 58.6, 2439.7, mercuryTexture->getTextureHandle());			// Mercury
 	solarSystem->addPlanet(4.81068E24, 108200000, 224.65, 243, 6052, venusTexture->getTextureHandle());			// Venus
 	solarSystem->addPlanet(5.9736E24, 149600000, 365, 1, 6378.16, earthTexture->getTextureHandle());				// Earth
@@ -216,7 +217,6 @@ void OGLSolarSystem::OGLSolarSystem::OGLviewportResize(void)
 	glViewport(0, 0, _iWidth, _iHeight);
 
 	viewPortAspectRatio = _iWidth / _iHeight;
-	viewPortAspectRatio = 1;
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -240,17 +240,21 @@ void OGLSolarSystem::OGLSolarSystem::OGLupdateGUI(void)
 
 	lCurrentDateTime->Text = String::Format("{0:0.000000000}", timeScale);
 
-	label26->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[0]);
-	label27->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[1]);
-	label28->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[2]);
-	label29->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[3]);
-	label31->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[4]);
-	label34->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[5]);
-	label35->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[6]);
-	label36->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[7]);
-	label37->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[8]);
-	label38->Text = String::Format("{0:0.000000000}", solarSystem->getPlanetMass[9]);
+	label26->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(0).getMass());
+	label27->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(1).getMass());
+	label28->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(2).getMass());
+	label29->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(3).getMass());
+	label31->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(4).getMass());
+	label34->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(5).getMass());
+	label35->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(6).getMass());
+	label36->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(7).getMass());
+	label37->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(8).getMass());
+	label38->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(9).getMass());
 
+
+	label30->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(3).getSatellite(0).getMass());
+	label32->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(4).getSatellite(0).getMass());
+	label33->Text = String::Format("{0:0.###E000}", solarSystem->getPlanet(4).getSatellite(1).getMass());
 }
 
 

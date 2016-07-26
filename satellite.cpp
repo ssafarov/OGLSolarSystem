@@ -34,9 +34,28 @@ void Satellite::calculatePosition(float time)
 	rotation = time * 360 / rotationTime;
 }
 
+// get the radius of this satellite
+float Satellite::getRadius(void)
+{
+	return radius;
+}
+
+// get the mass of this satellite
 float Satellite::getMass(void)
 {
 	return mass;
+}
+
+// get the velocity of this satellite
+float Satellite::getVelocity(void)
+{
+	return velocity;
+}
+
+// get the acceleration of this satellite
+float Satellite::getAcceleration(void)
+{
+	return acceleration;
 }
 
 

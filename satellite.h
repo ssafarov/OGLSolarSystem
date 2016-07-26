@@ -56,7 +56,17 @@ public:
 	// Calculate its position in 3D space relative to the planet in the orbit using the given time value
 	void calculatePosition(float time);
 
+	// Get the radius of the current satellite
+	float getRadius(void);
+
+	// get the mass of this satellite
 	float getMass(void);
+
+	// get the velocity of this satellite
+	float getVelocity(void);
+
+	// get the acceleration of this satellite
+	float getAcceleration(void);
 
 	// Render it to the screen
 	void render(void);

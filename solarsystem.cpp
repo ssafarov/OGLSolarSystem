@@ -33,16 +33,13 @@ void SolarSystem::getPlanetPosition(int index, float *vector)
 	planets[index].getPosition(vector);
 }
 
-float getPlanetMass(int index)
+// Get planet object data. 
+Planet SolarSystem::getPlanet(int index)
 {
-	return planets[index].getMass();
+	//@todo Need to add presence checks here
+	return planets[index];
 }
 
-// Get the radius of the planet at the given index in the planets list
-float SolarSystem::getRadiusOfPlanet(int index)
-{
-	return planets[index].getRadius();
-}
 
 // Calculate the positions according the accepted logic for all planets
 void SolarSystem::calculatePositions(float time)

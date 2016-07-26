@@ -164,7 +164,7 @@ private: System::Windows::Forms::Label^  label26;
 			void OGLviewportResize(void);
 			void OGLupdateGUI(void);
 
-			float viewPortAspectRatio;
+			double viewPortAspectRatio;
 
 
 			Texture* starsTexture;
@@ -175,6 +175,7 @@ private: System::Windows::Forms::Label^  label26;
 			Texture* moonTexture1;
 			Texture* moonTexture2;
 			Texture* moonTexture3;
+			Texture* moonTexture4;
 			Texture* marsTexture;
 			Texture* saturnTexture;
 			Texture* jupiterTexture;
@@ -382,7 +383,6 @@ private: System::Windows::Forms::Label^  label26;
 			this->label38->Size = System::Drawing::Size(26, 13);
 			this->label38->TabIndex = 116;
 			this->label38->Text = L"Sun";
-			this->label38->Click += gcnew System::EventHandler(this, &OGLSolarSystem::label38_Click);
 			// 
 			// label39
 			// 
@@ -392,7 +392,6 @@ private: System::Windows::Forms::Label^  label26;
 			this->label39->Size = System::Drawing::Size(31, 13);
 			this->label39->TabIndex = 115;
 			this->label39->Text = L"Pluto";
-			this->label39->Click += gcnew System::EventHandler(this, &OGLSolarSystem::label39_Click);
 			// 
 			// label37
 			// 
@@ -507,9 +506,9 @@ private: System::Windows::Forms::Label^  label26;
 			this->label25->AutoSize = true;
 			this->label25->Location = System::Drawing::Point(26, 197);
 			this->label25->Name = L"label25";
-			this->label25->Size = System::Drawing::Size(45, 13);
+			this->label25->Size = System::Drawing::Size(42, 13);
 			this->label25->TabIndex = 102;
-			this->label25->Text = L"Deymos";
+			this->label25->Text = L"Deimos";
 			// 
 			// label24
 			// 
@@ -613,20 +612,20 @@ private: System::Windows::Forms::Label^  label26;
 			// label10
 			// 
 			this->label10->AutoSize = true;
-			this->label10->Location = System::Drawing::Point(143, 16);
+			this->label10->Location = System::Drawing::Point(157, 16);
 			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(47, 13);
+			this->label10->Size = System::Drawing::Size(77, 13);
 			this->label10->TabIndex = 90;
-			this->label10->Text = L"V (km/s)";
+			this->label10->Text = L"Velocity (km/s)";
 			// 
 			// label2
 			// 
 			this->label2->AutoSize = true;
 			this->label2->Location = System::Drawing::Point(80, 16);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(37, 13);
+			this->label2->Size = System::Drawing::Size(53, 13);
 			this->label2->TabIndex = 89;
-			this->label2->Text = L"M (Mt)";
+			this->label2->Text = L"Mass (kg)";
 			// 
 			// groupBox2
 			// 

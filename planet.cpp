@@ -163,13 +163,33 @@ float Planet::getRadius(void)
 	return radius;
 }
 
+// get the mass of this planet
 float Planet::getMass(void)
 {
 	return mass;
+}
+
+// get the velocity of this planet
+float Planet::getVelocity(void)
+{
+	return velocity;
+}
+
+// get the acceleration of this planet
+float Planet::getAcceleration(void)
+{
+	return acceleration;
 }
 
 // add a moon to this planet
 void Planet::addSatellite(float mass, float distanceFromPlanet, float orbitTime, float rotationTime, float radius, GLuint textureHandle)
 {
 	satellites.push_back(Satellite(mass, distanceFromPlanet, orbitTime, rotationTime, radius, textureHandle));
+}
+
+// Get satellite object data
+Satellite Planet::getSatellite(int index)
+{
+	//@todo add some checks here
+	return satellites[index];
 }
