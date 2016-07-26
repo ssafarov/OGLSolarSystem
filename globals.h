@@ -30,5 +30,3 @@ const float CMS = 0.01f;
 const float CTS = 0.05f;
 
 const float TIME_SCALE_MULTIPLIERS[17] = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f, 1.1f, 1.2f, 1.5f, 2.0f, 3.0f, 5.0f, 10.0f };
-
-
