@@ -993,16 +993,16 @@ private: System::Void OGLSolarSystem_KeyDown(System::Object^  sender, System::Wi
 
 	switch (e->KeyCode)
 	{
-	case Keys::W:
+	case Keys::S:
 		controls.moveForward = true;
 		break;
-	case Keys::S:
+	case Keys::W:
 		controls.moveBackward = true;
 		break;
-	case Keys::A:
+	case Keys::D:
 		controls.slideLeft = true;
 		break;
-	case Keys::D:
+	case Keys::A:
 		controls.slideRight = true;
 		break;
 	case Keys::L:
@@ -1070,16 +1070,16 @@ private: System::Void OGLSolarSystem_KeyPress(System::Object^  sender, System::W
 private: System::Void OGLSolarSystem_KeyUp(System::Object^  sender, System::Windows::Forms::KeyEventArgs^  e) {
 	switch (e->KeyCode)
 	{
-	case Keys::W:
+	case Keys::S:
 		controls.moveForward = false;
 		break;
-	case Keys::S:
+	case Keys::W:
 		controls.moveBackward = false;
 		break;
-	case Keys::A:
+	case Keys::D:
 		controls.slideLeft = false;
 		break;
-	case Keys::D:
+	case Keys::A:
 		controls.slideRight = false;
 		break;
 	case Keys::L:
