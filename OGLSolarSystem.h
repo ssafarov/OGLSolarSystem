@@ -86,6 +86,8 @@ namespace OGLSolarSystem {
 			double timeScale;
 			double timeSpeed;
 
+			bool fog;
+			GLuint fogfilter;
 			bool light;
 			bool showOrbits;
 			int planetSelected;
@@ -149,6 +151,7 @@ private: System::Windows::Forms::Label^  label28;
 private: System::Windows::Forms::Label^  label27;
 private: System::Windows::Forms::Label^  label26;
 private: System::Windows::Forms::CheckBox^  cbLightSwitch;
+private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
 
 			ref struct ControlStates
 			{
@@ -163,6 +166,7 @@ private: System::Windows::Forms::CheckBox^  cbLightSwitch;
 			void setViewport(int width, int height);
 			void setCamera(void);
 			void renderUniverse(void);
+			void renderUniverseFog(void);
 			void OGLviewportResize(void);
 			void OGLupdateGUI(void);
 
@@ -250,6 +254,7 @@ private: System::Windows::Forms::CheckBox^  cbLightSwitch;
 			this->label10 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->groupBox2 = (gcnew System::Windows::Forms::GroupBox());
+			this->cbSpaceFogSwitch = (gcnew System::Windows::Forms::CheckBox());
 			this->cbLightSwitch = (gcnew System::Windows::Forms::CheckBox());
 			this->checkBox1 = (gcnew System::Windows::Forms::CheckBox());
 			this->cbParamsShowOrbits = (gcnew System::Windows::Forms::CheckBox());
@@ -632,6 +637,7 @@ private: System::Windows::Forms::CheckBox^  cbLightSwitch;
 			// 
 			// groupBox2
 			// 
+			this->groupBox2->Controls->Add(this->cbSpaceFogSwitch);
 			this->groupBox2->Controls->Add(this->cbLightSwitch);
 			this->groupBox2->Controls->Add(this->checkBox1);
 			this->groupBox2->Controls->Add(this->cbParamsShowOrbits);
@@ -641,6 +647,19 @@ private: System::Windows::Forms::CheckBox^  cbLightSwitch;
 			this->groupBox2->TabIndex = 76;
 			this->groupBox2->TabStop = false;
 			this->groupBox2->Text = L"Global settings";
+			// 
+			// cbSpaceFogSwitch
+			// 
+			this->cbSpaceFogSwitch->AutoSize = true;
+			this->cbSpaceFogSwitch->Checked = true;
+			this->cbSpaceFogSwitch->CheckState = System::Windows::Forms::CheckState::Checked;
+			this->cbSpaceFogSwitch->Location = System::Drawing::Point(99, 42);
+			this->cbSpaceFogSwitch->Name = L"cbSpaceFogSwitch";
+			this->cbSpaceFogSwitch->Size = System::Drawing::Size(80, 17);
+			this->cbSpaceFogSwitch->TabIndex = 7;
+			this->cbSpaceFogSwitch->Text = L"Fog On/Off";
+			this->cbSpaceFogSwitch->UseVisualStyleBackColor = true;
+			this->cbSpaceFogSwitch->CheckedChanged += gcnew System::EventHandler(this, &OGLSolarSystem::cbSpaceFogSwitch_CheckedChanged);
 			// 
 			// cbLightSwitch
 			// 
@@ -1041,8 +1060,9 @@ private: System::Void OGLSolarSystem_KeyDown(System::Object^  sender, System::Wi
 	case Keys::E:
 		controls.yawRight = true;
 		break;
+	case Keys::G:
+		fog = true;
 	}
-
 }
 
 private: System::Void OGLSolarSystem_KeyPress(System::Object^  sender, System::Windows::Forms::KeyPressEventArgs^  e) 
@@ -1121,6 +1141,13 @@ private: System::Void OGLSolarSystem_KeyUp(System::Object^  sender, System::Wind
 	case Keys::E:
 		controls.yawRight = false;
 		break;
+	case Keys::G:
+		fog = false;
+		fogfilter += 1;
+		if (fogfilter>2)
+		{
+			fogfilter = 0;
+		}
 	}
 
 }
@@ -1135,6 +1162,9 @@ private: System::Void cbParamsShowOrbits_CheckedChanged(System::Object^  sender,
 private: System::Void cbLightSwitch_CheckedChanged(System::Object^  sender, System::EventArgs^  e) 
 {
 	light = cbLightSwitch->Checked;
+}
+private: System::Void cbSpaceFogSwitch_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+	fog = cbSpaceFogSwitch->Checked;
 }
 };
 }

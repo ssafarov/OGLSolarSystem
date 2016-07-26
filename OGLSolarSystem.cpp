@@ -193,9 +193,19 @@ void OGLSolarSystem::OGLSolarSystem::renderUniverse(void)
 	gluQuadricOrientation(OQquadric, GLU_INSIDE);
 	float universeRadius = 100.0f;
 
-	// Setup global lighting for the universe -- BEGIN
+	// Setup global lighting and material :) for the universe -- BEGIN
+	GLfloat matAmbience[] = { 0.9f, 0.9f, 0.9f, 0.1f };
+	GLfloat matDiffuse[] = { 0.2f, 0.2f, 0.2f, 1.0f };
+	GLfloat matEmission[] = { 0.9f, 0.9f, 0.9f, 0.0f };
+	GLfloat matShininess[] = { 100.0 };
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matDiffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matDiffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matEmission);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, matShininess);
+
 	glDisable(GL_LIGHT0);
-	GLfloat lightDiffuse[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+	GLfloat lightDiffuse[] = { 0.3f, 0.3f, 0.3f, 1.0f };
 	GLfloat lightAmbient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
 	GLfloat lightPosition[] = { 0.0f, 0.0f, 0.0f, 0.0f };
 
@@ -203,13 +213,27 @@ void OGLSolarSystem::OGLSolarSystem::renderUniverse(void)
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiffuse);
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 	glEnable(GL_LIGHT0);
-
 	// Setup global lighting of the universe -- END
 
 	gluSphere(OQquadric, universeRadius, 512, 512);
 
 	glPopMatrix();
 
+}
+
+void OGLSolarSystem::OGLSolarSystem::renderUniverseFog(void)
+{
+	GLuint filter;
+	GLuint fogMode[] = { GL_EXP, GL_EXP2, GL_LINEAR };
+	GLfloat fogColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+
+	glEnable(GL_FOG);
+	glFogi(GL_FOG_MODE, fogMode[fogfilter]);
+	glFogfv(GL_FOG_COLOR, fogColor);        
+	glFogf(GL_FOG_DENSITY, 0.00001f);          
+	glHint(GL_FOG_HINT, GL_DISTANCE_ATTENUATION_EXT);      
+	glFogf(GL_FOG_START, 0.0f);             
+	glFogf(GL_FOG_END, 100.0f);
 }
 
 void OGLSolarSystem::OGLSolarSystem::OGLviewportResize(void)
@@ -263,6 +287,7 @@ void OGLSolarSystem::OGLSolarSystem::OGLupdateGUI(void)
 
 	cbLightSwitch->Checked = light;
 	cbParamsShowOrbits->Checked = showOrbits;
+	cbSpaceFogSwitch->Checked = fog;
 
 }
 
@@ -315,6 +340,13 @@ void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
 
 	// render the solar system
 	solarSystem->render();
+
+	if (fog) {
+		renderUniverseFog();
+	}
+	else {
+		glDisable(GL_FOG);
+	}
 
 
 	glFlush();
