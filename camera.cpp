@@ -20,8 +20,8 @@ Camera::Camera(void)
 	cameraTurnSpeed = CTS;
 
 	// set default vector values - obtained a nice viewing angle of the planets, got values using the debugger
-	vectorSet(positionDefault, -0.398769796f, -3.86760659f, 7.642456770f);
-	vectorSet(forwardDefaultVector, -1.398769796f, 2.763009906f, -0.508720219f);
+	vectorSet(positionDefault, 1.578899493f, -9.444166591f, -0.838456774f);
+	vectorSet(forwardDefaultVector, 0.644537496f, -3.34079906f, -0.208720219f);
 	vectorSet(rightDefaultVector, 0.886262059f, 0.463184059f, 0.000000000f);
 	vectorSet(upDefaultVector, -0.235630989f, 0.450859368f, 0.860931039f);
 
