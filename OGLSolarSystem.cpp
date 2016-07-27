@@ -163,6 +163,16 @@ void OGLSolarSystem::OGLSolarSystem::initializeSystem(void)
 	// @todo set the proper scale for moon orbit
 	solarSystem->addSatellite(4, 1.48E15, 2372300 * 10, 30.3, 17.3, 12.2, moonTexture3->getTextureHandle());	// Deimos for the Mars
 
+	initComplete = true;
+
+	if (initComplete != true) {
+		MessageBox::Show("Unable to start during the initialization has not been finished correctly.");
+		exit(2);
+	}
+	else {
+		timer1->Enabled = initComplete;
+	}
+
 }
 
 void OGLSolarSystem::OGLSolarSystem::setViewport(int width, int height)
@@ -294,6 +304,12 @@ void OGLSolarSystem::OGLSolarSystem::OGLupdateGUI(void)
 
 void OGLSolarSystem::OGLSolarSystem::OGLRender(void)
 {
+	if (initComplete != true) {
+		MessageBox::Show("Unable to start during the initialization has not been finished correctly.");
+		exit(2);
+
+	}
+		
 	if (controls.moveForward) camera->moveForward();
 	if (controls.moveBackward) camera->moveBackward();
 	if (controls.slideLeft) camera->slideLeft();

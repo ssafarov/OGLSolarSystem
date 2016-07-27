@@ -27,19 +27,19 @@ bool icompare(std::string const& a, std::string const& b)
 
 Texture::Texture(char* imagePath)
 {
-	std::string filePath = imagePath;
-	textureFileExt = filePath.substr( filePath.rfind(".") + 1 );
-	int tfeSize = textureFileExt.length();
-
-	if (tfeSize == 0)
-	{
-		MessageBox::Show("Unsupported texture file");
-		exit(1);
-	}
-	
 	// Try open the texture file
 	if (((ptrFile = fopen(imagePath, "rb")) == NULL)) {
 		MessageBox::Show("Unable to open requested texture file");
+		exit(1);
+	}
+
+	// Check what is file we have
+	std::string filePath = imagePath;
+	textureFileExt = filePath.substr(filePath.rfind(".") + 1);
+	int tfeSize = textureFileExt.length();
+	if (tfeSize != 3)
+	{
+		MessageBox::Show("Unsupported texture file");
 		exit(1);
 	}
 
@@ -69,7 +69,7 @@ void Texture::LoadTGATexture(FILE *ptrTextureFile)
 	TGAHeader header;	// structure for the header info
 
 	// column counter, row counter, i loop counters, and bytes per pixel
-	int c, r, i, j, bytesPP = 4;
+	int c, r, i, bytesPP = 4;
 	char n, packetHeader;
 	char pixel[4];
 

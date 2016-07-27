@@ -67,5 +67,8 @@
     <EmbeddedResource Include="OGLSolarSystem.resx">
       <Filter>Resource Files</Filter>
     </EmbeddedResource>
+    <EmbeddedResource Include="OGLSSAbout.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

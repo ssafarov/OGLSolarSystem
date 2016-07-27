@@ -92,6 +92,7 @@ namespace OGLSolarSystem {
 			bool light;
 			bool showOrbits;
 			int planetSelected;
+			bool initComplete = false;
 
 		private: System::Windows::Forms::GroupBox^  groupBox1;
 		private: System::Windows::Forms::Label^  lPosZ;
@@ -153,6 +154,19 @@ private: System::Windows::Forms::Label^  label27;
 private: System::Windows::Forms::Label^  label26;
 private: System::Windows::Forms::CheckBox^  cbLightSwitch;
 private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
+private: System::Windows::Forms::Label^  label52;
+private: System::Windows::Forms::Label^  label51;
+private: System::Windows::Forms::Label^  label50;
+private: System::Windows::Forms::Label^  label49;
+private: System::Windows::Forms::Label^  label48;
+private: System::Windows::Forms::Label^  label47;
+private: System::Windows::Forms::Label^  label46;
+private: System::Windows::Forms::Label^  label45;
+private: System::Windows::Forms::Label^  label44;
+private: System::Windows::Forms::Label^  label43;
+private: System::Windows::Forms::Label^  label42;
+private: System::Windows::Forms::Label^  label41;
+private: System::Windows::Forms::Label^  label40;
 
 			ref struct ControlStates
 			{
@@ -226,6 +240,19 @@ private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
 			this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->pControls = (gcnew System::Windows::Forms::Panel());
 			this->gbSolarSystemSettings = (gcnew System::Windows::Forms::GroupBox());
+			this->label52 = (gcnew System::Windows::Forms::Label());
+			this->label51 = (gcnew System::Windows::Forms::Label());
+			this->label50 = (gcnew System::Windows::Forms::Label());
+			this->label49 = (gcnew System::Windows::Forms::Label());
+			this->label48 = (gcnew System::Windows::Forms::Label());
+			this->label47 = (gcnew System::Windows::Forms::Label());
+			this->label46 = (gcnew System::Windows::Forms::Label());
+			this->label45 = (gcnew System::Windows::Forms::Label());
+			this->label44 = (gcnew System::Windows::Forms::Label());
+			this->label43 = (gcnew System::Windows::Forms::Label());
+			this->label42 = (gcnew System::Windows::Forms::Label());
+			this->label41 = (gcnew System::Windows::Forms::Label());
+			this->label40 = (gcnew System::Windows::Forms::Label());
 			this->label38 = (gcnew System::Windows::Forms::Label());
 			this->label39 = (gcnew System::Windows::Forms::Label());
 			this->label37 = (gcnew System::Windows::Forms::Label());
@@ -330,7 +357,7 @@ private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
 			// aboutToolStripMenuItem
 			// 
 			this->aboutToolStripMenuItem->Name = L"aboutToolStripMenuItem";
-			this->aboutToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->aboutToolStripMenuItem->Size = System::Drawing::Size(119, 22);
 			this->aboutToolStripMenuItem->Text = L"About ...";
 			this->aboutToolStripMenuItem->Click += gcnew System::EventHandler(this, &OGLSolarSystem::aboutToolStripMenuItem_Click);
 			// 
@@ -349,6 +376,19 @@ private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
 			// 
 			// gbSolarSystemSettings
 			// 
+			this->gbSolarSystemSettings->Controls->Add(this->label52);
+			this->gbSolarSystemSettings->Controls->Add(this->label51);
+			this->gbSolarSystemSettings->Controls->Add(this->label50);
+			this->gbSolarSystemSettings->Controls->Add(this->label49);
+			this->gbSolarSystemSettings->Controls->Add(this->label48);
+			this->gbSolarSystemSettings->Controls->Add(this->label47);
+			this->gbSolarSystemSettings->Controls->Add(this->label46);
+			this->gbSolarSystemSettings->Controls->Add(this->label45);
+			this->gbSolarSystemSettings->Controls->Add(this->label44);
+			this->gbSolarSystemSettings->Controls->Add(this->label43);
+			this->gbSolarSystemSettings->Controls->Add(this->label42);
+			this->gbSolarSystemSettings->Controls->Add(this->label41);
+			this->gbSolarSystemSettings->Controls->Add(this->label40);
 			this->gbSolarSystemSettings->Controls->Add(this->label38);
 			this->gbSolarSystemSettings->Controls->Add(this->label39);
 			this->gbSolarSystemSettings->Controls->Add(this->label37);
@@ -383,6 +423,123 @@ private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
 			this->gbSolarSystemSettings->TabIndex = 77;
 			this->gbSolarSystemSettings->TabStop = false;
 			this->gbSolarSystemSettings->Text = L"Solar System Data";
+			// 
+			// label52
+			// 
+			this->label52->AutoSize = true;
+			this->label52->Location = System::Drawing::Point(157, 311);
+			this->label52->Name = L"label52";
+			this->label52->Size = System::Drawing::Size(44, 13);
+			this->label52->TabIndex = 129;
+			this->label52->Text = L"N/A yet";
+			// 
+			// label51
+			// 
+			this->label51->AutoSize = true;
+			this->label51->Location = System::Drawing::Point(157, 289);
+			this->label51->Name = L"label51";
+			this->label51->Size = System::Drawing::Size(44, 13);
+			this->label51->TabIndex = 128;
+			this->label51->Text = L"N/A yet";
+			// 
+			// label50
+			// 
+			this->label50->AutoSize = true;
+			this->label50->Location = System::Drawing::Point(157, 266);
+			this->label50->Name = L"label50";
+			this->label50->Size = System::Drawing::Size(44, 13);
+			this->label50->TabIndex = 127;
+			this->label50->Text = L"N/A yet";
+			// 
+			// label49
+			// 
+			this->label49->AutoSize = true;
+			this->label49->Location = System::Drawing::Point(157, 243);
+			this->label49->Name = L"label49";
+			this->label49->Size = System::Drawing::Size(44, 13);
+			this->label49->TabIndex = 126;
+			this->label49->Text = L"N/A yet";
+			// 
+			// label48
+			// 
+			this->label48->AutoSize = true;
+			this->label48->Location = System::Drawing::Point(157, 220);
+			this->label48->Name = L"label48";
+			this->label48->Size = System::Drawing::Size(44, 13);
+			this->label48->TabIndex = 125;
+			this->label48->Text = L"N/A yet";
+			// 
+			// label47
+			// 
+			this->label47->AutoSize = true;
+			this->label47->Location = System::Drawing::Point(157, 197);
+			this->label47->Name = L"label47";
+			this->label47->Size = System::Drawing::Size(44, 13);
+			this->label47->TabIndex = 124;
+			this->label47->Text = L"N/A yet";
+			// 
+			// label46
+			// 
+			this->label46->AutoSize = true;
+			this->label46->Location = System::Drawing::Point(157, 174);
+			this->label46->Name = L"label46";
+			this->label46->Size = System::Drawing::Size(44, 13);
+			this->label46->TabIndex = 123;
+			this->label46->Text = L"N/A yet";
+			// 
+			// label45
+			// 
+			this->label45->AutoSize = true;
+			this->label45->Location = System::Drawing::Point(157, 151);
+			this->label45->Name = L"label45";
+			this->label45->Size = System::Drawing::Size(44, 13);
+			this->label45->TabIndex = 122;
+			this->label45->Text = L"N/A yet";
+			// 
+			// label44
+			// 
+			this->label44->AutoSize = true;
+			this->label44->Location = System::Drawing::Point(157, 128);
+			this->label44->Name = L"label44";
+			this->label44->Size = System::Drawing::Size(44, 13);
+			this->label44->TabIndex = 121;
+			this->label44->Text = L"N/A yet";
+			// 
+			// label43
+			// 
+			this->label43->AutoSize = true;
+			this->label43->Location = System::Drawing::Point(157, 105);
+			this->label43->Name = L"label43";
+			this->label43->Size = System::Drawing::Size(44, 13);
+			this->label43->TabIndex = 120;
+			this->label43->Text = L"N/A yet";
+			// 
+			// label42
+			// 
+			this->label42->AutoSize = true;
+			this->label42->Location = System::Drawing::Point(157, 82);
+			this->label42->Name = L"label42";
+			this->label42->Size = System::Drawing::Size(44, 13);
+			this->label42->TabIndex = 119;
+			this->label42->Text = L"N/A yet";
+			// 
+			// label41
+			// 
+			this->label41->AutoSize = true;
+			this->label41->Location = System::Drawing::Point(157, 59);
+			this->label41->Name = L"label41";
+			this->label41->Size = System::Drawing::Size(44, 13);
+			this->label41->TabIndex = 118;
+			this->label41->Text = L"N/A yet";
+			// 
+			// label40
+			// 
+			this->label40->AutoSize = true;
+			this->label40->Location = System::Drawing::Point(157, 36);
+			this->label40->Name = L"label40";
+			this->label40->Size = System::Drawing::Size(44, 13);
+			this->label40->TabIndex = 117;
+			this->label40->Text = L"N/A yet";
 			// 
 			// label38
 			// 
@@ -959,13 +1116,13 @@ private: System::Windows::Forms::CheckBox^  cbSpaceFogSwitch;
 			// 
 			// timer1
 			// 
-			this->timer1->Enabled = true;
 			this->timer1->Tick += gcnew System::EventHandler(this, &OGLSolarSystem::timer1_Tick);
 			// 
 			// cbTimeScale
 			// 
 			this->cbTimeScale->Cursor = System::Windows::Forms::Cursors::Default;
 			this->cbTimeScale->DropDownStyle = System::Windows::Forms::ComboBoxStyle::DropDownList;
+			this->cbTimeScale->Enabled = false;
 			this->cbTimeScale->FormattingEnabled = true;
 			this->cbTimeScale->Items->AddRange(gcnew cli::array< System::Object^  >(17) {
 				L"0.1", L"0.2", L"0.3", L"0.4", L"0.5", L"0.6",
@@ -1170,7 +1327,7 @@ private: System::Void cbSpaceFogSwitch_CheckedChanged(System::Object^  sender, S
 }
 private: System::Void aboutToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 	OGLSSAbout ^ aboutForm = gcnew OGLSSAbout();
-	aboutForm->Show();
+	aboutForm->ShowDialog();
 }
 };
 }
